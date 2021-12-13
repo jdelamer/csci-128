@@ -2,13 +2,14 @@
 Assignment #2: Oh crap, Zombies!
 ********************************
 
-* **Worth**: 10%
-* **DUE**: Oct 25, at 11:55pm; submitted on MOODLE.
+* **Worth**: 15%
+* **DUE**: TBD; submitted on MOODLE.
 * Starting point: :download:`asn2.ipynb <../assignments_files/asn2.ipynb>` OR :download:`asn2.py <../assignments_files/asn2.py>`
 
 .. warning::
 
-   For this assignment, you may **not** work with anyone else. You need to work independently. By all means communicate with each other at a high level (that's good), but your code needs to be your own here. 
+   For this assignment, you may work with **one** other student. Only one of you need to submit your work, but put **both** your names and student numbers!
+   By all means communicate with each other at a high level (that's good), but your code needs to be your own here. 
 
 .. warning::
 
@@ -306,7 +307,7 @@ General FAQ:
 * I know you told me to do it this way, but I did it another way, and I think my way is better.
    * Your way may be better, but I don’t care. Do it the way I told you.
 * Can I work with my friend?
-   * No
+   * Yes, with at most one friend.
 * I know our code looks the same, but we only worked together at a high level.
    * No you didn’t. If the anti-plagiarism software thinks your code is the same, you didn’t just talk on a high level. I can do simple statistics on how similar everyone’s code looks, and if you’re an outlier, then I know you cheated.
 * I know I cheated, I know I know I was cheating, but I’m reeeeaaaaaaaaallllllly sorry [that I got caught]. Can we just ignore it this time?

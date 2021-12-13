@@ -3,7 +3,7 @@ Assignment #1: Density of Starbucks
 ***********************************
 
 * **Worth**: 10%
-* **DUE**: ; submitted on MOODLE.
+* **DUE**: TBD; submitted on MOODLE.
 
 .. image:: ../img/starbucks_escher.jpeg
 
@@ -21,10 +21,10 @@ Learning objectives:
 * Comments
 * Using your code to answer questions
 
+.. warning::
 
-.. NOTE::
-
-	This assignment may be done with other students. Feel free to collaborate all you want (in fact, I encourage it). Every student must submit their own work. The only rule I have here is that your code/functions must not be more or less identical to other students'. If your code is, you will be investigated for academic misconduct. Also, if your code/functions are identical to those that you *obtained* from somewhere, we're going to have a problem (I have copies of past years assignment submissions to check your work against). 
+   For this assignment, you may work with **one** other student. Only one of you need to submit your work, but put **both** your names and student numbers!
+   By all means communicate with each other at a high level (that's good), but your code needs to be your own here. 
 
 .. warning::
    
@@ -223,7 +223,7 @@ General FAQ:
 * I know you told me to do it this way, but I did it another way, and I think my way is better.
 	* Your way may be better, but I don’t care. Do it the way I told you.
 * Can I work with my friend?
-	* Yes. In fact, you should!
+	* Yes, with at most one friend.
 * If our code/functions are identical, you won't really call this cheating, would you? I mean, you said we could work together!
     * I will absolutely try to nail you for cheating. I am letting you work together. Don't push it. All-in-all, it's going to be hard to *cheat* unless you are deliberately trying to. 
 * I know I cheated, I know I know I was cheating, but I’m reeeeaaaaaaaaallllllly sorry [that I got caught]. Can we just ignore it this time?
