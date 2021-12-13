@@ -83,7 +83,6 @@ Course Notes
     topic3
     topic4
     topic5
-    topic5b
     topic6
     topic7
     topic8
