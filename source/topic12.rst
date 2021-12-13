@@ -1,5 +1,5 @@
 ********************
-Topic #13 -- Objects
+Topic #12 -- Objects
 ********************
 
 * Like it or not, you've already been using objects for a while now

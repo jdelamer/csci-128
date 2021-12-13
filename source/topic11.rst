@@ -1,5 +1,5 @@
 ***********************************
-Topic #12 -- File IO and Exceptions
+Topic #11 -- File IO and Exceptions
 ***********************************
 
 Getting data into Python
@@ -94,9 +94,6 @@ Loading a CSV file
 
 * How does the ``csv.reader`` work?
 
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/HUHqBtNWJo8" frameborder="0" allowfullscreen></iframe>
 	
 .. admonition:: Activity+
 	
@@ -113,9 +110,6 @@ Loading a CSV file
     The parameter ``airport_list`` should be the list you loaded using ``load_airports()``.
 
 
-      .. raw:: html
-	
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/9wunG22ivJ0" frameborder="0" allowfullscreen></iframe>
    
 * Suppose you have some tabular data in Python that you want to save back in to a CSV
 

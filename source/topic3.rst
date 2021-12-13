@@ -155,10 +155,6 @@ Function Parameters
      
 * What happens if we don't give it enough, or too many parameters?
 
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/clFWPflvEKI" frameborder="0" allowfullscreen></iframe><br><br>
-
 Abstraction: first steps
 ========================
 
@@ -219,9 +215,6 @@ Back to concrete things...
 
     Write a function ``catstr`` which takes two strings as parameters and then prints out the concatenation of the strings. e.g., if I call ``catstr('Hello ','world!')`` it will print ``Hello world!``.
 
-      .. raw:: html
-
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/cMTPTq7xpOA" frameborder="0" allowfullscreen></iframe>
    
    
 .. admonition:: Activity
@@ -230,10 +223,6 @@ Back to concrete things...
    
     Now write a function ``crosscat`` that will take *four* strings and print out the concatenation of the first and third string, and then, on a new line, the concatenation of the second and fourth string. **BUT**: your function isn't allowed to use a ``print`` function! You can, however, use your ``catstr`` function.
 
-      .. raw:: html
-
-   		<iframe width="560" height="315" src="https://www.youtube.com/embed/DESQnHsGYss" frameborder="0" allowfullscreen></iframe> 
-	
 		
 Execution Flow
 ==============
@@ -307,9 +296,7 @@ Function values
     Say, does Python have a square root function?
     How would you find it?
 
-      .. raw:: html
 
-   		<iframe width="560" height="315" src="https://www.youtube.com/embed/yMaFqibYwQE" frameborder="0" allowfullscreen></iframe>	
 	
 	
 Composition
@@ -446,9 +433,6 @@ Then, at some later point, you'll have to go back to your code. It won't have co
 
 After that happens enough times, you'll start writing comments.
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/eD1iff-zLLo" frameborder="0" allowfullscreen></iframe>
 
 	
 For next class

@@ -32,10 +32,7 @@ The Boolean type
     Write a function ``is_negative(n)`` that *returns* ``True`` if the argument ``n`` is negative and ``False`` otherwise.
 
     Verify that the return type is correct.
-
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/xrBzzvmLCvQ" frameborder="0" allowfullscreen></iframe>   
+ 
 
 
 More about returns
@@ -90,9 +87,6 @@ The function type
 * If all of this weirds you out... good. You're normal. Passing around functions is crazy weird stuff.
 * Don't worry if you aren't 100% confident on this yet. We'll come back to it in more detail later.
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/7CAIlaxRpsg" frameborder="0" allowfullscreen></iframe>
 
 
 Developing bigger programs
@@ -120,9 +114,6 @@ Developing bigger programs
 
     Your function should return the value of the principle plus the interest after compounding.
 
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/epghFryGafA" frameborder="0" allowfullscreen></iframe>
 	
 
 * For bigger projects: break your problem down into a hierarchy of subproblems (remember, think in terms of *levels of abstraction*!).

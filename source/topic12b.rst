@@ -1,5 +1,5 @@
 ********************************
-Topic #13b -- More About Objects
+Topic #12b -- More About Objects
 ********************************
 
 More complexity

@@ -64,10 +64,6 @@ Logic First
 * What is the *type* of the result of applying a comparison operator?
  
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/NmeQHw0rOaY" frameborder="0" allowfullscreen></iframe>   
-
    
 Conditional execution
 =====================
@@ -101,10 +97,6 @@ Compound conditions
     if (grade < 90 and personality_type == 'A' and desired_career == 'med school') or (grade < 100 and personality_type == 'AAA'):
         print('Time to ask for extra credit!')
 
-
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/8OAsHilB0jw" frameborder="0" allowfullscreen></iframe>   
    
    
    
@@ -138,10 +130,6 @@ Alternative execution
     **HINT**: You may want to look up the Python modulus operator: ``%``.
    
    
-
-      .. raw:: html
-
-      	<iframe width="560" height="315" src="https://www.youtube.com/embed/k0LcSJzANgU" frameborder="0" allowfullscreen></iframe>
 		
     `This is actually some neat math stuff <https://en.wikipedia.org/wiki/Collatz_conjecture>`_
 
@@ -175,9 +163,6 @@ Chains of alternatives
 
     Write a Python function that takes an integer from 0-100 representing a course grade and returns a string representing the letter grade: A,B,C,D or F. You can pick the cutoffs.
 
-      .. raw:: html
-
-      	<iframe width="560" height="315" src="https://www.youtube.com/embed/-ZpxIvRshzg" frameborder="0" allowfullscreen></iframe>  
    
    
 Nested conditionals

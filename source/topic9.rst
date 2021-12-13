@@ -1,6 +1,6 @@
-*******************************************
-Topic #10 -- Tuples, Dictionaries, and Sets
-*******************************************
+******************************************
+Topic #9 -- Tuples, Dictionaries, and Sets
+******************************************
 
 * So far we have seen *lists* and *numpy arrays*. 
 
@@ -119,9 +119,7 @@ Dictionaries
 
 * We've just scratched the surface of what you can do with dictionaries here, but it's enough for our purposes right now.
 
-.. raw:: html
 
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/e8nhfwlsBl0" frameborder="0" allowfullscreen></iframe>
 
 So Why Are They Great?
 ----------------------

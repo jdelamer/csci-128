@@ -65,10 +65,6 @@ Kattis
     
 15. https://open.kattis.com/problems/hello (Let's get that O in IO working)   
 
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/k1PK3CGOskA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-   
 
 16. https://open.kattis.com/problems/carrots (Let's now get the I in IO working)
 
@@ -98,25 +94,16 @@ Kattis
         # Now we just print out what we stored in carrots
         print(carrots)
       
-      
-      
-.. raw:: html
-
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/wWG9eOrEW3Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-.. raw:: html
-
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/k1WWm-QiCZw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      
+           
       
 Back to Not Kattis
 ==================
 
-17. Seriously, look at the above code and take your time to understand it. 
+1.  Seriously, look at the above code and take your time to understand it. 
 
-18. Go back to Colab and play around with the input function. Try different things with it. The best way to learn this stuff is to play around with the code and see what you can do with it. 
+2.  Go back to Colab and play around with the input function. Try different things with it. The best way to learn this stuff is to play around with the code and see what you can do with it. 
 
-19. To make sure you get ``input``, write some code to ask the user for their first name. Then after that, write the code to ask the user for their last name. Then, after the 2nd input, print out the first name and then the last name. **Hint:** you'll probably need variables here. 
+3.  To make sure you get ``input``, write some code to ask the user for their first name. Then after that, write the code to ask the user for their last name. Then, after the 2nd input, print out the first name and then the last name. **Hint:** you'll probably need variables here. 
     
 
 More Kattis Problems

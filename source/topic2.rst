@@ -389,9 +389,7 @@ Doing sequences of things
 
     Consider the sentence ``Def Leppard is a poor substitute for Van Halen``. Write a program that stores *each word* of that sentence in it's own variable, and then prints the whole sentence to the screen, *using only a single print statement*.
 
-      .. raw:: html
 
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/u-d3chSpFO4" frameborder="0" allowfullscreen></iframe><br><br>
    
 For next class
 ==============

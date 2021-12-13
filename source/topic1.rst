@@ -211,17 +211,6 @@ Videos
    * These videos were made for Python 2 (but that won't really matter for you. Most you'll have to deal with is adding brackets to the print statements.)
 
    
-.. `Check out this video. <https://www.youtube.com/watch?v=EzBHGSMdwjg/>`_
-
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/MHwfXIl7O4U" frameborder="0" allowfullscreen></iframe><br><br>
-
-
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/lN6uUAQcKgY" frameborder="0" allowfullscreen></iframe><br><br>
-
 
 For next week
 =============

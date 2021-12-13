@@ -39,9 +39,6 @@ The thing about strings
 * Bonus if you're reading ahead: what does ``print(a[0:4])`` do?
 * This is called *slicing* the string.
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/cxppFPrjcow" frameborder="0" allowfullscreen></iframe>
 	
 More loops
 ==========
@@ -73,9 +70,6 @@ More loops
    n
    g
 
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/YS2TVVTIaPQ" frameborder="0" allowfullscreen></iframe>
 
 
 
@@ -122,9 +116,6 @@ in
     
     * HINT: what does the ``in`` operator do in Python?
 
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/sokPQLkrXjw" frameborder="0" allowfullscreen></iframe>
    
 
 * You can do the above exercise the hard way, with loops, or you can look up ``in``.

@@ -20,7 +20,7 @@ This course is devoted to learning proper problem solving techniques and basic p
 Professors
 ==========
 
-**Dr. Jean-Alexis Delamer (Section 12)**
+**Dr. Jean-Alexis Delamer**
 
 
 * jdelamer at stfx.ca

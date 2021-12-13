@@ -62,9 +62,6 @@ First loops
     * The ``while`` statement is followed by a condition (which can be any boolean function/statement/expression!). If the condition is ``True``, the body of the loop gets executed, otherwise it gets skipped. (don't forget the ``:`` !)
     * What would happen if we didn't have ``a = a + 1``?
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/I3wMZ5jkiyc" frameborder="0" allowfullscreen></iframe>
 
 .. admonition:: Activity --- Featuring LOOPS
 
@@ -110,9 +107,6 @@ First loops
 
     Trace through your function for the call ``int_sum(5)``
 
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/sUNBswKrmJY" frameborder="0" allowfullscreen></iframe>
  
 .. admonition:: Activity
 
@@ -164,9 +158,6 @@ OMG some actual *science*!
     * write a function ``approx_x`` that, given an approximation for x, computes the formula I gave you
     * write another function, that calls this function ``while x != approx_x``
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/9jrhr9rbwzc" frameborder="0" allowfullscreen></iframe>
 
 Algorithm
 =========

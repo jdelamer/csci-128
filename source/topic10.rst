@@ -1,5 +1,5 @@
 **********************
-Topic #11 -- Debugging
+Topic #10 -- Debugging
 **********************
 
 It's broke, I give up!
@@ -154,9 +154,6 @@ It is that easy!
 * You will rarely solve a complex problem with a single ``print``.
 * Instead, each ``print`` will lead you to form a new hypothesis... and then test it with another ``print``. 
    
-  .. raw:: html
-
-   <iframe width="560" height="315" src="https://www.youtube.com/embed/EnJhV2j8YR0" frameborder="0" allowfullscreen></iframe>
    
    
 Pencil & Paper (or better, a whiteboard)

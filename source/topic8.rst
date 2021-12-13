@@ -52,9 +52,6 @@ Data Structures
     * Sometimes they are a bit slower than more specialized alternatives.
         * This isn't a big deal for us though.
 
-  .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/EcuTE0VEDl8" frameborder="0" allowfullscreen></iframe>
 
 
 
@@ -106,9 +103,6 @@ Range
 
     **WARNING** This is a tad different in Python 2, so be mindful of that when watching the video.
     
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/izZEkV58Its" frameborder="0" allowfullscreen></iframe>
 
 
 Mutability 
@@ -206,9 +200,7 @@ Aliasing
 	[1, 2, 3, 4]
 
 
-  .. raw:: html
 
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/2F_qnTYA6g4" frameborder="0" allowfullscreen></iframe>
 
 * Spend some time getting used to this concept. I promise you, 100%, it will cause bugs in your code.
     * Happens to me all the time :(
@@ -403,9 +395,6 @@ Lists and loops
    
     Remember: ``range`` returns a list (kinda)... and a ``for`` loop can *iterate* over every element of a list.
 
-     .. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/0AuMKIMiPMo" frameborder="0" allowfullscreen></iframe>
 
 
 

@@ -1,11 +1,11 @@
 ***************************
-Getting set up for CSCI 161
+Getting set up for CSCI 128
 ***************************
 
 Colab
 =====
 
-There are a few ways to get setup to start programming in Python. By far the **easiest** and **recommended** way for CSCI 161 is to use `Google Colab <https://colab.research.google.com/notebooks/welcome.ipynb>`_.
+There are a few ways to get setup to start programming in Python. By far the **easiest** and **recommended** way for CSCI 128 is to use `Google Colab <https://colab.research.google.com/notebooks/welcome.ipynb>`_.
 
 There are a number of reasons this is the best choice for us, including being very easy to setup (I'm betting everyone already has a Google account). Further, it automatically backs everything up for you with Google Drive. Another big reason is this style of programming, called *notebook*, is becoming increasingly popular. 
 
