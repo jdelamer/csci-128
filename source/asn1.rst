@@ -3,7 +3,7 @@ Assignment #1: Density of Starbucks
 ***********************************
 
 * **Worth**: 10%
-* **DUE**: TBD; submitted on MOODLE.
+* **DUE**: TBA; submitted on MOODLE.
 
 .. image:: ../img/starbucks_escher.jpeg
 
@@ -44,7 +44,7 @@ To make life easier for the first assignment, you don't have to start from scrat
         :align: center
 
 
-Download the :download:`asn1.ipynp <../assignments_files/asn1.ipynb>` notebook and upload it to Colab to get started. See below image. **WARNING:** You should be sure to save a copy of this to your Google drive and then work with that one. You don't have to, but you will have to re-upload the project every time you want to work on it. 
+Download the :download:`asn1.ipynb <../assignments_files/asn1.ipynb>` notebook and upload it to Colab to get started. See below image. **WARNING:** You should be sure to save a copy of this to your Google drive and then work with that one. You don't have to, but you will have to re-upload the project every time you want to work on it. 
 
 
 .. image:: ../img/uploadColab.png
@@ -206,34 +206,18 @@ General FAQ:
 	* Probably not; you’re very likely doing something wrong
 * My thing keeps telling me ``No such file or directory: 'starbucks.csv'``
 	* Then the starbucks file probably isn't where python is looking.
-* But density will grow larger the smaller I make the area (aren't I so smart).
-	* Congratulations, you understand basic arithmetic. 
 * Is my area a high/low enough density?
 	* I really don't care how high/low it is. Just try a few things and see what you get.    
-* But I never used the one function!!!!1!
-	* Fine, but write the code anyways and make sure it works.
-* But the degrees values don't specify a cardinal direction!
-	* Make use of changing +/- if you need to change hemispheres.  
-* Wtf do the functions do that you gave me?
-	* Read the descriptions. Try figuring it out. This is actually part of the assignment learning objectives. 
-* Some of the code in the functions you gave us look like magic.
-	* At this point it may seem that way, but by the end of the semester, they will lose their magic 
 * Do I have enough comments?
 	* I don't know, maybe? If you're looking at code and have to ask if you should comment it... just comment it. That said, don't write me a book.
-* I know you told me to do it this way, but I did it another way, and I think my way is better.
-	* Your way may be better, but I don’t care. Do it the way I told you.
 * Can I work with my friend?
 	* Yes, with at most one friend.
-* If our code/functions are identical, you won't really call this cheating, would you? I mean, you said we could work together!
-    * I will absolutely try to nail you for cheating. I am letting you work together. Don't push it. All-in-all, it's going to be hard to *cheat* unless you are deliberately trying to. 
-* I know I cheated, I know I know I was cheating, but I’m reeeeaaaaaaaaallllllly sorry [that I got caught]. Can we just ignore it this time?
-	* Lol, no
+* I know I cheated, but I’m really sorry [that I got caught]. Can we just ignore it this time?
+	* No
 * If I submit it at 11:56pm, you’ll still mark it, right? I mean, commmmon!
 	* No. 11:55pm and earlier is on time. Anything after 11:55pm is late. Anything late is not marked. It’s rather simple really.
 * Moodle was totally broken, it’s not my fault it’s late.
 	* Nice try.
 * I accidentally submitted the wrong code. Here is the right code, but it’s late. But you can see that I submitted the wrong code on time! You’ll still accept it, right?
 	* Do you think I was born yesterday? No.
-* Will I really get 0 if I do the submission wrong? Like, what if I submit the .ipynb instead of the .py?
-	* Yes, you'll really get a **ZERO**. 
 

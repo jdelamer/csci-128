@@ -290,7 +290,7 @@ Primitive Types in Memory (RAM)
 
 * So far this is fine and dandy
 * But, what happens if we try to shove an array into one of those nicely divvied up chunks of RAM?
-    * The RAM is divvied up to accept single ints
+    * The RAM is divided up to accept single ints
     * But we have an array of 8 ints...
     * PROBLEM!
 
@@ -302,7 +302,7 @@ Primitive Types in Memory (RAM)
 * We're just putting each element into it's own RAM location
 * We just need to know that our array starts at memory address 677 and goes to 684.
 
-* ... but... how do we keep track of this?
+* How do we keep track of this?
 
 Pointers
 --------
@@ -331,9 +331,6 @@ Pointers
  
 * We called this aliasing and took note that it's weird
 * However... actually... the way we copy over ``my_list`` to ``another_list`` works THE SAME WAY AS PRIMITIVE TYPES
-    * But... You just said.. and you clearly showed us that it's totally different!!!!!!!!
-
-* Strap yourselves in, because I'm about to blow your mind
 
 * Let's say I write
 
@@ -491,7 +488,6 @@ Pure functions
 Who wants to be pure?
 =====================
 * Anything you can possibly do with a computer *can* be done with pure functions...
-* ... but... some stuff is just plain easier to do with side effects. 
 * This is a course for working scientists, so let's be pragmatic:
     * Write pure functions when practical to do so. The advantages make it worthwhile.
     * If it really is a lot easier to do the job with side effects... just do it and don't lose sleep over it.

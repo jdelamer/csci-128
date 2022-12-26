@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ***********************************
-Welcome to CSCI 128 --- Winter 2022
+Welcome to CSCI 128 --- Winter 2023
 ***********************************
 
 
@@ -41,8 +41,9 @@ Office Hours
 `Office Hours Etiquette --- Don't Do This <https://www.youtube.com/watch?v=lOTyUfOHgas>`_
    
 * **Dr. Jean-Alexis Delamer** Annex 9C
-    * Thursday, 10:00 -- 11:00
-    * Friday, 10:30 -- 11:30
+    * Monday, 13:15 -- 15:15
+    * Tuesday, 09:00 -- 11:00
+    * Thursday, 9:00 -- 11:00
     
     
 Learning Centre
@@ -91,7 +92,6 @@ Course Notes
     topic10
     topic11
     topic12
-    topic12b
    
    
 Labs
@@ -108,6 +108,7 @@ Labs
     lab7
     lab8
     lab9
+    lab10
     
     
 Assignments

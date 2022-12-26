@@ -128,8 +128,8 @@ Encapsulation
     * Get tired of typing those commands over and over...
     * ...
  
-OMG some actual *science*!
-==========================
+Some actual *science*!
+======================
 * Okay, maybe not. But we're taking a step in that direction.
 
 .. admonition:: Activity
@@ -142,7 +142,6 @@ OMG some actual *science*!
    
 * Okay, that's a tough one, so you get some help. How do we go about it?
 * Let's use something called `Newton's Method <http://en.wikipedia.org/wiki/Newton's_method>`_ .
-* Since I promised this is a no-prerequisite course...
 * Here's what you do:
     * Pick a value ``x`` between 0 and 1. Any will do. Seriously.
     * Compute: 
@@ -150,7 +149,7 @@ OMG some actual *science*!
     * The answer to that equation is an *approximation* of the solution
     * It's not a very *good* approximation yet. What to do?
     * Set ``x`` equal to the new approximation and plug in to the formula again.
-    * Presto! New approximation.
+    * New approximation.
     * Still not good enough? Guess what?
     * Set ``x`` equal to the new approximation and plug in to the formula again.
 
@@ -166,11 +165,10 @@ Algorithm
 * An algorithm is a description of a series of steps to solve a problem.
 * Algorithms can be presented in natural language, but are easier to turn into a program when presented in a formal language.
 * Finding an algorithm to solve most problems is *very hard*. You can make a career, get tenure, make millions of dollars in patent licensing, etc., "just" by developing algorithms.
-* As programmers though, we usually leverage existing algorithms and other things to make our lives easier. We often won't be starting from scratch (although, right now you are...)
-* The two most important concepts you will learn in this course (or really, what a computer scientist spends years learning) are:
+* As programmers though, we usually leverage existing algorithms and other things to make our lives easier.
+* The two most important concepts that will be introduced in this course (or really, what a computer scientist spends years learning) are:
     * **ALGORITHM**
     * **DATA STRUCTURE**
-* So we're half done! (Just kidding)
 
 .. admonition:: Activity 
 

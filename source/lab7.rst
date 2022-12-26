@@ -5,70 +5,127 @@ Lab #7
 Before Kattis
 =============
 
-.. Warning::
-   Before you do ANYTHING, take out a scrap piece of paper. If I do not see your paper at the end of the lab, you will get **0** on this lab. 
+**Before you do ANYTHING, take out a scrap piece of paper.** 
 
+**Note, do not work on the assignments during labs. If you do, you will be asked to leave and will be given a zero for the lab.**
 
-**1**
-
-Run the below code and **figure out what exactly is going on**. I want to see everyone with paper here working through the logic. If you can't figure it out, hack around with the code. Comment out bits. Print out bits. Do whatever you need to do to figure it out. 
+Let's say we have this code:
 
 .. code-block:: python
-    :linenos:
-    
-    a = [0, 0, 0]
-    b = [a,a,a]
+   
+   twoD = [['a', 'b', 'c'],
+           ['d', 'e', 'f'],
+           ['g', 'h', 'i']]
+		
 
-    for row in b:
-        toPrint = ''
-        for d in row:
-            toPrint += str(d) + ' '
-            
-        print(toPrint)
+.. warning::
+   
+   Above is a 3x3 matrix. YOUR CODE SHOULD WORK ON ANY SIZED MATRIX THOUGH. 4x4, 5x23, 23098x198272973!!! 
+   
+   Long story short, this is **bad**; do **not** do this:
+   
+   .. code-block:: python
+   
+      def printRow(mat, row):
+         print(mat[row][0])
+         print(mat[row][1])
+         print(mat[row][2])
+   
 
+   
+**1**
 
+Write a function ``printRow(mat, row)`` that will print out all the contents in a 2D matrix ``mat`` from a given row ``row``.
+
+ex:
+
+>>> printRow(twoD, 1)
+d
+e
+f
+
+.. image:: ../img/matRow.png
 
 **2**
 
-Add ``b[1][1] = 1`` to line 3 and run it again. Is this what you wanted? (no, it's not). Fix this code such that the output will be what's below. **Hint:** Change the list setup part, not the loops.  
+Write a function ``printCol(mat, col)`` that will print out all the contents in a 2D matrix ``mat`` from a given col ``col``.
 
+ex:
 
-.. code-block:: python
+>>> printCol(twoD, 2)
+c
+f
+i
 
-    0 0 0 
-    0 1 0 
-    0 0 0
-
-**2.5**
-
-Change line 3 ``b[0][1] = 1`` and hit run. Did it do what you expected?
-
+.. image:: ../img/matCol.png
 
 **3**
 
-Given a list of integers, return indices of the two numbers such that they add up to a specific target.
+Write a function ``printDownRight(mat)`` that will print out all the contents in a 2D matrix ``mat`` along the diagonal starting at the top left and ending at the bottom right.
 
-You may assume that each input would have exactly one solution, and you may not use the same element twice.
+ex:
 
-EXAMPLE
+>>> printDownRight(twoD)
+a
+e
+i
 
-Given ``nums = [2, 7, 11, 15]``, target = ``9``,
-
-Because ``nums[0]`` + ``nums[1]`` = ``2`` + ``7`` = ``9``,
-
-return ``[0, 1]``.
-
-
+.. image:: ../img/matDiag3.png
 
 **4**
 
-Think about how much work your algorithm for **3** had to do in terms of *n*, where *n* is the length of the list. Can you somehow think of a better algorithm that would do less work? Don't spend too much time on this if you can't come up with a solution. Just give yourself a fair chance. **Hint:** Dictionaries...  
- 
+Write a function ``printUpRight(mat)`` that will print out all the contents in a 2D matrix ``mat`` along the diagonal starting at the bottom right and ending at the top right.
+
+ex:
+
+>>> printUpRight(twoD)
+g
+e
+c
+
+.. image:: ../img/matDiag4.png
+
+**5**
+
+Write a function ``printDownLeft(mat)`` that will work similarly to above, but starting in the top right. 
+
+.. image:: ../img/matDiag5.png
+
+**6**
+
+Write a function ``printUpLeft(mat)`` that will work similarly to above, but starting in the bottom right.
+
+.. image:: ../img/matDiag6.png
+
+**7**
+
+What happens if you were to use this list now?
+
+.. code-block:: python
+
+   uhoh = [['a', 'b', 'c', 'w'],
+           ['d', 'e', 'f', 'x'],
+           ['g', 'h', 'i', 'y'],
+           ['j', 'k', 'l', 'z']]
+		   
+
+All of your functions should still work as expected (see example below). If they do not, FIX THEM!!!!
+
+>>> printCol(uhoh, 2)
+c
+f
+i
+l
+
+>>> printUpRight(uhoh)
+j
+h
+f
+w
+
 
 Kattis Problems
 ===============
-
-These are the same problems from last week. They're good problems. Keep going. Start where you left off. 
 
 Grab a scrap piece of paper to start scratching your ideas down on paper. The problems are getting tricky enough where this really is becoming a requirement. 
 
@@ -87,8 +144,8 @@ Grab a scrap piece of paper to start scratching your ideas down on paper. The pr
 13. https://open.kattis.com/problems/kornislav
 
 
-LeetCode Problems
-=================
+
+If you finish the lab, go back and work on incomplete problems from previous labs. 
 
 If you have somehow finished everything so far, go check out `LeetCode <https://leetcode.com/problemset/all/>`_. Sort the problems by *Acceptance* (click the table header) and start seeing if you can solve some of these problems. 
 

@@ -5,111 +5,191 @@ Lab #9
 Before Kattis
 =============
 
-**1**
+This lab relates to topics discussed in :doc:`class 13 </topic13>` and :doc:`class 13b </topic13b>`.
 
-Let's start with something simple. Write a function to do a linear search on a list. So, write a function called ``find_element(thing, inList)`` that will search for ``thing`` in ``inList``. Have this function return ``True`` if it exists in the list, and have it return ``False`` otherwise. 
+Let's make a small program with classes. We'll make a program that will store a contact list of people. 
 
-**2**
+We want 2 classes, and another script to interact with the objects we create. 
 
-Create a new class called ``SomeClass``. This class will be really simple to start. 
+Person
+======
 
-* Make it the class ``SomeClass``
-* Write a constructor that literally does nothing. Like, no parameters other than ``self``.  Then, I don't know, make the constructor print out a message. Something like "I'm code running in the constructor". This is just so when you test it you know it's running. 
+Start by making a simple object to store information for a ``Person``. Create a ``Person`` class. 
 
-There, that's it for that class for now. 
+If using PyCharm or Spyder, open an empty python file in your working directory/project. Call it *Person.py*
 
-To finish off part **2**, just create an instance of the object in the original script you created. Make sure the message is printed out. If it didn't something is wrong and you need to ask for help. 
+**Attributes**
 
-**3**
+* A first name (``_first_name``)
+* A last name (``_last_name``)
+* An email (``_email``)
 
-Now we're going to do something very contrived. If you're wondering *But... Why...* after this one, you're normal. Just do what I'm saying at this point. 
+There, that's it for now. We can add more later if we want. 
 
-Move the ``find_element(thing, inList)`` function to within the class ``SomeClass``. Just copy and paste it in. There is one key thing you'll have to change. What do all methods in a class need as their first parameter? Make that change. 
+**Methods**
 
-Go back to your original script (the not-class one) and call the ``find_element`` method from the ``SomeClass`` object you created. 
+* Constructor
+* Getters/setters for the attributes. 
+    * eg: ``get_first_name(self)``, ``set_first_name(self, newFirstName)``
+* The repr method (``__repr__``)
+    * You decide what should be returned here to give us a string representation of the object. Just come up with something reasonable. 
+    * My output looked like this 
+        ``Smith, Greg:	gsmith@xfts.ca``
+	
+* The equals method (``__eq__``)
+    * You decide what it is for two ``Person`` objects to be equivalent. 
+	
+That's about it for the ``Person`` object. It's pretty simple. 
 
-**4**
+ContactList
+===========
 
-For this bit, we're going to update the constructor for ``SomeClass``. 
+Now let's make a class called ``ContactList`` to hold onto a list of ``Person`` objects. If using PyCharm or Spyder, open another empty python file in your working directory/project. Call it *ContactList.py*. Be sure to import the ``Person`` class at the top of this file.
 
-* Add 2 parameter to the constructor
-    * thing
-    * inList
+**Attributes**
 
-* Now, call the function ``find_element`` from *within* the constructor for ``SomeClass``. Be sure to just pass along the parameters. Be sure to save the result into some attribute called ``self._was_it_there``.
+* A list of friends
 
-    * You might have a hard time doing this. If so, slow down and think about this...
-    * Assume in part **3** we had:
-    
+That's all I think we'll need for now. 
+
+**Methods**
+
+* The constructor
+    * We don't really need to give this any parameters actually (except we need ``self``). 
+    * Here we *could* pass it a list I guess, but let's not.
+    * We do want a list attribute though.
+
+* add_friend --- a method to add a ``Person`` object to the contact list.
+    * See that. **We need to create a Person OBJECT**.
+    * Here we have a design decision to make. Which parameters should the method get?
+        * Should we pass a reference to a ``Person`` object to the method 
+            ``def add_friend(self, aPerson):``
+			
+        * Should we pass the details to make a person to the method? 
+            ``def add_friend(self, fName, lName, email):``
+		
+    * Hard to really say actually. For now let's go with the 2nd option. 
+    * The choice will really impact how we *interface* with the objects.
+	
+	
+* ``__repr__``
+    * You decide what string should be returned. Just be sure to use the ``__repr__`` for the ``Person`` objects. 
+        * How do we convert something to a ``str``?
+    * My output looked like this, but do whatever you want really (as long as it makes sense)
+	
     .. code-block:: python
-        :linenos:
-        
-        # from SomeClass import *
-        
-        anObject = SomeClass()
-        anObject.find_element(5, [1,2,3,4,5])
-        
-    * Here, ``anObject`` is a *pointer to a SomeClass object*
-    * Whenever we call a method for an object, **we need a pointer to the object to access the attributes/methods**. 
-    * So, when we move calling the method ``find_element`` to within the class, guess how we access the method ``find_element``?
-
-* Write a getter for the only class attribute.    
     
-Go back to the not-class part of the code and alter it to be able to still effectively call the ``find_element`` method and then get the result. To do this, you'll just need to call the constructor. The constructor will call the method for us. We then need to ask the object about the ``_was_it_there`` attribute through the getter. 
-
-.. Warning:: 
-   If this seemed contrived, it was. If you're wondering what the point was, and how this makes no sense, you're not really wrong. I'm just showing you how to use these things in weird ways. 
-   
-**5**
-
-Here's the plan for this part. Instead of doing a linear search on a list, let's do a linear search through the file. 
-
-To do this, we'll add some file IO to this constructor. Remember, a constructor is just a method/function, so we can basically do anything we want in here that we can do with any other method/function. 
-
-* Remove the ``inList`` parameter from the constructor. 
-
-* Give the constructor a new parameter, call it ``fileName`` or something. This will be the name of a file we want to open. This file will contain the information for the we want to see if something is in. 
-
-    .. code-block:: python
-        :linenos:
-        
-        # Order doesn't matter here. 
-        def __init__(self, fileName, thing):
-            ...
-        
+        Contact List
+        0 Sehguh, Semaj:	ssehguh@xfts.ca
+        1 Smith, Greg:	gsmith@xfts.ca
 
 
-* We'll use the ``fileName`` parameter to open up a file. :doc:`If you forget how to do this, good news, it's in some of the lecture material </topic12>`. 
+If you are stuck on any of this, :doc:`you should have a look here </topic13b>`.		
+		
+Using Them Together
+===================
 
-There are a bunch of ways we can go about the next bit, but let's do it this way. Instead of just searching through the file, let's just load all the information into a list. Then after it's in the list, we'll just search the list. 
+Create ANOTHER file and put this in it:
 
-* Create an empty list that we will put the contents of the file in.
+.. code-block:: python
+    :linenos:	
 
-.. Warning:: 
-   Both the file and list objects do **not** need to be attributes. They can just be local variables (so, like very other variable we've used so far). We *could* make them attributes, but there is no need to here. 
-   
-* Read the file line by line and put the contents in the list. **You'll probably want to turn these from strings to ints**.
-    * Don't know how to read a file line by line? `Good thing Google exists then. <https://www.google.ca/>`_ 
+    #from ContactList import *      # Only need if using multiple files 
 
-* Remember ``find_element``, a method that needs a ``thing`` and a ``inList``? We can just call this method from within the constructor again but give it the list we just created. 
+    friends_list = ContactList()
+    friends_list.add_friend('Semaj', 'Sehguh', 'ssehguh@xfts.ca')
+    friends_list.add_friend('Greg', 'Smith', 'gsmith@xfts.ca')
 
-* Be sure we're setting the attribute ``_was_it_there``.
+    print(friends_list)
+	
+Everything should work. If not, ask for help. 
 
-* The trick now is to figure out how to make this all work. Despite the *trick*, there is no magic here. You should be able to figure this out.
-    * Run this with the files :download:`toSearchA<../data/toSearchA.txt>` and :download:`toSearchB<../data/toSearchB.txt>`.
-    
-* Call the getter for the attribute. 
-* print out the result. 
-    
+More Special Functions
+======================	
 
+Add these to the ``ContactList`` class. 
+	
+* ``__len__`` --- A method that returns the length of the ``ContactList`` (the length of the list of friends)
+    * I wonder how we can then use this to get the ``len`` of the object?
+    * Try adding this to the script we're running to test it out
+        ``print(len(friends_list))``
+    * ``len`` calls the ``__len__`` method. 
+	
+* ``__getitem__`` --- A method that returns a ``Person`` object from a given index in the list of friends. 
+    * Try adding this to the script we're running to test it out
+        ``print(friends_list[1])``
+    * indexing with ``[x]`` calls the ``__getitem__`` method. 
+
+Testing
+=======
+
+You should be able to run the below code and everything should work correctly. If not, ask for help. 
+
+
+.. code-block:: python
+    :linenos:	
+	
+    # Only need these if using multiple files
+    #from Person import *
+    #from ContactList import *
+
+    friends_list = ContactList()
+    friends_list.add_friend('Semaj', 'Sehguh', 'ssehguh@xfts.ca')
+    friends_list.add_friend('Greg', 'Smith', 'gsmith@xfts.ca')
+
+    print(friends_list)
+    print(len(friends_list))
+    a_friend = friends_list[1]
+    print(a_friend)
+
+    # This just makes sure that a_friend is 
+    # pointing to a a Person object.
+    # If it is, nothing special happens
+    # If it's not, it will crash the program
+    assert isinstance(a_friend, Person)
+
+    print(a_friend.get_first_name())
+    print(a_friend.get_last_name())
+    print(a_friend.get_email())
+    a_friend.set_first_name('Not')
+    a_friend.set_last_name('A')
+    a_friend.set_email('Thing')
+
+    print(friends_list)
+	
+	
+Make sure it makes sense to you *why* when we print out ``friends_list`` we now wee an altered person. 	
+	
+
+Add Some Things
+===============
+
+Now that you have everything working, go add some additional attributes to the ``Person`` class, update methods, add new methods, use the methods in the ``ContactList`` class, etc. Basically I just want you to go nuts and see what you can do. 
+
+Maybe go even loop up other special python methods and see if you can hac them to work in weird ways. 
 
 Kattis Problems
 ===============
 
-Go back and work on Kattis problems you have yet to solve. I'm betting there are **A LOT** of the early ones you got stuck on that you could not demolish. 
+Can you do these with something other than lists? In fact, you might have to for the runtime requirements. You may come up with a perfect solution that will be correct 100% of the time; however, a correct solution is not necessarily a *good* solution. 
 
-Remember, the Kattis problems are great for practice, and practice is the only way to get good at programming. 
+1. https://open.kattis.com/problems/everywhere 
+2. https://open.kattis.com/problems/babelfish
+3. https://open.kattis.com/problems/oddmanout
+4. https://open.kattis.com/problems/securedoors
+5. https://open.kattis.com/problems/modulo
+
+LeetCode Problems
+=================
+
+The following problem is a **classic** CS programming problem.
+
+1. https://leetcode.com/problems/two-sum/
+
+If you finish the lab, go back and work on incomplete problems from previous labs. 
 
 At this point, many of the not-so-difficult problems are totally doable by you now. If you're looking for more problems, or want more practice for tests, etc. sort the Kattis problems by difficulty and have fun. 
+
+If you have somehow finished everything so far, go check out `LeetCode <https://leetcode.com/problemset/all/>`_. Sort the problems by *Acceptance* (click the table header) and start seeing if you can solve some of these problems. 
 
 **ENSURE WE HAVE RECORDED YOUR COMPLETION. FAILURE TO DO SO WILL RESULT IN A GRADE OF 0!**

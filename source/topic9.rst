@@ -1,36 +1,310 @@
-******************************************
-Topic #9 -- Tuples, Dictionaries, and Sets
-******************************************
+***************************************
+Topic #9 -- More Lists and Numpy Arrays
+***************************************
 
-* So far we have seen *lists* and *numpy arrays*. 
+.. image:: ../img/hypercube3.png
 
-* Let's have a look at a few more. 
 
-Tuples
-======
-* A tuple looks a lot like a list, but with ``()`` instead of ``[]``:
-
-    >>> tup = (5,3)
-    >>> print(tup)
-    (5, 3)
-
-* Handy for storing something like an (x,y) co-ordinate pair.   
-
-* If a tuple is exactly like a list, why would I use it? It must be different *somehow*
+Higher Dimensions
+=================
 
 .. admonition:: Activity
 
-    Figure out how tuples differ from lists (other than using different types of brackets!). 
+    Let's say we have a list:
 
-    Some questions you might ask: Are tuples *mutable*? Do tuples have *built in functions*? (e.g., something like ``tup.max()``?)
-   
-* So why would you ever use a tuple instead of a list?
+    >>> a = ['a','b','c']
 
-* Well, you don't have to. Anything you can do with tuples, you can do with lists. But, because they are immutable:
-    * Tuples are *faster*
-    * Tuples prevent you from overwriting something that shouldn't be overwritten
+    **Questions:**
+
+        * What is the length of this list?
+        * What is the type of the things in this list?
+        * What do I type to get ``'a'`` printed out?
+
+   Answer these, and then test it in code. 
+
+
+.. admonition:: Activity
    
-**Here is a pretty cool use of numpy arrays and tuples**
+    OK cool, what if I do this:
+
+    >>> a = ['a','b','c']
+    >>> b = [a]
+
+    **Questions:**
+
+        * What is the length of this list?
+        * What is the type of the things in this list?
+        * What do I type to get ``'a'`` printed out?
+
+    Answer these, and then test it in code. 	  
+   
+.. admonition:: Activity
+
+    What if I do this:
+
+    >>> a = ['a','b','c']
+    >>> b = [a, ['d', 'e', 'f']]
+
+    **Questions:**
+
+        * What is the length of this list?
+        * What is the type of the things in this list?
+        * What do I type to get ``'a'`` printed out? Can you think of how you could do it two ways?
+	  
+    Answer these, and then test it in code. 
+
+.. admonition:: Activity
+
+    Here's a weird one:
+
+    >>> a = ['a','b','c']
+    >>> b = [a, a]
+
+    **Questions:**
+
+        * What is the length of this list?
+        * What is the type of the things in this list?
+        * What do I type to get ``'a'`` printed out?
+        * What happens if I write this ``b[0][0] = 'Z'``?
+	  
+    Answer these, and then test it in code. 
+
+.. admonition:: Activity
+
+    Last one, I swear:
+
+    >>> a = ['a','b','c']
+    >>> b = [a, ['d', 'e', 'f']]
+    >>> c = [b, ['g', 'h', 'i']]
+
+    **Questions:**
+
+        * What is the length of this list?
+        * What is the type of the things in this list?
+        * What do I type to get ``'a'`` printed out?
+	  
+    Answer these, and then test it in code.
+ 
+Numpy *Arrays*
+==============
+
+.. warning::
+
+    Numpy *arrays* are a little different than classic arrays. Nothing too much to worry about, but just be aware. 
+
+* The *list* was our first data structure. 
+* Now we're going to meet a similar, but slightly different, one: the numpy *array*
+* Let's get started:
+
+    >>> import numpy
+    >>> a = numpy.array([5,4,2])
+    >>> print(a)
+    [5 4 2]
+
+* Looks a lot like a list, doesn't it?
+* Can we manipulate it like a list?
+
+    >>> print(a[0])
+    5
+    
+    >>> print(a[1])
+    4
+
+* We can definitely *index* it, the same as a list.
+* I wonder if arrays are *mutable*?
+
+    >>> a[1] = 7
+    >>> print(a)
+    [5 7 2]
+
+* Yes, arrays are *mutable*.
+* With lists, I could mix types in a single list. Like this:
+
+    >>> l = [5,4,3]
+    >>> l[2] = 'walrus'
+    >>> print(l)
+    [5, 4, 'walrus']
+
+* Can I do that with arrays?
+
+    >>> a = numpy.array([5,4,2])
+    >>> a[2] = 'walrus'
+    ValueError: invalid literal for long() with base 10: 'walrus'   
+
+* Ah ha! We found a way in which arrays are different.
+* Lists are just collections of stuff. Any old stuff. Each element can be of a different type.
+* In an array, *every element must have the same type*! 
+   
+.. admonition:: Activity
+
+    Create two arrays of integers, each having the same number of elements.
+   
+    What mathematical operations can you do on the arrays? (``+,-,*,/``).
+
+    What happens if you try to perform the operations on arrays of different sizes? 
+
+    How does ``+`` work differently on arrays than lists?
+
+Numpy array object attributes and methods
+=========================================
+
+* Remember how I showed you how objects, like strings, had some *methods* attached to them?
+* Objects can also have *attributes*
+* We can ask numpy arrays what type the items in an array have like this:
+
+   >>> a.dtype
+   dtype('int32')   
+   
+* If you want to see all the attributes and methods your array has you can type ``a.`` (a dot) and then press the [Tab] key.
+    * Ones with parentheses are *methods*
+    * Ones with no parentheses are *attributes*
+
+* That's a lot of methods and attributes!
+
+* Some of those are things like ``dtype`` that store information about the state of the object (attributes).
+  
+* Some are special functions (methods) that can only be applied to that object
+  
+   >>> a = numpy.array([5, 4, 2])
+   >>> print(a.sum())
+   11
+   
+   >>> print(a.max())
+   5
+   
+   >>> print(a.mean())
+   3.6666666666666665
+   
+
+* When a function (method) appears after a ``.`` , that function is automatically applied to the object appearing before the ``.``
+    * These special functions built in to objects can also take parameters.
+  
+* For example, we can change the types of the elements of our array:
+
+    >>> b = a.astype(float)
+    >>> print(b)
+    [ 5.,  4.,  2.]
+   
+   
+   
+Making numpy arrays bigger
+==========================
+* With lists, we could always append items to make them bigger
+
+    >>> a = [1, 2, 3]
+    >>> a.append(5)
+    >>> print(a)
+    [1, 2, 3, 5]
+
+* Or even concatenate two lists together like this
+
+    >>> a = [1,2,3] + [5]
+    >>> print(a)
+    [1, 2, 3, 5]
+   
+* Arrays are meant to have *fixed* size.
+* **Why do you think this is?**
+* If you really, really, want to make an array bigger... you can't.
+* You *can* however, make a *new* array that is bigger using ``numpy.append()``:
+
+    >>> a = numpy.array([1,2,3,4])
+    >>> print(a)
+    [1, 2, 3, 4]
+    
+    >>> b = numpy.append(a,5)
+    >>> print(a)
+    [1, 2, 3, 4]
+   
+    >>> print(b)
+    [1, 2, 3, 4, 5]   
+   
+* Note that ``.append(...)`` here is a **FUNCTION**, not a method. 
+    * What is the input parameters and types here?
+    * What does this function return?
+
+* **Note** carefully that ``numpy.append()`` did *not* change *a*. It created a **new** array, *b*.   
+   
+* This is also kinda' like strings. Remember, we had to make copies of the string to make any changes?
+   
+.. admonition:: Activity
+
+    Create an array of 4 integers. 
+   
+    Create a new, bigger, array by appending the integer ``7`` on to your array. 
+
+    Create another new array by appending the string ``'walrus'``. 
+
+    Did that last one work? What happened?   
+   
+Flexibility vs Power
+====================
+
+* Arrays are less flexible than lists:
+    * We can't change their size
+    * They can only store data of a single type
+   
+* But... it is this very lack of flexibility that lets us do all sorts of cool stuff (eg. ``.sum()``)
+
+
+.. admonition:: Activity
+
+    How would you implement ``.sum()`` for a list?  
+   
+   
+Higher dimensions
+=================
+
+* Like lists, numpy arrays generalize to higher dimensions.
+* Let's create a 2D array:
+
+    >>> a=numpy.array([[1,2,3],[4,5,6],[7,8,9]])
+    >>> print(a)
+    [[1 2 3]
+     [4 5 6]
+     [7 8 9]]
+
+* Note the format in our call to ``numpy.array``. A list of lists.
+* Each row of the array gets its own list.
+* As long as two 2D arrays have the same *shape*, you can do arithmetic on them, just like 1D arrays.
+* How do we check the *shape* of an array?
+    * ``.shape`` attribute
+
+    >>> print(a.shape)
+    (3, 3)
+
+.. admonition:: Activity
+
+    Create a 4x4 array. Verify that it has ``shape`` ``(4,4)``. 
+   
+    You've changed your mind. The array should actually be 2x8. ``reshape`` your 4x4 array in to a 2x8 array without recreating it from scratch. 
+
+    Verify that the reshaped array is ``(2,8)``. 
+
+    Finally ``flatten`` your 2D array into a 1D array.
+   
+Starting points
+===============
+* Sometimes you want an array of shape ``(n,m)`` that contains all zeros:
+
+    >>> # The extra parentheses are important
+    >>> a = numpy.zeros((n,m))
+   
+* Guess what ``numpy.ones()`` does? 
+* How about ``numpy.eye()``?
+  
+Slicing
+=======
+* We've already seen that you can index arrays like lists (and strings)
+* Likewise, you can use Python's powerful *slicing* on arrays
+
+.. admonition:: Activity
+
+    Create an array ``arr = numpy.array([0,1,2,3,4,5,6,7])``. Using a single command
+        1. Print the first 3 elements
+        2. Print the last 3 elements
+        3. Print the even elements of ``arr``
+
+* Slicing works for higher dimensional arrays, too. For example:
 
     >>> a = numpy.arange(25).reshape(5,5)
     >>> print(a)
@@ -40,318 +314,44 @@ Tuples
      [15 16 17 18 19]
      [20 21 22 23 24]]
      
-    >>> print(a[1,2])
-    7
-   
-* Ok, so far the above is not really anything special. 
-* But let's say I was asking someone to give me like a ``(x,y)`` coordinate. 
+    >>> print(a[0:2,1:4])
+    [[1 2 3]
+     [6 7 8]]
 
-    >>> coord = (1, 2)
+* Note the use of ``numpy.arange`` which works like ``range`` but returns an array.
 
-* So above we're storing it as a tuple. Nothing special so far here either.
+* If you want a whole column/row/etc, you can use a plain ``:`` as the index. For example, if I wanted to pull out every row of the first two columns:
 
-    >>> print(a[coord])
-    7
-   
-* Woah! We just indexed a numpy array wit a tuple!
-    * Note that the origin in this situation is top left, not bottom left.   
-        * When I say origin, I mean like (0,0) on a `Cartesian plane <https://en.wikipedia.org/wiki/Cartesian_coordinate_system>`_
-
-Dictionaries
-============
-* Python Dictionaries are a more complex data structure than what we've seen so far.
-* But... they are *very very very very very very very very useful*.
-* Imagine a list which you can index with *strings* instead of *numbers*.
-* That's a dictionary.
-* Let's create an empty dictionary:
-
-    >>> my_dict = {}
-
-* Looks like an empty list, but using ``{}`` instead of ``[]``.
-* How do I add something?
-
-    >>> my_dict['James']=50
-    >>> print(my_dict)
-    {'James': 50}
-
-* The dictionary has associated the *key* ``James`` with the *value* ``50``.
-* Maybe this is a dictionary of grades? I need to work harder.
-* Let's add more:
-
-    >>> my_dict['Suzy'] = 95
-    >>> my_dict['Johnny'] = 85
-    >>> print(my_dict)
-    {'James': 50, 'Suzy': 95, 'Johnny': 85}
-
-* Dictionaries always associate a *key* with a *value*.
-    * ``dict[key] = value``
-   
-.. admonition:: Activity
-
-    Build the dictionary ``my_dict`` above. 
-   
-    Figure out how to access the value associated with a particular key, without printing out the whole dictionary (e.g., how would I print just Suzy's grade?). 
-
-    *Hint*: it's a lot like indexing a list or array or tuple...
-   
-    What happens if I try to index the dictionary with a key that doesn't exist?
-   
-* Dictionaries are a *generalization* of lists:
-    * A list associates *fixed indices* from 0 up to ``n`` with values.
-    * A dictionary associates *arbitrary strings* with values.
+    >>> print a[:,0:2]
+    [[ 0  1]
+     [ 5  6]
+     [10 11]
+     [15 16]
+     [20 21]]
 
 .. admonition:: Activity
 
-    Now type ``my_dict.`` and hit the [Tab] key. Play around with the built-in functions for dictionaries. 
-
-    Take special care to look at: 
-
-        * ``my_dict.keys()``
-        * ``my_dict.values()``
-
-    I wonder if there is an easy way to iterate over the contents of a dictionary?
+    Modify the previous command to print all of the columns of the first two *rows*.   
    
    
-* This is *really useful* for humans because it's much easier for us to assign names to things than to try to remember arbitrary numberings.
-  
-* Many programming languages have nothing like dictionaries. In some others you'll see them called "associative arrays" or "associative memories".
-    * In some, we have to *make* them ourselves
+For loops
+=========
 
-* We've just scratched the surface of what you can do with dictionaries here, but it's enough for our purposes right now.
-
-
-
-So Why Are They Great?
-----------------------
-
-* Imagine we have a 2D list like this:
-
-.. code-block:: python
-   :linenos:
-
-    # Creates some lookup table list thing
-    grades = [['James', 98], ['Bob', 86], ['Janice', 86], ['Greg', 59]]
-
-* How would we get the grade for any given student?
-    * Linear search, right!
-    * So there is nothing *wrong* with this, but... there's a better way!
-
-* With a dictionary, we can simply do this!
-
-.. code-block:: python
-   :linenos:
-
-    # Creates some lookup table list thing
-    grades = {'James':98, 'Bob':86, 'Janice':86, 'Greg':59}
-
-* How would we get the grade for any given student?
-    * Just index the dictionary!
-    * Way better!
-
-Are They Actually Better?
--------------------------
-
-* Remember how the ``in`` keyword allowed us to do a linear search really easily. 
-* It wasn't really *better* than coding a linear search yourself, but it did save some typing. 
-* Is the dictionary not just doing the linear search work for us like how ``in`` was?
-    * **NO** (asterisk) 
-    * But I won't teach you this yet because it's well beyond the scope of this class. 
-        * Sorry :(   
-   
-.. admonition:: `Activity++ <https://leetcode.com/problems/two-sum/description/>`_
-
-    Given an array of integers, return indices of the two numbers such that they add up to a specific target.
-
-    You may assume that each input would have exactly one solution, and you may not use the same element twice.
-   
-    **EXAMPLE**
-
-    Given nums = [2, 7, 11, 15], target = 9,
-
-    Because nums[0] + nums[1] = 2 + 7 = 9,
-
-    return [0, 1].
-
-Sets
-====
-
-* A set is kinda' like a list, but it only holds *unique* things.
-* Also, sets typically do not have any ordering to them.
-    * Lists start at index 0, then go to 1, 2, ... 
-    * Sets start... wherever
-   
-    >>> a = set([])	# `[]' not actually needed for empty one
-    >>> print(a)
-    set()
-    
-    >>> print(type(a))
-    <class 'set'>
-    
-    >>> b = set([1, 2, 3, 4])
-    >>>print(b)   
-    {1, 2, 3, 4}
-
-* Cool. But you said something about *uniqueness* and *orderdness*
-
-    >>> c = set([3, 4, 2, 2, 1, 5, 5, 5, 5])
-    >>> print(c)
-    {1, 2, 3, 4, 5}
-   
-* Hmmm... Looks ordered to me
-    * Not really though, there is no actual intrinsic ordering enforced here
-* We can totally see the uniqueness though, so that's cool
-
-* ``in`` totally works
-
-    >>> print(3 in c)
-    True
-    
-    >>> print('a' in c)
-    False
-   
-* Iterating over a set
-
-    >>> for thing in c:
-    >>>   print(thing)
-    1
-    2
-    3
-    4
-    5
-   
-* Add things to a set
-
-    >>> c.add('hello')
-    >>> print(c)
-    {1, 2, 3, 4, 5, 'hello'}
-    
-    >>> c.add('hello')
-    >>> print(c)
-    {1, 2, 3, 4, 5, 'hello'}
-   
-* *discard* things
- 
-    >>> c.discard('hello')
-    >>> print(c)
-    {1, 2, 3, 4, 5}
-    
-    >>> c.discard('hello')
-    >>> print(c)
-    {1, 2, 3, 4, 5}
-   
-* *remove* things
-    * Almost the same as discard, but will throw an *exception* if we try to remove something that's not there
-   
-    >>> print(c)
-    {1, 2, 3, 4, 5}
-    
-    >>> c.remove(5)
-    >>> print(c)
-    {1, 2, 3, 4}
-   
-    >>> c.remove(5)
-    KeyError              Traceback (most recent call last)
-    <ipython-input-91-0733df1dbd33> in <module>()
-    ----> 1 c.remove(5)
-    KeyError: 5
-
-* Clearing out a set
-
-    >>> c.clear()
-    >>> print(c)
-    set()
-
-* Check equality
-
-    >>> c = set([1, 2, 3])
-    >>> d = set([3, 2, 1])
-    >>> print(c == d)
-    True
-   
-What makes them special other than just uniqueness and orderdness?
-------------------------------------------------------------------
-
-* So far they might not seem that special when compared to lists
-* But they are very very very special in many ways
-* One of which is: ``in``. 
-* Remember how when we used ``in`` for a list, but at the end of the day, the computer still have to do a linear search
-    * Remember what a liner search is?
-* Turns out, for a set, ``in`` can tell us if something is in the set **without** having to do a linear search!
-
+* If ``for`` loops work for lists, do you think they'll work for arrays?
 
 .. admonition:: Activity
 
-    Load up this code into Python:
-   
-    .. code-block:: python
-   
-        set_a = set([0, 1])
-        set_b = set([0, 1, 2])
-        set_c = set([2, 3])
+    Write a function ``printeach(arr)`` that uses a ``for`` loop to print each element of an array that is passed in as a parameter. 
 
-    * Figure out if there is an easy way to determine if set ``set_a`` ``isubset`` of ``set_b``
-    * Figure out if thre is an easy way to get the ``union`` of two sets
-    * Figure out if there is an easy way to get the ``intersection`` of two sets
-    * Figure out if there is an easy way to get the ``difference`` between ``set_b`` and ``set_a`` 
-    * Do the previous one again but try the ``difference`` between ``set_a`` and ``set_b``
-   
-    **HINT:** hit tab.
+    Test it on a 1D array. 
 
-.. image:: ../img/sets.png
-   
-  
-.. admonition:: Activity
+    Now try a 2D array. 
 
-    1. Imagine I gave you the text from a book that you could load up into Python. What's the easiest way to count the number of unique words?
-   
-    2. What would you do if I gave you another book and asked you which words do they have in common?
-   
-    3. What if I wanted to know the number of unique words that exist between the two books?
-   
-    4. What If I wanted to know which words were in one book, but not the other?
+    If you're feeling bold, how about a 3D array?
 
-   
-
-   
- 
- 
-The Bad News...
-===============
-
-* The above data structures are pretty awesome
-* Unfortunately... they're not *free*
-    * Although Python really makes it look like they are
-* With dictionaries, sets, tuples, and even lists, someone actually had to write a lot of nifty algorithms to do all the amazing things they do
-* I briefly discussed fixed length arrays before, and those, classically speaking, we get for free, in addition to the *primitive types*
-* Most of the cool data structures we've seen so far are actually built on top of the fixed length arrays
-* In the same way that we're not actually sure how ``print`` actually works, we don't know how these data structures really work under the hood. 
-
-
-The Good News...
-================
-
-* This does not really matter for us right now. 
-* As of now, we don't really need to know all this to get the computer to do fun things. 
-* Just like how you don't really need to know all the ins and outs of an internal combustion engine in order to drive a car, we don't need to know all the ins and outs of the data structures to use them. 
-* Buuuuutttttttttttt... at the same time, if I was a race car driver, maybe knowing how things work under the hood could help me tweak and tune the car for the best performance. 
-
-The Good/Bad News...
-====================
-
-* The under the hood stuff here is outside the scope of this course. 
-* If you're thinking **Thank F@-%!#& GAWD**, lucky you
-* If you're thinking *awhhhhhhhhhhhhhhhh, I wanna' know*, sorry
-
-* Either way, we will look at *some* of these data structures in CSCI 162!
-    * Trust me, it's actually a lot of fun!!
-
-
-
-
- 
    
 For next class
 ==============
-* `Get PyCharm installed! <https://www.jetbrains.com/pycharm/download>`_
-
-* Read `appendix A of the text <http://openbookproject.net/thinkcs/python/english3e/app_a.html>`_   
+   
+* Read `chapter 9 of the text <http://openbookproject.net/thinkcs/python/english3e/tuples.html>`_   
+* Read `chapter 20 of the text <http://openbookproject.net/thinkcs/python/english3e/dictionaries.html>`_   

@@ -2,7 +2,7 @@
 Computer Science 128 -- Coding for Problem Solving
 ==================================================
 
-Winter 2022
+Winter 2023
 ===========
 
 Course Description
@@ -28,8 +28,9 @@ Instructor
 * Dr. Jean-Alexis Delamer
 * Office: Annex 9C
 * Office Hours:
-    * Thursday, 10:00 -- 11:00
-    * Friday, 10:30 -- 11:30
+    * Monday, 13:15 -- 15:15
+    * Tuesday, 09:00 -- 11:00
+    * Thursday, 9:00 -- 11:00
 * Email: jdelamer at stfx.ca
 
 
@@ -88,18 +89,15 @@ Student Evaluation (Tentative Dates)
 +========================+============+=====================+
 | Assignment 1           | 10%        | End of January-ish  |
 +------------------------+------------+---------------------+
-| Assignment 2           | 15%        | Mid February-ish    |
+| Assignment 2           | 10%        | Mid February-ish    |
 +------------------------+------------+---------------------+
-| Assignment 3           | 15%        | Early March-ish     |
+| Assignment 3           | 10%        | Early March-ish     |
 +------------------------+------------+---------------------+
-| Labs                   | 10%        | Throughout          |
+| Midterm Exam           | 30%        | TBD, in class       |
 +------------------------+------------+---------------------+
-| Midterm Exam           | 20%        | TBD, in class       |
-+------------------------+------------+---------------------+
-| Final Exam             | 30%        | TBA                 |
+| Final Exam             | 40%        | TBA                 |
 +------------------------+------------+---------------------+
 
-.. *IMPORTANT NOTE: To be eligible to receive a passing grade in the course, your mark on the final exam must be at least 40%, and your weighted average on the assignments must be at least 40%. Otherwise, the maximum overall mark you can receive is 45%. To be eligible to receive a grade of 60% or higher, your mark on the final exam must be at least 50%, and your weighted average on the assignments must be at least 50%. Otherwise, the maximum overall mark you can receive is 58%.*
 
 
 Assignment Submission

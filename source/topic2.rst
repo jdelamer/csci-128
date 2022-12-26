@@ -328,10 +328,6 @@ Operators
 * **Operators** are symbols that tell Python to perform computations on expressions.
    * e.g., +, -, \*, / 
 
-.. raw:: html
-
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/8M0uZ5gclOQ" frameborder="0" allowfullscreen></iframe><br><br>   
-   
    
 .. admonition:: Activity
 
@@ -348,9 +344,7 @@ Operators
       * `But I don't know how to convert Celsius to Fahrenheit!!!! <https://www.google.com/search?sxsrf=ACYBGNR8TzZ_PzGMU9aXJ2I1VNjrV2XESg%3A1566411780922&source=hp&ei=BIxdXfP-NZLr-gTIp7v4CQ&q=how+to+convert+c+to+f>`_   
       .. raw:: html
 
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/R1ScWDNUEnM" frameborder="0" allowfullscreen></iframe><br><br>   
-   
-   
+
 Are operators just for numbers?
 ===============================
 

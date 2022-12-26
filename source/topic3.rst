@@ -219,7 +219,7 @@ Back to concrete things...
    
 .. admonition:: Activity
 
-    **NOTE:** This one is tricky but super important to understand. If you're still stuck after class, be sure to take your time to figure this out. There's a YouTube video to help you out. 
+    **NOTE:** This one is tricky but super important to understand. If you're still stuck after class, be sure to take your time to figure this out.
    
     Now write a function ``crosscat`` that will take *four* strings and print out the concatenation of the first and third string, and then, on a new line, the concatenation of the second and fourth string. **BUT**: your function isn't allowed to use a ``print`` function! You can, however, use your ``catstr`` function.
 

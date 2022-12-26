@@ -21,10 +21,8 @@ The thing about strings
 * In a *compound object*, indexing allows us to pick out individual components.
 * Note that in Python, the first index is ``0``, not ``1``!
     * Whether to start at zero or one is an arbitrary decision made by programming language designers.
-    * Is the "first floor" of a building the same as le "premier étage"? Natural language problem, too!
     * Python inherited the 0-based convention from C (this actually makes sense if/when you learn about memory pointers)
     * MATLAB inherited 1-based indexing from Fortran
-    * This is a small gotcha for folks switching from one language to another; very easy to fix, but perplexing if you don't know to look for it!
 
 .. admonition:: Activity
 
@@ -76,7 +74,6 @@ More loops
 
 * The ``while`` loop certainly worked OK there, but it was a bit awkward.
 * ``while`` loops are meant to continue until some logical condition is met.
-    * Which this technically is, buttttt...
 * Maybe there is another kind of loop that says "Do the indented code block once for each item in a compound object" rather than "Do the code block until an arbitrary condition is met".
 * Such a thing exists: the ``for`` loop::
 
@@ -202,8 +199,8 @@ String Trivia
     >>> print(wut)
     A
    
-Formatting output (the ol' trusty way)
-======================================
+Formatting output
+=================
 
 **%.2f** (percent dot two eff)
 
@@ -268,9 +265,7 @@ Objects
 
 * These are objects!
 * We can even make our own *objects* 
-    * stay tuned
 * These objects act a little differently inside the computer 
-    * For good reason too, but stay tuned. 
 
 
 Methods
@@ -282,7 +277,7 @@ Methods
 
 .. admonition:: Activity
 
-    In Colab (or whatever IDE):
+    In Colab:
         1. Make a string
         2. Assign it to a variable (if using Colab, hit run too)
         3. Type the name of the variable
@@ -326,8 +321,6 @@ Answer
 
     * Put all the string methods with the strings
 
-5. But really... because
-   
 
 How are you supposed to keep track of what's what?
 --------------------------------------------------
