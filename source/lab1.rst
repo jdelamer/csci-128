@@ -11,43 +11,35 @@ Getting Familiar
 2. Log onto Colab
 3. Get Hello World working on Colab
 
-(Steps 4 -- 9 cut due to COVID-19)
 
-.. 4. Open up Spyder
-.. 5. Get Hello World working on Spyder
-.. 6. Open up PyCharm (might take a while...)
-.. 7. Get Hello World working on PyCharm
-.. 8. Open up IPython (If using the lab computer, you can't do this one, but that's OK)
-.. 9. Get Hello World working in your interpreter
-
-.. .. Warning:: 
-    Do no panic. You do not need to remember how to use Colab, Spyder, PyCharm, and IPython at this stage. I'm simply just showing you so you have some familiarity. For now, I recommend sticking with Colab. Then, after a few days or weeks, start to get comfortable with IPython (my YouTube videos use this). Then, after a few more weeks, maybe go for one of the IDEs. 
+.. warning:: 
+    Do no panic. You do not need to remember how to use Colab. I'm simply just showing you so you have some familiarity. For now, I recommend sticking with Colab.
 
 Refreshing What We Learned
 ==========================
 
-10. Go back to Colab (or use whichever programming method you prefer)
-11. Enter the following into your code.
+4. Go back to Colab (or use whichever programming method you prefer)
+5. Enter the following into your code.
 
     .. code-block:: python
    
         a = 5
         a = a * 2
         
-    Print out the type of ``a``.
+    Print out the type of :code:`a`.
     
-12. Enter the following into your code 
+6. Enter the following into your code 
 
     .. code-block:: python
    
         a = 5
         a = a * 2.5
     
-    Print out the type of ``a``. 
+    Print out the type of :code:`a`. 
     
     Is this what you expected?
 
-13. Make two variables and assign values. Then, add them together and save the result in another variable. THEN, print out the result from the third variable. 
+7. Make two variables and assign values. Then, add them together and save the result in another variable. THEN, print out the result from the third variable. 
 
 
 Kattis
@@ -58,19 +50,19 @@ Kattis
     It will be a lot easier to build your solutions on Colab and then copy/paste them into Kattis. 
     
 
-14. Kattis sign up (be sure to set affiliation) 
+*  Kattis sign up (be sure to set affiliation) 
 
     * Go to settings to do this
     * Also, you might want to set your default language to Python 3
     
-15. https://open.kattis.com/problems/hello (Let's get that O in IO working)   
+*  https://open.kattis.com/problems/hello (Let's get that O in IO working)   
 
 
-16. https://open.kattis.com/problems/carrots (Let's now get the I in IO working)
+*  https://open.kattis.com/problems/carrots (Let's now get the I in IO working)
 
     Although I give you a solution below, the actual task I want you to do for this step is to look at the code, read the comments, and try to figure out WTF is going on. Talk to each other. Make sure it makes sense. Take your time. Ask us questions. That's what this is all about.
 
-    * Here is a solution with an explanation::
+   *  Here is a solution with an explanation::
    
         # This loads in the first line (it's of type STRING!)
         # For example, if we take the first sample input of --- 2 1

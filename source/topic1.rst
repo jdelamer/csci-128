@@ -58,7 +58,6 @@ How will this class work?
 * There are a few reasons for this:
     * It's been `demonstrated <http://www.sciencemag.org/content/332/6031/862.full?ijkey=GMW4zTHNMM1Tc&keytype=ref&siteid=sci>`_ that students from classes using the microlecture/work format outperform students from traditional lecture classes. The students are also report being happier and more engaged
     * Listening to a lecturer droning on for hours isn't very engaging
-    * You get better value for your tuition dollar (what can a lecture give you that a Khan academy video or a textbook can't?)
 
 * A standard class works like this:
 
@@ -69,10 +68,6 @@ How will this class work?
 
 * Our class will work like this:
 
-    * You'll be offered suggested readings every week
-    * You do the reading (or not, your choice... although I really really recommend it)
-        * People that actually do the readings typically get 90+ in the course
-    * You check out the YouTube videos
     * I give a short microlecture on a topic from the readings
     * I give the class a problem to solve, based on the microlecture
     * You work with your neighbours in class to solve the problem
@@ -106,28 +101,6 @@ What should I bring to class
 * Just to be crystal clear: you **do not** need to bring a laptop to class
 * If you have one, and you're keen to get the most out of the class, it's worth considering
    
-   
-Is this class easy?
-===================
-
-The quick answer is, it depends...
-
-.. admonition:: Quick Activity
-
-   * Who here knows how to use a hammer?
-   * Who knows how to use a screwdriver?
-   * Who knows how to use a saw?
-   * ...
-   * ...
-   * Who here knows how to build a house?
-
-
-* Each of the things you will learn are perhaps simple on their own, but using them together to achieve something is challenging   
-   
-* These topics really are going to be shockingly different from what you are probably used to. Very few classes can prepare you for the way of thinking that will be required for this class
-
-* Unfortunately, intro to CS classes do often have an unusually high fail rate
-
 
 So I should be terrified?
 =========================
@@ -150,32 +123,7 @@ So I should be terrified?
         * This is a good thing
         * This is normal
    
-   
-I need help!
-============
 
-.. image:: ../img/beforeGoogle.jpg
-
-There are A LOT of resources to help you. We have `Google <https://www.youtube.com/watch?v=e9C_cgL2150>`_, YouTube videos, email, `Google <https://www.youtube.com/watch?v=e9C_cgL2150>`_, `office hours, <https://vimeo.com/270014784>`_ labs, `Google <https://www.youtube.com/watch?v=e9C_cgL2150>`_, `Google <https://www.youtube.com/watch?v=e9C_cgL2150>`_, `etc. <https://www.youtube.com/watch?v=e9C_cgL2150>`_. 
-   
-
-Why did you just say Google so many times?
-==========================================
-
-* When a programmer isn't debugging, they're Googling their problems 
-* This is so common that you can find an insane number of memes making fun of this 
-
-* I am going to tell you to "Google It" very often in this course
-    * This is intentional
-* Independent learning is one of the most important things you will learn at university
-* Further, it will be your go to tool when you're programming in the future 
-* `Get used to "Googling it" <https://www.youtube.com/watch?v=e9C_cgL2150>`_
-
-
-.. image:: ../img/Googling.jpg
-    :width: 500 px
-    :align: center
-   
 
 Can I write a program now?
 ==========================
@@ -191,22 +139,9 @@ Can I write a program now?
 .. image:: ../img/HelloWorldColab.png
    
    
-Videos
-======
-
-* `Be sure to check out these YouTube videos! <https://www.youtube.com/channel/UCIruexBZJaawh_9WF_vjTPg>`_
-* **WARNING:** 
-   * These videos are not a substitute for lecture or the course notes. They are supplementary. 
-   * These videos were **NOT** created for this course, but a similar class, so they'll probably be handy
-   * These videos are using the local interpreter. You will not see any Colab in them. They will still be super useful though. 
-   * These videos were made for Python 2 (but that won't really matter for you. Most you'll have to deal with is adding brackets to the print statements.)
-
-   
 
 For next week
 =============
 
-* `Read chapter 1 of the text <http://openbookproject.net/thinkcs/python/english3e/way_of_the_program.html>`_
-* Read sections 2.1-2.5 of `chapter 2 of the text <http://openbookproject.net/thinkcs/python/english3e/variables_expressions_statements.html>`_
 * Get your computer at home :doc:`set up for CS 128 </gettingset>` 
 

@@ -90,8 +90,6 @@ Terminology
 * Hard Drive
 * RAM
 * Binary
-* Compiling
-* Interpreter vs IDE
    
    
 Okay, we're done with the background, let's get on with the real stuff
@@ -219,38 +217,11 @@ Choosing variable names
 
 .. admonition:: Activity
 
-   Suppose you're a big fan of '80s Arena Rock. Create two variables, named ``def`` and ``leppard``, set them to ``19`` and ``87`` respectively, then add them.
+   Create two variables, named ``number_1`` and ``number_2``, set them to ``20`` and ``23`` respectively, then add them.
 
-* What happened? (To your code, not the band!)   
+* What happened? 
 
-Constants
-=========
 
-* They're just variables, but WE, as the programmers use them a special way
-* Imagine you are writing a program where you're doing a lot of calculations with sales tax
-
-    >>> some_bill = 10.45 * 1.15
-    12.0175
-    
-    >>> another_bill = 4.99 * 1.15
-    5.7385
-    ...
-	
-* This is clearly correct, butttt:
-    * What if one of your friends looks at this code and wonders "wtf is 1.15?"
-    * What if the gov changes the sales tax in the future?
-
-* Isn't that a little clearer?
- 
-	
-	>>> SALES_TAX = 1.15
-	>>> some_bill = 10.45 * SALES_TAX
-	12.0175
-	>>> another_bill = 4.99 * SALES_TAX
-	5.7385
-	...
-	
-* Convention is all uppercase and underscores   
 	
    
 input

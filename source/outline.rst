@@ -142,10 +142,6 @@ Even if we don't have assigned lab sessions, the classes are in the computer sci
 After each topic, a lab on the previous topic will be held, the purpose of the labs is to give students hands-on experience.
 Labs will have required assigned work and will revolve around `Kattis <https://open.kattis.com/>`_. 
 
-* It is your responsability to attend every labs.
-* Lab exercises must be completed for marks; attendance and lab completion is mandatory. Each completed lab is worth 1.25% of your final grade (to a maximum of 10%). It is your responsibility to ensure your attendance and exercise completion is recorded. 
-* There is a total of 8 labs, however there is potential for additional labs. In the case where there are more than 8 labs, the marks for your best 8 will be recorded.
-* Students must bring their student identification to all labs. 
 
 
 
