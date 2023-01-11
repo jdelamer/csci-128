@@ -1,12 +1,12 @@
-******
-Lab #4
-******
+**********
+Car rental
+**********
 
 Before Kattis
 =============
 
 
-.. image:: ../img/carRental.png
+.. image:: ../../img/carRental.png
 
 A car rental place needs our help. They want a simple program to calculate how much a customer is to be charged based on their rental agreement, age, how far they drove, and how long they had the car. 
 

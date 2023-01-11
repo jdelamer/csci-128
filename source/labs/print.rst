@@ -1,6 +1,6 @@
-******
-Lab #1
-******
+***************************
+Print, Operations and Types
+***************************
 
 NOTE: I do not expect you to actually finish everything so don't worry. We'll aim to get up to step 16. 
 

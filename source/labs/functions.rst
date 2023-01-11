@@ -1,6 +1,6 @@
-******
-Lab #2
-******
+*********
+Functions
+*********
 
 Remember, the point of the lab is **not** to complete the tasks. The point of the labs is to understand why the code you have written does what it does. Do not rush through the steps. Take your time and understand everything we are doing. The understanding is important, **not** just knocking off the tasks. 
 
@@ -60,7 +60,6 @@ Before Kattis
 Kattis Problems
 ===============
 
-The problems below are 
 
 Remember, here is *magic* code we needed last week::
    

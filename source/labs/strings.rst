@@ -1,5 +1,5 @@
 ******
-Lab #6
+String
 ******
 
 Before Kattis

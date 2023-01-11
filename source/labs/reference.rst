@@ -1,12 +1,9 @@
-******
-Lab #8
-******
+******************
+List and Reference
+******************
 
 Before Kattis
 =============
-
-.. Warning::
-   Before you do ANYTHING, take out a scrap piece of paper. If I do not see your paper at the end of the lab, you will get **0** on this lab. 
 
 
 **1**

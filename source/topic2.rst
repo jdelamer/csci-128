@@ -1,6 +1,6 @@
-**************************************************
-Topic #2 -- Values, Types, Variables, Print, Input
-**************************************************
+**************************************
+Values, Types, Variables, Print, Input
+**************************************
 
 Welcome back
 ============
@@ -8,66 +8,35 @@ Welcome back
 Let's get started right away...
 
 .. admonition:: Quick Activity
+    :class: warning
 
     Did you try anything interesting with Python yet?
    
    
-**Heads up:** Before we get to the "super awesome fun stuff", we've got to cover the basics. I understand that the basics aren't super awesome. Don't worry, we'll get there. But we can't get there without the basics.
+**Heads up:** Before we get to the fun stuff, we've got to cover the basics. I understand that the basics aren't super awesome. Don't worry, we'll get there. But we can't get there without the basics.
 
 
 .. admonition:: Activity
+    :class: warning
 
-    What is *computation?* What is a *computer?* What is *programming?*
-
-
-.. admonition:: Activity
-
-    Who can name different kinds of *computers* `? <https://en.wikipedia.org/wiki/Computer#Unconventional_computers>`_
-	  
-	  
-	     
-What's a program?
-=================
-
-* The stuff in the computers
-* A thing that does stuff
-* A recipe
-* A sequence of instructions that specifies *exactly* how to perform a computation?
-
-.. admonition:: Activity
-
-    Explain to a partner how you would go about making breakfast in the morning.
+    *  What is *computation?* What is a *computer?* What is *programming?*
+    *  Who can name different kinds of *computers* `? <https://en.wikipedia.org/wiki/Computer#Unconventional_computers>`_
+	*  What is a program?
+    *  Explain to a partner how you would go about making breakfast in the morning.
    
-   
-* There, that's basically a program.
-* What kind of computer was executing this program?   
-
-
-What's debugging?
-=================
-
-* Mystery novel
-* A logic puzzle
-* How you fix your mistakes
-* What most programming is
-
-.. admonition:: Quick Activity
-
-    Have you seen any Python errors yet? 
-
-    What were they? 
-
-    Did you understand them?
    
    
 Languages
 =========
 
-* What's the difference between a formal, and a natural, language?
-* Why is ambiguity so important to natural language?
-* Why is ambiguity deadly for a formal language?
+In this course we will use the programming language Python.
+
+*  What's the difference between a formal, and a natural, language?
+*  Why is ambiguity so important to natural language?
+*  Why is ambiguity deadly for a formal language?
 
 .. admonition:: Activity
+    :class: warning
 
     Do you think there is a limit to what I can describe with a formal language? 
 
@@ -75,10 +44,6 @@ Languages
 
     **HINT**: Is the following statement true or false: "This statement is false."
    
-* The world is a screwed up, scary, place (for mathematicians, anyways). If you want to fall down this particular rabbit hole:
-    * https://en.wikipedia.org/wiki/G%C3%B6del%27s_incompleteness_theorems
-	* http://en.wikipedia.org/wiki/Principia_Mathematica
-	* http://en.wikipedia.org/wiki/Computability   
    
 
 Terminology
@@ -96,6 +61,7 @@ Okay, we're done with the background, let's get on with the real stuff
 ======================================================================
 
 .. admonition:: Activity
+    :class: warning
 
     Write a (single-line) Python program that prints a witty message, of your choice.   
    
@@ -103,30 +69,37 @@ Okay, we're done with the background, let's get on with the real stuff
 print
 =====
 
-* Print is a *function* that allows us to print out information to the screen
-* Print might end up being your best friend
-* Get used to writing it
+*  Print is a *function* that allows us to print out information to the screen
+*  Print might end up being your best friend
+*  Get used to writing it
    
    
 Values 
 ======
 
-* Values are things that a program manipulates
-    * *Strings*: "abcdef"
-    * *Integers*: 7, 42, 97
-    * *Floating-point numbers*: 3.792, 0.000000000005
-* These values are called **literals**
-    * like, 1 is *literally* 1  
-* Notice how I described the **type** of each value along with the value itself
-    * Strings
-    * Integers
-    * Float
-   
-* Computers are exceptionally stupid. You must be completely explicit about everything
+*  Values are things that a program manipulates
 
-* To a computer, the integer 1 is not necessarily the same thing as the floating point number 1.0... because they have different *types*
-    * They actually have different meaning
-    * They even technically have different physical representations inside the computer too, which is neato  
+   *  *Strings*: "abcdef"
+   *  *Integers*: 7, 42, 97
+   *  *Floating-point numbers*: 3.792, 0.000000000005
+
+*  These values are called **literals**
+   
+   *  like, 1 is *literally* 1  
+
+*  Notice how I described the **type** of each value along with the value itself
+   
+   *  Strings
+   *  Integers
+   *  Float
+   
+*  Computers are exceptionally stupid. You must be completely explicit about everything
+
+*  To a computer, the integer 1 is not necessarily the same thing as the floating point number 1.0... because they have different *types*
+
+   *  They actually have different meaning
+   *  They even technically have different physical representations inside the computer too!
+
 * Many of the errors you will make in programming result from mixing types inappropriately
 * Some languages (e.g., C, Fortran, Java) are very militant about types. You have to be totally explicit about them
 * Python is a little more relaxed. You *can* be explicit, but you don't have to be. Python will guess if you don't tell it
@@ -159,25 +132,27 @@ Values
 Variables
 =========
 
-* Probably the most important feature of a procedural programming language.
-* If you're going to pay attention only once this term... now's the time.
-* **Variables let you store values in a labeled (named) location**
-* You store *values* into *variables* by using the *assignment operator* **=**	
+*  Probably the most important feature of a procedural programming language.
+*  If you're going to pay attention only once this term... now's the time.
+*  **Variables let you store values in a labeled (named) location**
+*  You store *values* into *variables* by using the *assignment operator* **=**	
     >>> a=5
     >>> m='Variables are fun'
 	
-* For historical reasons, we're stuck with the '=' symbol for assignment, but it doesn't really mean the same thing as the '=' sign in math.
-* In math when we write 'a = 5' we mean that '5' and 'a' *are equivalent as they exist*. We're not asking to change anything; we're making a **statement of fact**.   
+*  For historical reasons, we're stuck with the '=' symbol for assignment, but it doesn't really mean the same thing as the '=' sign in math.
+*  In math when we write 'a = 5' we mean that '5' and 'a' *are equivalent as they exist*. We're not asking to change anything; we're making a **statement of fact**.   
    
-* In Python when we write
+*  In Python when we write
     >>> a=5
-* ... we're saying "Hey, Python interpreter! Create a variable named ``a`` and store the value ``5`` in it. This isn't a statement of fact, it's an *order*!  
-    * a *is* 5 now
-    * a is **not** a literal though, it's a *variable*
-    * Wait, what? Literal, variable?
-        * It's simple
-        * If I say ``print(5)`` python will print out the literal ``5``
-        * If I say ``print(a)``, where ``a`` was assigned to ``5``, python will print out the variable a which has the value ``5``
+*  ... we're saying "Hey, Python interpreter! Create a variable named :code:`a` and store the value :code:`5` in it. This isn't a statement of fact, it's an *order*!  
+
+   *  a *is* 5 now
+   *  a is **not** a literal though, it's a *variable*
+   *  Wait, what? Literal, variable?
+        
+      *  It's simple
+      *  If I say :code:`print(5)` python will print out the literal :code:`5`
+      *  If I say :code:`print(a)`, where :code:`a` was assigned to :code:`5`, python will print out the variable a which has the value :code:`5`
 
 What can you do with variables?
 ===============================
@@ -211,13 +186,13 @@ Choosing variable names
 * You can use whatever you want, within a few restrictions set by the language.
     * Python wants variable names that begin with a letter of the alphabet and limits what non-alphanumeric characters you can use
 * A good choice is a variable name that is descriptive of what the variable is meant to contain. 
-    * good: ``density``
-    * less good: ``d``
-    * bad: ``definitely_not_density``
+    * good: :code:`density`
+    * less good: :code:`d`
+    * bad: :code:`definitely_not_density`
 
 .. admonition:: Activity
 
-   Create two variables, named ``number_1`` and ``number_2``, set them to ``20`` and ``23`` respectively, then add them.
+   Create two variables, named :code:`number_1` and :code:`number_2`, set them to :code:`20` and :code:`23` respectively, then add them.
 
 * What happened? 
 
@@ -239,7 +214,7 @@ input
         >>> my_value = input()
         
 * The program will wait for the user to enter a value
-* After a value is entered, it will be stored in the variable ``myValue`` 
+* After a value is entered, it will be stored in the variable :code:`myValue`
 
 .. admonition:: Activity
 
@@ -278,17 +253,17 @@ Statements
 * You type in the statement into the interpreter, press Enter, and Python does what you asked (or at least tries to)
 * If you type a series of statements into Colab and press run, Python does what you asked (or, again, at least tries to)
 * Some statements produce immediate output, some just change things 'behind the scenes'
-* We've already been using assignment statements (``=``), prints, inputs, and there are A LOT more
+* We've already been using assignment statements (:code:`=`), prints, inputs, and there are A LOT more
 
 Expressions
 ===========
 
 * An **expression** is, roughly, a thing that can be crunched down to a **value**.
 * More precisely, an expression is a combination of:
-   * literal values (e.g., ``5``)
-   * variables (e.g., ``leppard``)
-   * operators (e.g., ``+``)
-	>>> leppard = 87
+   * literal values (e.g., :code:`5`)
+   * variables (e.g., :code:`my_variable`)
+   * operators (e.g., :code:`+`)
+	>>> my_variable = 87
 	>>> print(leppard * 2 + 7)
 	181   
    
@@ -309,7 +284,6 @@ Operators
    * 4) Divide result of step 3 by the result of step 1
    * 3) Add a third variable to the result of step 2
 
-   ARE YOU READY FOR THIS?
 
    * Convert a temperature in Celsius to Fahrenheit.  
       * `But I don't know how to convert Celsius to Fahrenheit!!!! <https://www.google.com/search?sxsrf=ACYBGNR8TzZ_PzGMU9aXJ2I1VNjrV2XESg%3A1566411780922&source=hp&ei=BIxdXfP-NZLr-gTIp7v4CQ&q=how+to+convert+c+to+f>`_   
@@ -335,24 +309,11 @@ Doing sequences of things
 * That's not going to scale very well for most of the stuff we want to do...
 * You can store an (arbitrarily long) series of statements in Colab (or in a file), and then ask Python to run that file for you.
 * Python will execute each line of the file, in order, as if you'd typed them in.
-* There are lots of ways to run scripts. Suppose you put a series of statements into a file called ``my_program.py``
-    * from Colab: hit the run button or press Ctrl-Enter
-    * from your IDE: hit the run button or figure out the hotkey
-    * from the shell: ``$ python my_program.py`` or ``ipython my_program.py``
-    * from the interpreter: ``>>> execfile('my_program.py')``
-    * if you're using Ipython: ``%run my_program``
-* To edit the script, you can use any text editor that you want. You'll have an easier time with one that is "Python aware", though.
-   * Wut?
-   * Colab
-   * Notepad++ (Windows)
-   * Sublime (Windows and Mac)
-   * Integrated Development Environment
-   * PyCharm!
-   
+
 
 .. admonition:: Activity
 
-    Consider the sentence ``Def Leppard is a poor substitute for Van Halen``. Write a program that stores *each word* of that sentence in it's own variable, and then prints the whole sentence to the screen, *using only a single print statement*.
+    Consider the sentence :code:`Learning programming is fun`. Write a program that stores *each word* of that sentence in it's own variable, and then prints the whole sentence to the screen, *using only a single print statement*.
 
 
    

@@ -1,6 +1,6 @@
-*********************
-Topic #3 -- Functions
-*********************
+*********
+Functions
+*********
 
 .. image:: ../img/Eniac.jpeg
 
@@ -13,7 +13,9 @@ Functions
     * (or cutting and pasting in your editor)
 
 
-* Imagine the following code is super important::
+* Imagine the following code is super important:
+
+.. code-block::
 
     x = 10 * 2
     y = x/4
@@ -21,7 +23,9 @@ Functions
 
 * OK, good, that wasn't so bad
 * But now your boss says that you need to do the same calculation two more times, but with 9 and then 8 instead of 10
-* Now your program looks like this::
+* Now your program looks like this:
+
+.. code-block::
 
     x = 10 * 2
     y = x/4
@@ -37,7 +41,9 @@ Functions
 
 * That wasn't *soooooo* bad, but it does feel somewhat silly to copy/paste the code
 * Your boss can't make up their mind, and they now say that it should be divided by 3 instead of 4...
-* So you change your code::
+* So you change your code:
+
+.. code-block::
 
 	x = 10 * 2
 	y = x/3
@@ -52,7 +58,9 @@ Functions
 	print(y)
 
 * Fixed.
-    * While doing so, you actually missed the 2nd /4, but you fortunately caught your mistake in time
+
+   * While doing so, you actually missed the 2nd /4, but you fortunately caught your mistake in time
+
 * Your boss comes back again, saying that it needs to be done 18 more times, and they actually liked the divided by 4
 * ...
 
@@ -62,13 +70,15 @@ There's gotta' be a better way!
 * Well, there is
 
 * We want a way to *group together sequence of statements that we frequently reuse*
-* In Python, we do this with a *function*. Here's one now::
+* In Python, we do this with a *function*. Here's one now:
+
+.. code-block::
 
     def my_function(a_parameter):
         b = a_parameter * 2
         print(b)
 		
-* Once you've defined a function, you can *call* it exactly the same way you'd call a *built-in function* like ``print()``.
+* Once you've defined a function, you can *call* it exactly the same way you'd call a *built-in function* like :code:`print()`.
   
 * So let's use our function:
     >>> my_function(2)
@@ -80,7 +90,7 @@ There's gotta' be a better way!
     >>> my_function('James')
     JamesJames
 
-* When we *call* ``my_function``, Python executes the statements that
+* When we *call* :code:`my_function`, Python executes the statements that
   make up the function, in order.
 * Functions make code easy to reuse, easy to edit, and easy to read. More importantly they *facilitate abstraction*.	
 
@@ -92,7 +102,7 @@ There's gotta' be a better way!
 Function Parameters
 ===================
 
-* Note carefully the parameter (``a_parameter``) in the definition of ``my_function``
+* Note carefully the parameter (:code:`a_parameter`) in the definition of :code:`my_function`
 * When you are defining a function, you want the function to be very *general*
     * You want it to work with *any possible* parameter that someone might want to give it
    
@@ -101,36 +111,44 @@ Function Parameters
 
 * Parameters are like variables. When you *call* the function, the first thing that happens is the parameter values get set.   
    
-* To motivate this, let's go back to our previous example and throw it in a function::
+* To motivate this, let's go back to our previous example and throw it in a function:
+
+.. code-block::
    
-    def i_hate_my_boss():
+    def a_function():
         x = 10 * 2
         y = x/4
         print(y)
 
 * This function is kinda' stuck; it will only ever do multiply 10 by 2, and then divide it by 4...
-* Instead, we'll give it parameters::
+* Instead, we'll give it parameters:
 
-	def i_hate_my_boss(a_value, another_value):
+.. code-block::
+
+	def a_function(a_value, another_value):
 	   x = a_value * 2
 	   y = x/another_value
 	   print(y)
 
-* And we can call it like this::
+* And we can call it like this:
 
-    i_hate_my_boss(10, 4)
+.. code-block::
+
+    a_function(10, 4)
 
 * If this is scaring you, chill
 * Like it or not, you've been doing this for years in math class
-   
-    ``f(x) = x + 5``
+
+.. math::
+
+    f(x) = x + 5
    
 * This is a math *function* that takes a *parameter* 
 * What happens if you say... f(5)
-    * ``f(5) = 5 + 5``
-    * ``f(5) = 10``
+    * :math:`f(5) = 5 + 5`
+    * :math:`f(5) = 10`
 
-* IT'S THE SAME WITH THIS HERE!!
+* It's the same in programming!
    
    
 * Let's do one more example with adding two numbers::
@@ -406,7 +424,9 @@ Function headers
 
 * Because so much of our programming consists of pasting together functions... it is of special
   importance to document what a function does.
-* We do this with a *function header*::
+* We do this with a *function header*:
+
+.. code-block::
 
     def set_up_cities(names):
         """
@@ -435,7 +455,3 @@ After that happens enough times, you'll start writing comments.
 
 
 	
-For next class
-==============
-
-* Read `chapter 5 of the text <http://openbookproject.net/thinkcs/python/english3e/conditionals.html>`_
