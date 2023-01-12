@@ -48,4 +48,3 @@ Remember, here is the *magic* code we needed last week::
 If you are done everything, feel free to work on the assignment. Just note that Lab time is **not** office hours and I will likely not provide support for assignment 1. 
 
 
-**ENSURE WE HAVE RECORDED YOUR COMPLETION. FAILURE TO DO SO WILL RESULT IN A GRADE OF 0!**

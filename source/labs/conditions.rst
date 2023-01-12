@@ -51,4 +51,3 @@ Remember, here is the *magic* code we needed last week::
 
 
 
-**ENSURE WE HAVE RECORDED YOUR COMPLETION. FAILURE TO DO SO WILL RESULT IN A GRADE OF 0!**

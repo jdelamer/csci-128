@@ -125,6 +125,7 @@ Values
 
 
 .. admonition:: Activity
+    :class: warning
 
     Write a single line program to print out the *integer* 1. Now write a single line program to print out the *string* 1. Can you tell the difference by looking at the output?   
 
@@ -172,6 +173,7 @@ What can you do with variables?
    
    
 .. admonition:: Activity
+    :class: warning
 
     * Assign various values of types string, integer and float to variables. 
     * Try adding variables of the same type. What happens? 
@@ -191,8 +193,9 @@ Choosing variable names
     * bad: :code:`definitely_not_density`
 
 .. admonition:: Activity
+    :class: warning
 
-   Create two variables, named :code:`number_1` and :code:`number_2`, set them to :code:`20` and :code:`23` respectively, then add them.
+    Create two variables, named :code:`number_1` and :code:`number_2`, set them to :code:`20` and :code:`23` respectively, then add them.
 
 * What happened? 
 
@@ -217,6 +220,7 @@ input
 * After a value is entered, it will be stored in the variable :code:`myValue`
 
 .. admonition:: Activity
+    :class: warning
 
     * Read in some value into the computer. 
     * Print out the value you inputted.
@@ -276,16 +280,18 @@ Operators
 
    
 .. admonition:: Activity
+    :class: warning
 
-   Generate expressions to: 
+    Generate expressions to: 
 
-   * 1) Add two variables 
-   * 2) Multiply two variables 
-   * 4) Divide result of step 3 by the result of step 1
-   * 3) Add a third variable to the result of step 2
+    * 1) Add two variables 
+    * 2) Multiply two variables 
+    * 4) Divide result of step 3 by the result of step 1
+    * 3) Add a third variable to the result of step 2
 
 
-   * Convert a temperature in Celsius to Fahrenheit.  
+    * Convert a temperature in Celsius to Fahrenheit.  
+
       * `But I don't know how to convert Celsius to Fahrenheit!!!! <https://www.google.com/search?sxsrf=ACYBGNR8TzZ_PzGMU9aXJ2I1VNjrV2XESg%3A1566411780922&source=hp&ei=BIxdXfP-NZLr-gTIp7v4CQ&q=how+to+convert+c+to+f>`_   
       .. raw:: html
 
@@ -296,10 +302,11 @@ Are operators just for numbers?
 * Nope! Values of all sorts have operators that work on 'em.
 
 .. admonition:: Activity
+    :class: warning
    
-   * Experiment with the operators you know on *strings* (instead of just integers). 
-   * Which ones work? What do they do? 
-   * Try mixing strings and integers with various operators. What happens there?
+    * Experiment with the operators you know on *strings* (instead of just integers). 
+    * Which ones work? What do they do? 
+    * Try mixing strings and integers with various operators. What happens there?
 
    
 Doing sequences of things
@@ -312,6 +319,7 @@ Doing sequences of things
 
 
 .. admonition:: Activity
+    :class: warning
 
     Consider the sentence :code:`Learning programming is fun`. Write a program that stores *each word* of that sentence in it's own variable, and then prints the whole sentence to the screen, *using only a single print statement*.
 

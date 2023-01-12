@@ -112,4 +112,3 @@ Grab a scrap piece of paper to start scratching your ideas down on paper.
 
 
 
-**ENSURE WE HAVE RECORDED YOUR COMPLETION. FAILURE TO DO SO WILL RESULT IN A GRADE OF 0!**

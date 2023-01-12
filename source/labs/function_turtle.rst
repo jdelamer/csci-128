@@ -102,4 +102,3 @@ Skip any of the following problems if you did them already.
 
 7.  `Go to Kattis and sort the problems by difficulty <https://open.kattis.com/problems?order=problem_difficulty>`_. Read them, understand the problem, then see if you can figure any out. Most you can't yet, but still see what you can do and what you CAN'T.  Try to figure out *why* you can't.  
 
-**ENSURE WE HAVE RECORDED YOUR COMPLETION. FAILURE TO DO SO WILL RESULT IN A GRADE OF 0!**
