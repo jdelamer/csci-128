@@ -11,12 +11,12 @@ What will I learn?
     * How to write programs to solve problems
     * A little bit of how computers work
     * A little bit about what on earth computer science actually is 
-    * How to be a 21st century individual so you won't be left behind
+    * How to be a 21st-century individual so you won't be left behind
 
 * The long version:
     * :doc:`Read the outline </outline>`
 
-.. image:: ../img/turing.jpg
+.. image:: ../../img/turing.jpg
 
  
 What prerequisites do I need?
@@ -57,7 +57,7 @@ How will this class work?
 * We're going to be using a "partially flipped" classroom, with a "microlecture" format and lots of in class hands-on time
 
 * There are a few reasons for this:
-    * It's been `demonstrated <http://www.sciencemag.org/content/332/6031/862.full?ijkey=GMW4zTHNMM1Tc&keytype=ref&siteid=sci>`_ that students from classes using the microlecture/work format outperform students from traditional lecture classes. The students are also report being happier and more engaged
+    * It's been `demonstrated <http://www.sciencemag.org/content/332/6031/862.full?ijkey=GMW4zTHNMM1Tc&keytype=ref&siteid=sci>`_ that students from classes using the microlecture/work format outperform students from traditional lecture classes. The students also report being happier and more engaged.
     * Listening to a lecturer droning on for hours isn't very engaging
 
 * A standard class works like this:
@@ -111,7 +111,7 @@ So I should be terrified?
 * It's actually not that bad, *if you put in the effort*
     * But that's why we're all here, right?
 
-* Real waring though: The class is dense and very accumulative, do not fall behind!
+* Real warning, though: The class is dense and very accumulative, do not fall behind!
 
 * The good news is, you get to make mistakes
 * You get to see if what you did works or not

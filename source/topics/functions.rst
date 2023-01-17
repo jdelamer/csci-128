@@ -2,7 +2,7 @@
 Functions
 *********
 
-.. image:: ../img/Eniac.jpeg
+.. image:: ../../img/Eniac.jpeg
 
 
 Functions
@@ -54,9 +54,10 @@ Functions
 	y = x/3
 	print(y)
 
-* Fixed.
 
-   * While doing so, you actually missed the 2nd /4, but you fortunately caught your mistake in time
+.. warning::
+
+    This change could lead to a few mistakes. You would be lucky to not miss one modification or not creating bugs.
 
 
 There's gotta' be a better way!
@@ -80,8 +81,8 @@ There's gotta' be a better way!
     >>> my_function(7)
     14
 	
-    >>> my_function('James')
-    JamesJames
+    >>> my_function('Jean')
+    JeanJean
 
 * When we *call* :code:`my_function`, Python executes the statements that
   make up the function, in order.
@@ -112,7 +113,7 @@ Function Parameters
     def a_function():
         x = 10 * 2
         y = x/4
-        print(y)
+        return y
 
 * This function is kinda' stuck; it will only ever do multiply 10 by 2, and then divide it by 4...
 * Instead, we'll give it parameters:
@@ -122,7 +123,7 @@ Function Parameters
 	def a_function(a_value, another_value):
 	   x = a_value * 2
 	   y = x/another_value
-	   print(y)
+	   return y
 
 * And we can call it like this:
 
@@ -147,22 +148,23 @@ Function Parameters
    
 * Let's do one more example with adding two numbers::
 
-    def add_print(a, b):
-        print(a + b)
+    def return_print(a, b):
+        return a + b
 
 * Now that the function is defined, we can *call* it. Like this:
 
-    >>> add_print(5, 2)
+    >>> return_print(5, 2)
     7
 
-* The *call* ``add_print(5, 2)`` gets handled like this:
-    * Python checks to see if it knows about a function named ``add_print``
-        * We just defined ``add_print``, so it does.
-    * When we defined it, we told Python it should have two parameters: ``a`` and ``b``.
-    * Python now takes the values in the call (in this case, ``5`` and ``2``) and assigns those
-     values to the function parameters ``a`` and ``b``.
-        * In other words, the first thing Python does in this case is set ``a = 5`` and ``b = 2``, just like variables. 
+* The *call* :code:`return_print(5, 2)` gets handled like this:
+    * Python checks to see if it knows about a function named :code:`return_print`
+        * We just defined `return_print`, so it does.
+    * When we defined it, we told Python it should have two parameters: :code:`a` and :code:`b`.
+    * Python now takes the values in the call (in this case, :code:`5` and :code:`2`) and assigns those
+     values to the function parameters :code:`a` and :code:`b`.
+        * In other words, the first thing Python does in this case is set :code:`a = 5` and :code:`b = 2`, just like variables. 
     * Then Python executes the body of the function, with the parameters having their new values.
+    * Then it *return* the sum of :code:`a` and :code:`b`, meaning it send back the value to your *main* code.
 
      
 * What happens if we don't give it enough, or too many parameters?
@@ -375,7 +377,7 @@ Optional parameters for functions
       
 * When you call ``my_function(5, 12)``, ``a`` will have value ``5``, ``b`` value ``12`` and ``c`` value ``3``.
 * Because we specified a *default* value for ``c``, we don't have to provide one when we call the function.
-* If we want to *override* the default though, we can: ``my_function(4, 3, 2)``.
+* If we want to *override* the default, though, we can: ``my_function(4, 3, 2)``.
 
 * A reasonable example::
 

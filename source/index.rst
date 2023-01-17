@@ -73,9 +73,9 @@ Cool Things
     :numbered:
     :maxdepth: 1
    
-    topic1
-    topic2
-    topic3
+    topics/intro
+    topics/types
+    topics/functions
     topic4
     topic5
     topic6
