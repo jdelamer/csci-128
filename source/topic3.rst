@@ -10,22 +10,19 @@ Functions
 
 * Script/program files are a nice way to organize many statements
 * You eventually find yourself writing the same series of statements over and over
-    * (or cutting and pasting in your editor)
-
-
 * Imagine the following code is super important:
 
-.. code-block::
+.. code-block:: python
 
     x = 10 * 2
     y = x/4
     print(y)
 
 * OK, good, that wasn't so bad
-* But now your boss says that you need to do the same calculation two more times, but with 9 and then 8 instead of 10
+* But now you need to do the same calculation two more times, but with 9 and then 8 instead of 10
 * Now your program looks like this:
 
-.. code-block::
+.. code-block:: python
 
     x = 10 * 2
     y = x/4
@@ -39,11 +36,11 @@ Functions
     y = x/4
     print(y)
 
-* That wasn't *soooooo* bad, but it does feel somewhat silly to copy/paste the code
-* Your boss can't make up their mind, and they now say that it should be divided by 3 instead of 4...
+* That wasn't bad, but it does feel somewhat silly to copy/paste the code
+* Now you realize that it should be divided by 3 instead of 4...
 * So you change your code:
 
-.. code-block::
+.. code-block:: python
 
 	x = 10 * 2
 	y = x/3
@@ -61,18 +58,14 @@ Functions
 
    * While doing so, you actually missed the 2nd /4, but you fortunately caught your mistake in time
 
-* Your boss comes back again, saying that it needs to be done 18 more times, and they actually liked the divided by 4
-* ...
 
 There's gotta' be a better way!
 ===============================
 
-* Well, there is
-
 * We want a way to *group together sequence of statements that we frequently reuse*
 * In Python, we do this with a *function*. Here's one now:
 
-.. code-block::
+.. code-block:: python
 
     def my_function(a_parameter):
         b = a_parameter * 2
@@ -96,6 +89,7 @@ There's gotta' be a better way!
 
 
 .. admonition:: Quick Activity
+    :class: activity
 
     Write your own function to do something with math. Honestly, whatever you want. 
 
@@ -113,7 +107,7 @@ Function Parameters
    
 * To motivate this, let's go back to our previous example and throw it in a function:
 
-.. code-block::
+.. code-block:: python
    
     def a_function():
         x = 10 * 2
@@ -179,6 +173,7 @@ Abstraction: first steps
 * Why is abstraction important?
 
 .. admonition:: Activity
+    :class: activity
 
     Write down a "program" to make spaghetti (not in python, like on paper). You can only use the following statements: 
 
@@ -191,6 +186,7 @@ Abstraction: first steps
     Assume you start from a clean, empty, kitchen.
 
 .. admonition:: Activity
+    :class: activity
 
     Write down a "program" to make spaghetti (not in python, like on paper). You can use plain English prose and assume you are addressing a human being.
 
@@ -230,12 +226,14 @@ Back to concrete things...
     * Many other languages use pairs like ``begin, end`` , ``do, done`` or ``{, }`` to delimit the body of a function.
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``catstr`` which takes two strings as parameters and then prints out the concatenation of the strings. e.g., if I call ``catstr('Hello ','world!')`` it will print ``Hello world!``.
 
    
    
 .. admonition:: Activity
+    :class: activity
 
     **NOTE:** This one is tricky but super important to understand. If you're still stuck after class, be sure to take your time to figure this out.
    
@@ -294,6 +292,7 @@ Function values
 * Because that function ends in a ``return``, when execution flow comes back to the calling program, the call to ``do_stuff`` gets replaced with whatever value got ``return`` ed.
 
 .. admonition:: Activity
+    :class: activity
 
     * Write a function ``no_stuff(a, b)`` which is identical to ``do_stuff(a, b)`` **except** it does not contain a ``return`` statement.
     * What happens when you try this?
@@ -301,11 +300,13 @@ Function values
     * What happens when you try this?
         >>> print(do_stuff(2, 2))
 
-.. Warning:: 
+.. Warning::
+
     The difference between a ``print`` and a ``return`` is **HUGE**, yet, every year this difference ends up being a problem for many students. Make sure to take your time understanding the difference. Take your time. Play around. Remember, playing around with Python is the best way to learn this stuff.   
 
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``compmag(r,m)`` to compute, and return, the magnitude of a complex number. It should take the real component of the number as parameter ``r`` and the imaginary component as ``m``.
    
@@ -333,15 +334,18 @@ Composition
     * Keep doing this until you're down to one value.
 
 .. admonition:: Activity
+    :class: activity
 
     Figure out the value of ``do_stuff(do_stuff(2, 2), (do_stuff(2, 2) + do_stuff(4, 4)) )`` using only *pen and paper*. No computers!
 
 .. admonition:: Activity
+    :class: activity
 
     Figure out the value of ``no_stuff(no_stuff(2, 2), (no_stuff(2, 2) + no_stuff(4, 4)) )`` using only *pen and paper*. No computers!
 	
 Variable scope
 ==============
+
 * If you set a variable inside a function, it is *local* to that function.
 * No other function can see a function's local variables. They are *local*. Consider this code::
 
@@ -362,6 +366,7 @@ Variable scope
 	
 Optional parameters for functions
 =================================
+
 * Sometimes you want a function to have an optional parameter, with a pre-specified default value.
 * This is done very easily::
 
@@ -379,6 +384,7 @@ Optional parameters for functions
 	
 Import
 ======
+
 * Another practical matter: sometimes you want to make a big library of functions. Maybe related to analysis data from your research. 
 * You'd like to access some of those functions from another program that you're writing.
 * If you put your functions in a file called 'myfuncs.py', you can *import* them into another program like this:
@@ -392,13 +398,14 @@ Import
 
 Import --- MORE
 ===============
+
 * Can also import other people's functions
 * 	>>> import math
 * 	>>> import numpy	
 
 
-COMMENTS!!!!!!!!!!!
-===================
+Comments
+========
 
 * You can add *comments* to your code in Python with ``#``::
 
@@ -412,11 +419,9 @@ COMMENTS!!!!!!!!!!!
 * Especially 6 weeks later when you have to change it
 
 
-* And *especially* when someone else has to make sense of your mess
+* And *especially* when someone else has to make sense of your code
 * Comments shouldn't just repeat what's obvious from reading the code
 * They should provide a *higher level* description of what's happening.
-* Computer Scientists get real geeky about comments
-* Physicists immediately go into shock and collapse if they write a single comment
 * Find a healthy balance that works for you
 
 Function headers
@@ -426,7 +431,7 @@ Function headers
   importance to document what a function does.
 * We do this with a *function header*:
 
-.. code-block::
+.. code-block:: python
 
     def set_up_cities(names):
         """

@@ -23,6 +23,7 @@ Read/Write to a text file
 * Take a wild guess what 'r' means
 
 .. admonition:: Activity
+    :class: activity
 
     1. Create a text in the working directory. If using Colab, you'll have to get one there. 
     2. Open it like the above
@@ -35,6 +36,7 @@ Read/Write to a text file
 >>> my_other_file = open('anotherFileName.txt', 'w')
 
 .. admonition:: Activity
+    :class: activity
 
     Try to figure out how to ``write`` to this file. 
 
@@ -96,6 +98,7 @@ Loading a CSV file
 
 	
 .. admonition:: Activity+
+    :class: activity
 	
     Figure out how it works. Download :download:`this csv file <../data/airports.csv>` to your computer. **NOTE:** If using Colab, you'll have to upload it. 
    
@@ -104,6 +107,7 @@ Loading a CSV file
     Play with this list a bit and get a feel for how the data is organized.
 
 .. admonition:: Activity+++
+    :class: activity
 
     Now write a function ``get_name_from_code(airport_code, airport_list)`` that will return a string containing the full name of the airport with the code ``airport_code``. 
 

@@ -9,6 +9,7 @@ Higher Dimensions
 =================
 
 .. admonition:: Activity
+    :class: activity
 
     Let's say we have a list:
 
@@ -24,6 +25,7 @@ Higher Dimensions
 
 
 .. admonition:: Activity
+    :class: activity
    
     OK cool, what if I do this:
 
@@ -39,6 +41,7 @@ Higher Dimensions
     Answer these, and then test it in code. 	  
    
 .. admonition:: Activity
+    :class: activity
 
     What if I do this:
 
@@ -54,6 +57,7 @@ Higher Dimensions
     Answer these, and then test it in code. 
 
 .. admonition:: Activity
+    :class: activity
 
     Here's a weird one:
 
@@ -70,6 +74,7 @@ Higher Dimensions
     Answer these, and then test it in code. 
 
 .. admonition:: Activity
+    :class: activity
 
     Last one, I swear:
 
@@ -136,6 +141,7 @@ Numpy *Arrays*
 * In an array, *every element must have the same type*! 
    
 .. admonition:: Activity
+    :class: activity
 
     Create two arrays of integers, each having the same number of elements.
    
@@ -189,6 +195,7 @@ Numpy array object attributes and methods
    
 Making numpy arrays bigger
 ==========================
+
 * With lists, we could always append items to make them bigger
 
     >>> a = [1, 2, 3]
@@ -227,6 +234,7 @@ Making numpy arrays bigger
 * This is also kinda' like strings. Remember, we had to make copies of the string to make any changes?
    
 .. admonition:: Activity
+    :class: activity
 
     Create an array of 4 integers. 
    
@@ -247,6 +255,7 @@ Flexibility vs Power
 
 
 .. admonition:: Activity
+    :class: activity
 
     How would you implement ``.sum()`` for a list?  
    
@@ -273,6 +282,7 @@ Higher dimensions
     (3, 3)
 
 .. admonition:: Activity
+    :class: activity
 
     Create a 4x4 array. Verify that it has ``shape`` ``(4,4)``. 
    
@@ -284,6 +294,7 @@ Higher dimensions
    
 Starting points
 ===============
+
 * Sometimes you want an array of shape ``(n,m)`` that contains all zeros:
 
     >>> # The extra parentheses are important
@@ -294,10 +305,12 @@ Starting points
   
 Slicing
 =======
+
 * We've already seen that you can index arrays like lists (and strings)
 * Likewise, you can use Python's powerful *slicing* on arrays
 
 .. admonition:: Activity
+    :class: activity
 
     Create an array ``arr = numpy.array([0,1,2,3,4,5,6,7])``. Using a single command
         1. Print the first 3 elements
@@ -330,6 +343,7 @@ Slicing
      [20 21]]
 
 .. admonition:: Activity
+    :class: activity
 
     Modify the previous command to print all of the columns of the first two *rows*.   
    
@@ -340,6 +354,7 @@ For loops
 * If ``for`` loops work for lists, do you think they'll work for arrays?
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``printeach(arr)`` that uses a ``for`` loop to print each element of an array that is passed in as a parameter. 
 

@@ -13,7 +13,8 @@ How did...
 * This list can go on forever.
 
 
-.. Warning:: 
+.. Warning::
+
     It might be safer to use Colab, IPython, or Spyder for this. By all means, try PyCharm, if it doesn't work there, try Spyder. 
    
    
@@ -76,6 +77,7 @@ Requires Supervision
 * There are many algorithms for both types of learning and new ones being described every day. We're just going to barely scratch the surface here.
       
 .. admonition:: Activity
+    :class: activity
 
     With your neighbours, come up with some situations in which you think you'd use supervised learning and some more in which you'd use unsupervised learning.
     
@@ -130,6 +132,7 @@ Requires Supervision
     * y means dependent variable. 
 
 .. admonition:: Activity+++
+    :class: activity
 
     Write a function called ``what_type_is_this(x)`` that will take one observation of a iris (sepal and petal length and width) and it will return which classification of iris it is. 
     
@@ -185,6 +188,7 @@ Supervised: k-Nearest Neighbours
     
     
 .. admonition:: Activity
+    :class: activity
 
     Pick some random irises from your ``data`` set and attempt to classify them.
    
@@ -279,12 +283,14 @@ Supervised: Support Vector Machines (SVM)
 
 
 .. admonition:: Activity+
+    :class: activity
 
     For fun, go find some of your own data. Like online, or some data from another one of your classes. 
     
     Load it up into Python and see if you can build a classifier for it. 
     
 .. admonition:: Activity+
+    :class: activity
 
     I showed you 2 types of supervised machine learning for classification. `Go check out the zoo of other methods out there. <https://scikit-learn.org/stable/supervised_learning.html#supervised-learning>`_
     
@@ -332,12 +338,14 @@ Unsupervised: K-means clustering
     
     
 .. admonition:: Activity+
+    :class: activity
 
     Pretending you don't have access to ``labels``, what, if anything, does this result tell you?
 
     `Try visualizing <http://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_iris.html>`_ your results.
     
 .. admonition:: Activity+
+    :class: activity
 
     *Quantify* how good of a job k-means clustering did of grouping together irises of the same type. To do this, you'll need to bring in your "ground truth" ``labels``. 
    
@@ -390,6 +398,7 @@ The Zoo
     * If you *really* want to learn ML, get `Chris Bishop's Book <http://research.microsoft.com/en-us/um/people/cmbishop/prml/>`_ . It starts from basic probability theory and goes from there. It is comprehensive, it is rigorous... it is *not easy to read*.
 
 .. admonition:: Activity
+    :class: activity
 
     Break into small groups. Identify a problem that you think could be solved well with machine learning. Specifically, you should be able to answer:
         1. What is the data source?

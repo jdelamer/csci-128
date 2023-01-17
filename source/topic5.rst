@@ -4,6 +4,7 @@ Logic, Booleans, More Functions
 
 The Boolean type
 ================
+
 * A value that is either ``True`` or ``False`` (and nothing else) has type `Boolean <http://en.wikipedia.org/wiki/George_Boole>`_.
 * We've used comparison operators (e.g., ``<, >, ==``) in conditionals.
 * What's going on "under the hood" with the comparison, though?
@@ -28,6 +29,7 @@ The Boolean type
     <class 'bool'>
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``is_negative(n)`` that *returns* ``True`` if the argument ``n`` is negative and ``False`` otherwise.
 
@@ -49,6 +51,7 @@ More about returns
             return False
 
 .. admonition:: Activity
+    :class: activity
 
     * What is the result of the function call ``divisible_by(4, 2)``? 
     * How about ``divisible_by(4, 3)``? 
@@ -79,6 +82,7 @@ The function type
         return f(a, b)
 
 .. admonition:: Activity
+    :class: activity
 
     * What is the value of ``do_something(add, 5, 7)``?
     * How about ``do_something(substract, 5, 7)``?
@@ -109,6 +113,7 @@ Developing bigger programs
     * Besides, I'm sorry, but you're not perfect.
    
 .. admonition:: Activity
+    :class: activity
 
     Build a function to compute compound interest given a starting amount(``P``), an annual interest rate (``r``), the number of compounding periods per year(``n``) and the total number of years (``t``). 
 

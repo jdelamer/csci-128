@@ -9,6 +9,7 @@ The basics
 *  But do you know how images are represented in memory?
 
 .. admonition:: Activity
+    :class: activity
     
     *  Discuss with other students and come up with a way to represent images in memory.
 
@@ -70,6 +71,7 @@ In Python
 *  As you can see 0 is black while 255 is white.
 
 .. admonition:: Activity
+    :class: activity
 
     *  Modify the values inside this image and see what happens.
 
@@ -94,6 +96,7 @@ In Python
     img.save('my_color_img.png')
 
 .. admonition:: Activity
+    :class: activity
     
     *  Create an image full red.
     *  Do the same thing with blue.
@@ -118,6 +121,7 @@ Advanced
 *  And as we have a numpy array, we can modify it the way we want.
 
 .. admonition:: Activity
+    :class: activity
 
    *  Check the following code and try to understand what this code is doing.
 
@@ -160,6 +164,7 @@ Detecting contour
 *  First we implement the luminance function:
 
 .. code-block:: python
+    :class: activity
 
     def luminance(pixel):
         r = pixel[0]

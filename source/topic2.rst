@@ -8,7 +8,7 @@ Welcome back
 Let's get started right away...
 
 .. admonition:: Quick Activity
-    :class: warning
+    :class: activity
 
     Did you try anything interesting with Python yet?
    
@@ -17,7 +17,7 @@ Let's get started right away...
 
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     *  What is *computation?* What is a *computer?* What is *programming?*
     *  Who can name different kinds of *computers* `? <https://en.wikipedia.org/wiki/Computer#Unconventional_computers>`_
@@ -36,7 +36,7 @@ In this course we will use the programming language Python.
 *  Why is ambiguity deadly for a formal language?
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     Do you think there is a limit to what I can describe with a formal language? 
 
@@ -61,7 +61,7 @@ Okay, we're done with the background, let's get on with the real stuff
 ======================================================================
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     Write a (single-line) Python program that prints a witty message, of your choice.   
    
@@ -125,7 +125,7 @@ Values
 
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     Write a single line program to print out the *integer* 1. Now write a single line program to print out the *string* 1. Can you tell the difference by looking at the output?   
 
@@ -173,7 +173,7 @@ What can you do with variables?
    
    
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     * Assign various values of types string, integer and float to variables. 
     * Try adding variables of the same type. What happens? 
@@ -193,7 +193,7 @@ Choosing variable names
     * bad: :code:`definitely_not_density`
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     Create two variables, named :code:`number_1` and :code:`number_2`, set them to :code:`20` and :code:`23` respectively, then add them.
 
@@ -220,7 +220,7 @@ input
 * After a value is entered, it will be stored in the variable :code:`myValue`
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     * Read in some value into the computer. 
     * Print out the value you inputted.
@@ -280,7 +280,7 @@ Operators
 
    
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     Generate expressions to: 
 
@@ -302,7 +302,7 @@ Are operators just for numbers?
 * Nope! Values of all sorts have operators that work on 'em.
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
    
     * Experiment with the operators you know on *strings* (instead of just integers). 
     * Which ones work? What do they do? 
@@ -319,7 +319,7 @@ Doing sequences of things
 
 
 .. admonition:: Activity
-    :class: warning
+    :class: activity
 
     Consider the sentence :code:`Learning programming is fun`. Write a program that stores *each word* of that sentence in it's own variable, and then prints the whole sentence to the screen, *using only a single print statement*.
 

@@ -4,6 +4,7 @@ Loops
 
 Reusing variables
 =================
+
 * Consider this code fragment::
 
     a = 5
@@ -17,6 +18,7 @@ Reusing variables
     print(a)
 
 .. admonition:: Very Quick Activity
+    :class: activity
 
     What is the value of the variable ``a`` at the various ``print`` function in the above code?
    
@@ -33,6 +35,7 @@ Reusing variables
 * What does this do?
 
 .. admonition:: Activity
+    :class: activity
     
     * Write a function to add ``+1`` to some variable 5 times and return the value.
     * Now do the same thing, but 10 times.
@@ -64,6 +67,7 @@ First loops
 
 
 .. admonition:: Activity --- Featuring LOOPS
+    :class: activity
 
     * Write a function to add ``+1`` to some variable 5 times and return the value.
     * Now do the same thing, but 10 times.
@@ -80,6 +84,7 @@ First loops
         return answer
 
 .. admonition:: Activity
+    :class: activity
 
     What does the code above do? Trace through it, using pen and paper, for a few example values of ``n!``
 
@@ -102,6 +107,7 @@ First loops
 +------------------------+---------------+ 
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``int_sum(n)`` that takes a single integer ``n`` as a parameter and returns the *sum* of all of the numbers between ``1`` and ``n``. 
 
@@ -109,6 +115,7 @@ First loops
 
  
 .. admonition:: Activity
+    :class: activity
 
     Modify ``int_sum(n)`` so that it prints out a Trace table, like the one you did by hand, every time it runs.
 
@@ -116,6 +123,7 @@ First loops
 
 Encapsulation
 =============
+
 * Big word for a simple idea: take your code and "encapsulate" it in a function.
 * That's it.
 * Normal development process for scientific software:
@@ -130,9 +138,11 @@ Encapsulation
  
 Some actual *science*!
 ======================
+
 * Okay, maybe not. But we're taking a step in that direction.
 
 .. admonition:: Activity
+    :class: activity
 
     Find the solution to the equation (for what value of ``x`` is this statement true?):
    
@@ -171,6 +181,7 @@ Algorithm
     * **DATA STRUCTURE**
 
 .. admonition:: Activity 
+    :class: activity
 
     Write down (in English) an algorithm for printing out the sum of all the even numbers between 1 and ``n``. 
 

@@ -12,6 +12,7 @@ Conditionals
 
 
 .. admonition:: Activity
+    :class: activity
 
     Using **only** the Python features/statements **we've seen so far**, can you write a program that will divide a number in half *only if* that number is a multiple of 2?
    
@@ -27,6 +28,7 @@ Logic First
     * NOT
 
 .. admonition:: Activity
+    :class: activity
 
     Write out the truth tables for the logical operations **AND**, **OR** and **NOT**. 
    
@@ -52,6 +54,7 @@ Logic First
     * Just be thankful this isn't C/C++
 
 .. admonition:: Activity
+    :class: activity
 
     Figure out what the other comparison operators in Python are. Hint: ``3`` doesn't equal ``5``, it is *____ than* 5.
 
@@ -67,6 +70,7 @@ Logic First
    
 Conditional execution
 =====================
+
 * Now we can test if a comparison statement is ``True`` or ``False``.
 * We need a way to use that to control our program.
 * ``if`` some condition is ``True``, do something::
@@ -83,6 +87,7 @@ Conditional execution
 * **NOTE:** Remember that the thing in the if statement is either `True` or `False`!
 
 .. admonition:: Activity
+    :class: activity
 
     Using only the Python features/statements we've seen so far, can you write a program that will divide a number in half *only if* that number is a multiple of 2?
 
@@ -91,6 +96,7 @@ Conditional execution
    
 Compound conditions
 ===================
+
 * We can use the logical operators ``and``, ``or`` and ``not`` to combine conditions.
 * The combinations can be arbitrarily complex::
 
@@ -102,6 +108,7 @@ Compound conditions
    
 Alternative execution
 =====================
+
 * This pattern is very common::
 
     if x > 10:
@@ -122,6 +129,7 @@ Alternative execution
 * Involves less typing and is easier to read and understand. 
 
 .. admonition:: Activity
+    :class: activity
 
     Write a Python function called ``hail`` that takes an integer as its argument. If the integer is even, return the value of the integer divided by 2. If it's odd, return the value of the integer multiplied by 3 and with 1 added. 
 
@@ -138,6 +146,7 @@ Alternative execution
    
 Chains of alternatives
 ======================
+
 * Sometimes a binary ``if``/``else`` isn't enough.
 * What if I want several, *mutually exclusive*, alternatives?::
 
@@ -160,6 +169,7 @@ Chains of alternatives
 * **Always** end with a plain ``else`` to catch any conditions not covered in the chain.
 
 .. admonition:: Activity
+    :class: activity
 
     Write a Python function that takes an integer from 0-100 representing a course grade and returns a string representing the letter grade: A,B,C,D or F. You can pick the cutoffs.
 
@@ -225,6 +235,7 @@ Nested conditionals
 
 Libraries
 =========
+
 * Most of you are here because you are pragmatic people who want to *get stuff done*
 * The fastest way to *get stuff done* is by leveraging stuff that other people have done.
 * Remember functions? Wouldn't it be awesome if there were huge collections of functions that already existed... and did a lot of the stuff you want to do? 
@@ -233,6 +244,7 @@ Libraries
 	   
 NumPy
 =====
+
 * The most important library for us is *Numerical Python* ("NumPy" for short).
 * For anyone working with real data in Python, NumPy is awesome
 * Because it isn't 'built in' to Python, we have to tell Python that we want to use NumPy:
@@ -241,6 +253,7 @@ NumPy
 
 NumPy Types
 ===========
+
 * Recall that Python values have types.
 * NumPy defines a `whole bunch of new types <http://docs.scipy.org/doc/numpy/user/basics.types.html>`_.
 * When you call NumPy functions, Python will, as always, try it's best to guess at type conversions for you.
@@ -267,17 +280,10 @@ NumPy Types
 * If you aren't sure what type a variable has, remember that you can always check with ``type()``
 
 .. admonition:: Activity
+    :class: activity
 
     Write a Python function that takes two Python ``float`` s as inputs, converts them both into ``numpy.float32`` type and then returns the product.   
    
-   
-   
-   
-   
-      
-For next class
-==============
 
-* Read `chapter 6 of the text <http://openbookproject.net/thinkcs/python/english3e/fruitful_functions.html>`_
 
 

@@ -28,6 +28,7 @@ What prerequisites do I need?
 
 
 .. admonition:: Activity
+    :class: activity
 
    Where have you encountered computer programs before?
 
@@ -80,6 +81,7 @@ How will this class work?
 
 
 .. admonition:: Activity
+    :class: activity
 
    Have a chat with the people sitting around you: 
 

@@ -4,7 +4,9 @@ Strings & Objects
 
 The thing about strings
 =======================
+
 .. admonition:: Activity
+    :class: activity
 
     How is a string different from the other data types we've seen (``int``, ``float``, ``numpy.float32``, ``bool``)?
    
@@ -25,6 +27,7 @@ The thing about strings
     * MATLAB inherited 1-based indexing from Fortran
 
 .. admonition:: Activity
+    :class: activity
 
     Write a single line command to print the first 4 characters of some string ``a``. 
     
@@ -40,6 +43,7 @@ The thing about strings
 	
 More loops
 ==========
+
 * I can get the *length* of string like this:
     >>> len(a)
     15
@@ -47,6 +51,7 @@ More loops
 * Let's apply that...
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``vert_print`` that takes a string as an argument and then uses a ``while`` loop to print each character on its own line. (See sample output below)
    
@@ -89,6 +94,7 @@ More loops
    
 Mutability
 ==========
+
 * So... if we can *access* an individual character in a string with an index...
 * ... you might be feeling tempted to try to *set* an individual character with an index, too.
 * Let's try::
@@ -108,6 +114,7 @@ in
 ==
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``char_is_in(char,string)`` that returns ``True`` if the character ``char`` appears in the string ``string``.
     
@@ -118,6 +125,7 @@ in
 * You can do the above exercise the hard way, with loops, or you can look up ``in``.
 
 .. admonition:: Tricky Activity
+    :class: activity
 
     What's wrong with this?::
    
@@ -135,11 +143,13 @@ in
     * Try: `char_is_in('e', 'test')`
 
 .. admonition:: Activity
+    :class: activity
 
     Write a function ``where_is(char,string)`` that returns the *index* of the first occurrence of ``char`` in ``string``.
 
 String Trivia
 =============
+
 * ``''`` or ``""`` will work for the quotes needed for strings
     * But you can put ``''`` inside ``""`` s
    
@@ -255,11 +265,13 @@ Objects
     Also, we will be going into more detail on Objects later in the class.
 
 * We have seen *primitive* types
+
     * Int
     * Float
     * Booleans
    
 * There are other *types*:
+
     * Strings (actually kinda' a primitive type in Python, but let's ignore this ...)
     * Numpy things 
 
@@ -270,12 +282,14 @@ Objects
 
 Methods
 =======
+
 * We've seen built in functions 
     * ``print('this is a function')``
 * We've written our own functions
     * ``char_is_in('a','bleh')``
 
 .. admonition:: Activity
+    :class: activity
 
     In Colab:
         1. Make a string
@@ -288,6 +302,7 @@ Methods
     .. image:: ../img/methods.png
 
 .. admonition:: Activity
+    :class: activity
 
     1. Try writing ``a_string.upper()`` and printing it out. 
     2. Try some other *methods*
@@ -330,6 +345,7 @@ How are you supposed to keep track of what's what?
 
 Heavy lifting with strings
 ==========================
+
 * If the program you are writing needs to do a lot of string manipulation, you probably want to
     >>> import string
 * ... and `read about all the nifty stuff it does <http://docs.python.org/library/string.html>`_ 
