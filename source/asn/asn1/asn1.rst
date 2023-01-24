@@ -2,8 +2,8 @@
 Fractals and L-Systems
 **********************
 
-* **Worth**: 5%
-* **DUE**: TBA; submitted on MOODLE.
+* **Worth**: 10%
+* **DUE**: February 7th, 2023; submitted on MOODLE.
 
 
 Learning objectives:
@@ -206,7 +206,7 @@ If the function is implemented correctly, it must draw the same thing.
 Blobs
 -----
 
-This fractal follows the rule :math:`F \rightarrow F+F-F+`.
+This fractal follows the rule :math:`F \rightarrow F-F++F`.
 
 Complete the following function:
 
@@ -229,7 +229,7 @@ If used as:
 
 .. code-block::
 
-	blobs(5, 25, 90)
+	blobs(6, 25, 90)
 
 You should obtain:
 
