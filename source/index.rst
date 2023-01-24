@@ -110,7 +110,7 @@ Cool Things
     :maxdepth: 1
     :numbered:
    
-    .. asn1
+    asn/asn1/asn1
     .. asn2
     .. asn3
    
