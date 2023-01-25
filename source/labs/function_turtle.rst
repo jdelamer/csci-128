@@ -10,9 +10,9 @@ Before Kattis
 
 **NOTE:**  :doc:`If you forget how to do the function, go back to the class notes. </topic3>`
 
-In this lab you will aply what you learned on something different: Turtle!
+In this lab you will apply what you learned on something different: Turtle!
 
-Turtle is a old drawing tool in python.
+Turtle is an old drawing tool in python.
 
 
 1. Open colab. On a first cell copy, paste and execute the next lines:
@@ -22,33 +22,33 @@ Turtle is a old drawing tool in python.
     !pip3 install ColabTurtle
     from ColabTurtle.Turtle import *
 
-2. Turtle propose different functions listed below. Try them and understand how they work!
+2. Turtle proposes different functions listed below. Try them and understand how they work!
 
    *  :code:`forward(unit)`: Moves the turtle in the direction it is facing, by :code:`unit` pixels.
    *  :code:`backward(units)`: Moves the turtle in the opposite of the direction it is facing, by :code:`unit` pixels.
    *  :code:`right(degrees)`: Turns the turtle to right by the given :code:`degrees` many degrees.
-   *  :code:`left(degrees)`: Turns the turtle to left by the given :code:`degrees` many degrees.
+   *  :code:`left(degrees)`: Turns the turtle left by the given :code:`degrees` many degrees.
    *  :code:`penup()`: Lifts the pen, turtles movement will not draw anything after this function is called.
    *  :code:`pendown()`: Puts the pen down, causing the turtle movements to start drawing again.
    *  :code:`home()`: Takes the turtle to the beginning position and angle. The turtle will continue drawing during this operation if the pen is down.
    *  :code:`clear()`: Clear any drawing on the screen.
 
-3. Write a function :code:`reset()` that return the turtle fome and clear any drawing.
+3. Write a function :code:`reset()` that return the turtle home and clear any drawing.
 
-4. Write a **function** called :code:`square(unit)` that takes one integer as parameter, and draw a square of :code:`unit` side length. Call the function to verify its correctness with he below code.
+4. Write a **function** called :code:`square(unit)` that takes one integer as parameters, and draw a square of :code:`unit` side length. Call the function to verify its correctness with he below code.
 
     .. code-block:: python
     
         square(100)
 
 
-5. Write a **function** called :code:`rectangle(width, height)` that takes two integers as parameters, and draw a rectangle. Call the function to verify its correctness witht he below code.
+5. Write a **function** called :code:`rectangle(width, height)` that takes two integers as parameters, and draw a rectangle. Call the function to verify its correctness with the code below.
 
     .. code-block:: python
     
         rectangle(200, 100)
 
-5. Write a **function** called :code:`rhombus(angle_1, angle_2, unit)` that takes three integers as parameters, and draw a rhonbus (or diamond). Call the function to verify its correctness with he below code.
+5. Write a **function** called :code:`rhombus(angle_1, angle_2, unit)` that takes three integers as parameters, and draw a rhombus (or diamond). Call the function to verify its correctness with the below code.
 
     .. code-block:: python
     
@@ -62,7 +62,7 @@ Turtle is a old drawing tool in python.
    To modify the color you can use the function :code:`pencolor(colorstring)`.
 
 
-7.  Write a **function** called :code:`three_squares(unit, space)` that takes two integers as parameters, and draw three squares of side length :code:`unit` separated by a length of :code:`space`. Call the function to verify its correctness with he below code.
+7.  Write a **function** called :code:`three_squares(unit, space)` that takes two integers as parameters, and draw three squares of side length :code:`unit` separated by a length of :code:`space`. Call the function to verify its correctness with the below code.
 
    .. code-block::
 
