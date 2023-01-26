@@ -37,7 +37,6 @@ Logic First
     * Wikipedia 
     * Google 
     * Your neighbour
-    * Just don't ask me!
    
    
 * To make parts of the program *conditionally* executed, we need a *formal* way to describe conditions.
