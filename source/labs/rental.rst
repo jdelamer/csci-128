@@ -10,10 +10,6 @@ Before Kattis
 
 A car rental place needs our help. They want a simple program to calculate how much a customer is to be charged based on their rental agreement, age, how far they drove, and how long they had the car. 
 
-.. warning::
-   
-   I'm obviously aware that this is directly from class. Don't just copy/paste the solution. Take this as an opportunity to re-implement the solution. In fact, I will be very very happy if you have slightly different solutions than what I had. Use this as a place to work through what you understand in the course and figure out what you don't quite understand yet. Then, when you know what you don't know, ASK FOR HELP!!!!!!!!!!
-
 **Rules:**
 
 * We will get the customer's:

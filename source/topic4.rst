@@ -250,38 +250,38 @@ NumPy
     >>> import numpy
     
 
-NumPy Types
-===========
+.. NumPy Types
+.. ===========
 
-* Recall that Python values have types.
-* NumPy defines a `whole bunch of new types <http://docs.scipy.org/doc/numpy/user/basics.types.html>`_.
-* When you call NumPy functions, Python will, as always, try it's best to guess at type conversions for you.
-* *but*... you can be explicit about it, too:
-    >>> x = numpy.float32(7.3)
-    >>> print x
-    7.3
+.. * Recall that Python values have types.
+.. * NumPy defines a `whole bunch of new types <http://docs.scipy.org/doc/numpy/user/basics.types.html>`_.
+.. * When you call NumPy functions, Python will, as always, try it's best to guess at type conversions for you.
+.. * *but*... you can be explicit about it, too:
+..     >>> x = numpy.float32(7.3)
+..     >>> print x
+..     7.3
     
-    >>> type(x)
-    <class 'numpy.float32'>
+..     >>> type(x)
+..     <class 'numpy.float32'>
 
-* Check this out:
-    >>> numpy.float128(3.33)
-    3.330000000000000071
-    >>> numpy.float64(3.33)
-    3.33
+.. * Check this out:
+..     >>> numpy.float128(3.33)
+..     3.330000000000000071
+..     >>> numpy.float64(3.33)
+..     3.33
 
 
-* Floating point precision...
-* Let's think for a second about real numbers vs. computers. 	
+.. * Floating point precision...
+.. * Let's think for a second about real numbers vs. computers. 	
 	
 
-* You can convert regular Python types, and NumPy types, back and forth as you need.
-* If you aren't sure what type a variable has, remember that you can always check with ``type()``
+.. * You can convert regular Python types, and NumPy types, back and forth as you need.
+.. * If you aren't sure what type a variable has, remember that you can always check with ``type()``
 
-.. admonition:: Activity
-    :class: activity
+.. .. admonition:: Activity
+..     :class: activity
 
-    Write a Python function that takes two Python ``float`` s as inputs, converts them both into ``numpy.float32`` type and then returns the product.   
+..     Write a Python function that takes two Python ``float`` s as inputs, converts them both into ``numpy.float32`` type and then returns the product.   
    
 
 
