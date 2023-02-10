@@ -51,7 +51,7 @@ More loops
 * Let's apply that...
 
 .. admonition:: Activity
-    :class: activity
+   :class: activity
 
     Write a function ``vert_print`` that takes a string as an argument and then uses a ``while`` loop to print each character on its own line. (See sample output below)
    

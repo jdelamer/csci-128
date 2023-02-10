@@ -1,9 +1,9 @@
-*********************
-Assignment #2: Wordle
-*********************
+******
+Wordle
+******
 
 * **Worth**: 15%
-* **DUE**: TBA; submitted on MOODLE.
+* **DUE**: February 28th, 2023; submitted on MOODLE.
 
 Learning objectives:
 
@@ -35,21 +35,13 @@ In this assignment, you will use a list of 5 character words to create a game of
 
 To make life easier for the second assignment, you don't have to start from scratch. I've already started a file for you to use as a template. This is also somewhat realistic for programmers; you don't always start completely from scratch... Sometimes you're trying to modify someone else's code that you downloaded or inherited. Also, learning how to work with existing code is a huge way to learn. 
 
-.. warning::
-   
-	Some students have reported their browsers (seems to only be chrome that's being difficult) complaining about possible security issues. There isn't any; this is just because the files are scripts and scripts CAN be problematic if they are intended to be troublesome (these are not). To get around this, tell the browser to download it anyways. There are a few ways to do this: (a) Click the arrow next to the download at the bottom of the page and say "Keep". (b) Navigate to your browser's download screen and select "Keep".
- 
-    .. image:: ../img/security.png
-        :width: 200
-        :align: center
 
 
-Download the :download:`asn2.ipynb <../assignments_files/asn2.ipynb>` notebook and upload it to Colab to get started. See below image. **WARNING:** You should be sure to save a copy of this to your Google drive and then work with that one. You don't have to, but you will have to re-upload the project every time you want to work on it. 
+Download the `asn2.ipynb` notebook from Moodle and upload it to Colab to get started. See below image. **WARNING:** You should be sure to save a copy of this to your Google drive and then work with that one. You don't have to, but you will have to re-upload the project every time you want to work on it. 
 
 
 .. image:: ../img/uploadColab.png
 
-Alternatively if you want, download :download:`asn2.py <../assignments_files/asn2.py>` to get started if you want to *not* use Colab. Do whichever you want. It's the same as the notebook file, just missing the notebook stuff. 
 
 The steps you need to do are laid out, in detail (and suggested order) below.
 
@@ -61,7 +53,7 @@ The steps you need to do are laid out, in detail (and suggested order) below.
 		* Do not remove or add to the parameters
 	  
 
-You will also need the data file :download:`wordle.csv <../assignments_files/wordle.csv>`. Download this to your computer and upload it to your Colab files (see below image). Unfortunately, every time you open your colab project, you will need to re-upload. Not a big deal, but something you will need to remember. 
+You will also need the data file :download:`wordle.csv <../../assignments_files/wordle.csv>`. Download this to your computer and upload it to your Colab files (see below image). Unfortunately, every time you open your colab project, you will need to re-upload. Not a big deal, but something you will need to remember. 
 
 If you would like to *not* use Colab and work from your own computer, then just be sure to save this file in the **same directory** that you are saving your assignment in. 
 

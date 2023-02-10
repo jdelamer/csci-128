@@ -278,7 +278,7 @@ You should obtain:
 Koch curve
 ----------
 
-The Koch curve is one of the best known fractal and follow the simple rule :math:`F \rightarrow F+F-F+`.
+The Koch curve is one of the best known fractal and follow the simple rule :math:`F \rightarrow F+F--F+F`.
 
 Complete the following function:
 
