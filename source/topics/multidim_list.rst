@@ -1,6 +1,6 @@
-***************************
-More Lists and Numpy Arrays
-***************************
+***************************************
+Mutidimentionnal Lists and Numpy Arrays
+***************************************
 
 .. image:: ../img/hypercube3.png
 
@@ -356,7 +356,7 @@ For loops
 .. admonition:: Activity
     :class: activity
 
-    Write a function ``printeach(arr)`` that uses a ``for`` loop to print each element of an array that is passed in as a parameter. 
+    Write a function ``print_each(arr)`` that uses a ``for`` loop to print each element of an array that is passed in as a parameter. 
 
     Test it on a 1D array. 
 

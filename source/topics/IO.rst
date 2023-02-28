@@ -72,13 +72,13 @@ Loading a CSV file
     Subject 3, 155, 54, 105
    
 * The first line is a *header*, explaining the values in each field. 
-* Headers are *not* mandatory. Some CSVs have 'em, some don't.
+* Headers are *not* mandatory. Some CSVs have them, some don't.
 * Good news: Python has a built-in library to read CSV files for you!
 * In fact, we've seen this before::
 
     def load_asn1_data():
         """
-        This function loads the file `starbucks.csv` and returns a LIST of
+        This function loads the file `wordle.csv` and returns a LIST of
         latitudes and longitudes for North American Starbucks'.
         We'll talk about lists formally in class in a few lectures, but maybe
         you can start guessing how they work based on what you see here...
@@ -86,13 +86,13 @@ Loading a CSV file
 	
         import csv
 	
-        reader = csv.reader(open('starbucks.csv', 'r'))
-        locations = []
+        reader = csv.reader(open('wordle.csv', 'r'))
+        words = []
 	
         for r in reader:
-            locations.append( (r[0],r[1]))
+            words.append( (r[0],r[1]))
 		
-        return locations
+        return words
 
 * How does the ``csv.reader`` work?
 
@@ -100,7 +100,7 @@ Loading a CSV file
 .. admonition:: Activity+
     :class: activity
 	
-    Figure out how it works. Download :download:`this csv file <../data/airports.csv>` to your computer. **NOTE:** If using Colab, you'll have to upload it. 
+    Figure out how it works. Download :download:`this csv file <../../data/airports.csv>` to your computer. **NOTE:** If using Colab, you'll have to upload it. 
    
     Now write a function called ``load_airports()`` that loads this CSV file into a list. 
 

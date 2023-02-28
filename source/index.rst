@@ -76,14 +76,16 @@ Cool Things
     topics/intro
     topics/types
     topics/functions
-    topic4
-    topic5
-    topic6
-    topic7
-    topic8
-    topic8b
-    topic9
-    topic10
+    topics/logic
+    topics/boolean
+    topics/loops
+    topics/strings
+    topics/lists
+    topics/lists_trivia
+    topics/multidim_list
+    topics/IO
+    topics/images
+    topics/machine_learning
     topic11
     topic12
    
@@ -100,6 +102,7 @@ Cool Things
     labs/rental
     labs/loops
     labs/strings
+    labs/list
     labs/matrix
     labs/reference
 

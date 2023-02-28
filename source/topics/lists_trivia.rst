@@ -1,6 +1,6 @@
-*********************
-List & Pointer Trivia
-*********************
+***********
+List Trivia
+***********
 
 
 Nested lists

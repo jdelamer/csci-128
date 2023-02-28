@@ -1,6 +1,6 @@
-*****************
-Strings & Objects
-*****************
+*******
+Strings
+*******
 
 The thing about strings
 =======================
@@ -8,7 +8,7 @@ The thing about strings
 .. admonition:: Activity
     :class: activity
 
-    How is a string different from the other data types we've seen (``int``, ``float``, ``numpy.float32``, ``bool``)?
+    How is a string different from the other data types we've seen (``int``, ``float``, ``bool``)?
    
 * I can print individual *characters* of a string, by *indexing* the string:
 
@@ -138,14 +138,14 @@ in
                     return False
                 count = count + 1
 
-    * Try: `char_is_in('t', 'test')`
-    * Try: `char_is_in('z', 'test')`
-    * Try: `char_is_in('e', 'test')`
+    * Try: :code:`char_is_in('t', 'test')`
+    * Try: :code:`char_is_in('z', 'test')`
+    * Try: :code:`char_is_in('e', 'test')`
 
 .. admonition:: Activity
     :class: activity
 
-    Write a function ``where_is(char,string)`` that returns the *index* of the first occurrence of ``char`` in ``string``.
+    Write a function :code:`where_is(char,string)` that returns the *index* of the first occurrence of :code:`char` in :code:`string`.
 
 String Trivia
 =============
@@ -255,100 +255,6 @@ Formatting output
     * Check them out if you care
 
    
-Objects
-=======
-
-.. warning::
-   
-    Some of the following is not actually true for Python, but will be the case for many of the commonly used programming languages. 
-   
-    Also, we will be going into more detail on Objects later in the class.
-
-* We have seen *primitive* types
-
-    * Int
-    * Float
-    * Booleans
-   
-* There are other *types*:
-
-    * Strings (actually kinda' a primitive type in Python, but let's ignore this ...)
-    * Numpy things 
-
-* These are objects!
-* We can even make our own *objects* 
-* These objects act a little differently inside the computer 
-
-
-Methods
-=======
-
-* We've seen built in functions 
-    * ``print('this is a function')``
-* We've written our own functions
-    * ``char_is_in('a','bleh')``
-
-.. admonition:: Activity
-    :class: activity
-
-    In Colab:
-        1. Make a string
-        2. Assign it to a variable (if using Colab, hit run too)
-        3. Type the name of the variable
-        4. Press dot (period)
-        5. Wait... (or space or press ctrl-space (depends on IDE))
-
-    .. image:: ../img/methods2.png
-    .. image:: ../img/methods.png
-
-.. admonition:: Activity
-    :class: activity
-
-    1. Try writing ``a_string.upper()`` and printing it out. 
-    2. Try some other *methods*
-   
-* *Methods* are very very similar to *functions*
-* But we're telling a specific *object* to do something
-* Long story short:
-    * Sometimes we do things with functions
-    * Sometimes we do things with methods
-
-BUT WAIT...
------------
-
-* Why do we have to do it like this ``a_string.upper()``
-* As opposed to like this: ``upper(a_string)``
-
-Answer
-------
-
-1. Because... 
-
-2. ``upper(a_string)`` is not actually defined 
-
-    * unless we define it ourselves
-
-3. These methods were written by someone, and they wrote them to work a certain way
-
-    * Not necessarily the best way, or a way you like
-
-4. There's also a good bookkeeping argument too
-
-    * Put all the string methods with the strings
-
-
-How are you supposed to keep track of what's what?
---------------------------------------------------
-
-* Don't worry, you'll get it with practice
-* Do note though, **the key is practice** 
-
-Heavy lifting with strings
-==========================
-
-* If the program you are writing needs to do a lot of string manipulation, you probably want to
-    >>> import string
-* ... and `read about all the nifty stuff it does <http://docs.python.org/library/string.html>`_ 
 
 For next class
 ==============
