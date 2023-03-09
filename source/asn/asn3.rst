@@ -1,9 +1,9 @@
-**************************************************************
-Assignment #3: I'm only taking programming to make video games
-**************************************************************
+*********
+Connect 4
+*********
 
-* **Worth**: 15%
-* **DUE**:TBA; submitted on MOODLE.
+* **Worth**: 10%
+* **DUE**: April 5th; submitted on MOODLE.
 * Starting point:
    * Interpreting requirements correctly
    * Validating input
@@ -39,18 +39,15 @@ I will still be guiding you through this assignment. Remember, try not to think 
 
 Some of the functions I'll have you write at first may seem complicated, but don't worry, it will all come together in the end. 
 
-.. image:: ../img/a3_programmer.jpg
-
-
 Now, when I say, **Connect4**, I mean **Connect4**. 
 
-.. image:: ../img/a3_win.png
+.. image:: ../../img/a3_win.png
 
 
-Download the :download:`asn3.ipynb <../assignments_files/asn3.ipynb>` notebook and upload it to Colab to get started. See below image. **WARNING:** You should be sure to save a copy of this to your Google drive and then work with that one. You don't have to, but you will have to re-upload the project every time you want to work on it. 
+Download the `asn3.ipynb` notebook from Moodle and upload it to Colab to get started. See below image. **WARNING:** You should be sure to save a copy of this to your Google drive and then work with that one. You don't have to, but you will have to re-upload the project every time you want to work on it. 
 
 
-.. image:: ../img/uploadColab.png
+.. image:: ../../img/uploadColab.png
 
 
 The steps you need to do are laid out, in detail (and suggested order) below.
@@ -70,7 +67,7 @@ Coding, Part I
 
 1. Write a function ``create_grid()`` that will simply create a grid (2D list) for the **Connect 4** of the correct size 6X7. Initially, you will insert "." in the lists. Eventually we will replace these "."" characters with either an 'R' or an 'Y'. **Once you are done, test the function! Seriously, test it thoroughly. If these early functions do not work properly, the latter functions are gonna have a bad time.** Warning, be careful with pointers here!
 
-.. image:: ../img/a3_empty.png
+.. image:: ../../img/a3_empty.png
 
 2. Write ``is_full(grid)`` that will verify if the grid is full or not. To know if there is some space left, you just need to verify if there is a ``.`` in the grid.
 
@@ -79,7 +76,7 @@ Coding, Part I
 4. Write ``drop_token(grid, column, token)``. This function will take the grid, the column and the token. It will call get_line_in_col to know where to add the token in the column. It will modify the grid for the specific line and column. Finally, it will return the line where the token was placed. **Again, once you are done, test the function!**
 
 
-.. image:: ../img/a3_player.png
+.. image:: ../../img/a3_player.png
 
 
 5. Write the function ``check_line(grid, line, token)``. This function check if the player aligned 4 token (or more) on the same line. To simplify the implementation we start at the beginning of the line. Each time a token of the player is found had 1 to a counter. If the counter each 4, return True. If a token of another player is found, reset the counter to 0. At the end of the line, if the counter never reached 4, return False. **Again, once you are done, test the function!**
@@ -141,13 +138,7 @@ General FAQ:
 	* If you are still stuck, come to my office hours.
 * It’s not working, therefore Python is broken!
 	* Probably not; you’re very likely doing something wrong
-* Do I have enough comments?
-	* I don't know, maybe? If you're looking at code and have to ask if you should comment it... just comment it. That said, don't write me a book.
 * Can I work with my friend?
 	* Yes, with at most one friend.
-* I know I cheated, but I’m really sorry [that I got caught]. Can we just ignore it this time?
-	* No
-* If I submit it at 11:56pm, you’ll still mark it, right? I mean, commmmon!
-	* No. 11:55pm and earlier is on time. Anything after 11:55pm is late. Anything late is not marked. It’s rather simple really.
-* Moodle was totally broken, it’s not my fault it’s late.
-	* Nice try.
+* If I submit it at 11:56pm.
+	* 11:55pm and earlier is on time. Anything after 11:55pm is late. Anything late is not marked.

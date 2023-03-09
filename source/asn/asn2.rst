@@ -2,7 +2,7 @@
 Wordle
 ******
 
-* **Worth**: 15%
+* **Worth**: 10%
 * **DUE**: March 2nd, 2023; submitted on MOODLE.
 
 Learning objectives:
@@ -198,14 +198,8 @@ General FAQ:
 	* Probably not; you’re very likely doing something wrong
 * My thing keeps telling me ``No such file or directory: 'wordle.csv'``
 	* Then the wordle file probably isn't where python is looking.  
-* Do I have enough comments?
-	* I don't know, maybe? If you're looking at code and have to ask if you should comment it... just comment it. That said, don't write me a book.
 * Can I work with my friend?
 	* Yes, with at most one friend.
-* I know I cheated, but I’m really sorry [that I got caught]. Can we just ignore it this time?
-	* No
-* If I submit it at 11:56pm, you’ll still mark it, right? I mean, commmmon!
-	* No. 11:55pm and earlier is on time. Anything after 11:55pm is late. Anything late is not marked. It’s rather simple really.
-* Moodle was totally broken, it’s not my fault it’s late.
-	* Nice try.
+* If I submit it at 11:56pm. 
+	* 11:55pm and earlier is on time. Anything after 11:55pm is late. Anything late is not marked. It’s rather simple really.
 

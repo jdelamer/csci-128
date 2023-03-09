@@ -2,7 +2,7 @@
 Mutidimentionnal Lists and Numpy Arrays
 ***************************************
 
-.. image:: ../img/hypercube3.png
+.. image:: ../../img/hypercube3.png
 
 
 Higher Dimensions
@@ -10,10 +10,13 @@ Higher Dimensions
 
 .. admonition:: Activity
     :class: activity
+    
 
     Let's say we have a list:
 
-    >>> a = ['a','b','c']
+    .. code-block::
+        
+        list_1 = ['a','b','c']
 
     **Questions:**
 
@@ -21,7 +24,8 @@ Higher Dimensions
         * What is the type of the things in this list?
         * What do I type to get ``'a'`` printed out?
 
-   Answer these, and then test it in code. 
+    Answer these, and then test it in code. 
+
 
 
 .. admonition:: Activity
@@ -29,8 +33,8 @@ Higher Dimensions
    
     OK cool, what if I do this:
 
-    >>> a = ['a','b','c']
-    >>> b = [a]
+    >>> list_1 = ['a','b','c']
+    >>> list_2 = [list_1]
 
     **Questions:**
 
@@ -45,8 +49,8 @@ Higher Dimensions
 
     What if I do this:
 
-    >>> a = ['a','b','c']
-    >>> b = [a, ['d', 'e', 'f']]
+    >>> list_1 = ['a','b','c']
+    >>> list_2 = [list_1, ['d', 'e', 'f']]
 
     **Questions:**
 
@@ -61,15 +65,15 @@ Higher Dimensions
 
     Here's a weird one:
 
-    >>> a = ['a','b','c']
-    >>> b = [a, a]
+    >>> list_1 = ['a','b','c']
+    >>> list_2 = [list_1, list_1]
 
     **Questions:**
 
         * What is the length of this list?
         * What is the type of the things in this list?
         * What do I type to get ``'a'`` printed out?
-        * What happens if I write this ``b[0][0] = 'Z'``?
+        * What happens if I write this ``list_2[0][0] = 'Z'``?
 	  
     Answer these, and then test it in code. 
 
@@ -78,9 +82,9 @@ Higher Dimensions
 
     Last one, I swear:
 
-    >>> a = ['a','b','c']
-    >>> b = [a, ['d', 'e', 'f']]
-    >>> c = [b, ['g', 'h', 'i']]
+    >>> list_1 = ['a','b','c']
+    >>> list_2 = [list_1, ['d', 'e', 'f']]
+    >>> list_3 = [list_2, ['g', 'h', 'i']]
 
     **Questions:**
 

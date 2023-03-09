@@ -115,7 +115,7 @@ Cool Things
    
     asn/asn1/asn1
     asn/asn2
-    .. asn3
+    asn/asn3
    
    
 .. toctree::
