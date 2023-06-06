@@ -131,9 +131,9 @@ Advanced
 .. admonition:: Activity
     :class: activity
 
-   *  Check the following code and try to understand what this code is doing.
+    *  Check the following code and try to understand what this code is doing.
 
-   .. code-block:: python
+    .. code-block:: python
 
        def do_something_fancy(img):
            height = img.shape[0]
@@ -172,7 +172,6 @@ Detecting contour
 *  First we implement the luminance function:
 
 .. code-block:: python
-    :class: activity
 
     def luminance(pixel):
         r = pixel[0]
