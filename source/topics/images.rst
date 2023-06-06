@@ -19,15 +19,19 @@ Theory
 *  If you consider the image below.
 *  We have lots of different colors.
 
-.. figure:: ../img/mont-saint-michel.png
+.. figure:: ../../img/mont-saint-michel.png
     :align: center
     :width: 70%
+
+|
 
 *  If we zoom on an image, we can se that it is composed of squares that we call **pixel**.
 
-.. figure:: ../img/pixel_img.png
+.. figure:: ../../img/pixel_img.png
     :align: center
     :width: 70%
+
+|
 
 *  Each pixel is composed of only one color.
 *  All colors can be created with a mix of red, green and blue.
@@ -36,13 +40,17 @@ Theory
 *  The amount of each color is defined by a value between 0 and 255.
 *  Following an example:
 
-.. figure:: ../img/colorpixels.png
+.. figure:: ../../img/colorpixels.png
     :align: center
+
+|
 
 *  For the grayscale images it is very similar, but we only have one color.
 
-.. figure:: ../img/grayscale.png
+.. figure:: ../../img/grayscale.png
     :align: center
+
+|
 
 In Python
 ---------
@@ -108,7 +116,7 @@ Advanced
 *  We will try some things more advanced.
 *  We could create our own image pixel by pixel, but it takes too much time.
 *  So, we will open an existing one and modify it.
-*  Download the image :download:`Mont Saint Michel <../img/mont-saint-michel.png>`.
+*  Download the image :download:`Mont Saint Michel <../../img/mont-saint-michel.png>`.
 *  Now we will open it and put it in an array.
 
 
