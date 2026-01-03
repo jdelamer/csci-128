@@ -1,0 +1,706 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Advanced Sound Techniques}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large Going deeper with sound manipulation!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Access and modify individual \textcolor{stfxblue}{sound samples}
+        \item<2-> Create \textcolor{marigold}{echo} and delay effects
+        \item<3-> Change sound speed and pitch
+        \item<4-> Splice and mix multiple sounds
+        \item<5-> Generate sounds from mathematical formulas
+        \item<6-> Build complex audio effects
+        \item<7-> Apply algorithms to sound processing
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textit{Just like advanced image filters, we can create \textcolor{marigold}{\textbf{sophisticated sound effects!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Review: Sound as Data}
+    \textbf{Remember from last time:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> Sound is a sequence of \textcolor{marigold}{samples}
+        \item<2-> Each sample is a number (amplitude)
+        \item<3-> Sample rate (e.g., 44,100 Hz) determines quality
+        \item<4-> We can manipulate samples like \textcolor{stfxblue}{pixels}
+        \item<5-> Pydub makes sound processing easier
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<6->{\textbf{Today:} We'll work with samples \textcolor{marigold}{\textbf{directly}} to create custom effects!}
+\end{frame}
+
+\begin{frame}[fragile]{Accessing Individual Samples}
+    \textbf{Get raw sample data from sound:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+import array
+
+sound = AudioSegment.from_wav("sound.wav")
+
+# Get samples as array
+samples = array.array(sound.array_type, sound.raw_data)
+
+print(f"Total samples: {len(samples)}")
+print(f"First 10 samples: {samples[:10]}")
+
+# Modify a sample
+samples[1000] = 0  # Silence one sample
+
+# Create new sound from modified samples
+modified = sound._spawn(samples.tobytes())
+modified.export("modified.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Understanding Sample Values}
+    \textbf{Sample values represent \textcolor{marigold}{air pressure}:}
+
+    \vspace{1em}
+
+    For \textcolor{stfxblue}{16-bit audio} (CD quality):
+    \begin{itemize}
+        \item<1-> Range: -32,768 to +32,767
+        \item<2-> \textcolor{stfxblue}{0} = neutral (no pressure change)
+        \item<3-> \textcolor{marigold}{Positive} = increased pressure (push)
+        \item<4-> \textcolor{marigold}{Negative} = decreased pressure (pull)
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Waveform patterns:}
+    \begin{itemize}
+        \item<6-> Sine wave = pure tone
+        \item<7-> Square wave = harsh, buzzy
+        \item<8-> Sawtooth wave = bright, brassy
+        \item<9-> Random values = white noise
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Creating Echo Effect}
+    \textbf{\textcolor{marigold}{Echo}: Add delayed copy of sound to itself}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def add_echo(sound, delay_ms=300, decay=0.5):
+    """Add echo effect to sound.
+
+    delay_ms: Delay in milliseconds
+    decay: Volume reduction for echo (0.0-1.0)
+    """
+    # Create silence for delay
+    silence = AudioSegment.silent(duration=delay_ms)
+
+    # Delayed version at reduced volume
+    echo = silence + sound
+    echo = echo - (20 * (1 - decay))  # Reduce volume
+
+    # Overlay original and echo
+    result = sound.overlay(echo)
+
+    return result
+
+sound = AudioSegment.from_wav("voice.wav")
+echoed = add_echo(sound, delay_ms=400, decay=0.6)
+echoed.export("voice_echo.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Multiple Echoes (Reverb)}
+    \textbf{Create multiple echoes for \textcolor{stfxblue}{reverb} effect:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def reverb(sound, num_echoes=5):
+    """Create reverb with multiple echoes."""
+    result = sound
+
+    for i in range(1, num_echoes + 1):
+        delay = 100 * i  # Increasing delay
+        decay = 0.7 ** i  # Decreasing volume
+
+        # Create echo
+        silence = AudioSegment.silent(duration=delay)
+        echo = silence + sound
+        echo = echo - (20 * (1 - decay))
+
+        # Add to result
+        result = result.overlay(echo)
+
+    return result
+
+sound = AudioSegment.from_wav("clap.wav")
+reverbed = reverb(sound, num_echoes=5)
+reverbed.export("clap_reverb.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Changing Speed (No Pitch Change)}
+    \textbf{\textcolor{marigold}{Speed up} or \textcolor{stfxblue}{slow down}:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("speech.wav")
+
+# Speed up 1.5x (play faster)
+# Change frame rate but keep samples
+faster = sound._spawn(
+    sound.raw_data,
+    overrides={"frame_rate": int(sound.frame_rate * 1.5)}
+)
+faster = faster.set_frame_rate(sound.frame_rate)
+faster.export("faster.wav", format="wav")
+
+# Slow down 0.75x (play slower)
+slower = sound._spawn(
+    sound.raw_data,
+    overrides={"frame_rate": int(sound.frame_rate * 0.75)}
+)
+slower = slower.set_frame_rate(sound.frame_rate)
+slower.export("slower.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Crossfade Between Sounds}
+    \textbf{Smooth transition from one sound to another:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound1 = AudioSegment.from_wav("song1.wav")
+sound2 = AudioSegment.from_wav("song2.wav")
+
+# Crossfade duration in milliseconds
+crossfade_duration = 3000  # 3 seconds
+
+# Append with crossfade
+result = sound1.append(sound2, crossfade=crossfade_duration)
+
+result.export("mixed_songs.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{How it works:}
+    \begin{itemize}
+        \item sound1 fades out at the end
+        \item sound2 fades in at the beginning
+        \item They overlap during crossfade
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Splicing Sounds Precisely}
+    \textbf{Cut and combine sound segments:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+speech = AudioSegment.from_wav("speech.wav")
+
+# Extract specific parts (times in milliseconds)
+intro = speech[0:2000]        # First 2 seconds
+middle = speech[5000:8000]    # 5-8 seconds
+end = speech[-3000:]          # Last 3 seconds
+
+# Combine in different order
+rearranged = intro + end + middle
+
+# Add silence between parts
+silence = AudioSegment.silent(duration=500)
+spaced = intro + silence + middle + silence + end
+
+rearranged.export("rearranged.wav", format="wav")
+spaced.export("spaced.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Like cutting and pasting regions in images!
+\end{frame}
+
+\begin{frame}[fragile]{Creating White Noise}
+    \textbf{Generate random noise:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+from pydub.generators import WhiteNoise
+
+# Generate 3 seconds of white noise
+noise = WhiteNoise().to_audio_segment(duration=3000)
+
+# Make it quieter
+noise = noise - 20  # Reduce by 20 dB
+
+noise.export("white_noise.wav", format="wav")
+
+# Use for sound effects
+sound = AudioSegment.from_wav("music.wav")
+# Add quiet background noise
+result = sound.overlay(noise - 30)
+result.export("with_noise.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    White noise contains all frequencies equally.
+\end{frame}
+
+\begin{frame}[fragile]{Generating Tones}
+    \textbf{Create pure tones at specific frequencies:}
+
+    \begin{lstlisting}
+from pydub.generators import Sine, Square, Sawtooth
+
+# Musical notes (frequencies in Hz)
+C4 = 261.63
+E4 = 329.63
+G4 = 392.00
+
+duration = 500  # milliseconds
+
+# Create C major chord
+c_note = Sine(C4).to_audio_segment(duration=duration)
+e_note = Sine(E4).to_audio_segment(duration=duration)
+g_note = Sine(G4).to_audio_segment(duration=duration)
+
+# Make them quieter
+c_note = c_note - 20
+e_note = e_note - 20
+g_note = g_note - 20
+
+# Mix them together
+chord = c_note.overlay(e_note).overlay(g_note)
+chord.export("c_major_chord.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a Simple Melody}
+    \textbf{Play notes in sequence:}
+
+    \begin{lstlisting}
+from pydub.generators import Sine
+from pydub import AudioSegment
+
+# Note frequencies (C major scale)
+notes = {
+    'C': 261.63, 'D': 293.66, 'E': 329.63,
+    'F': 349.23, 'G': 392.00, 'A': 440.00,
+    'B': 493.88, 'C2': 523.25
+}
+
+melody = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C2']
+duration = 300  # Each note duration
+
+song = AudioSegment.silent(duration=0)
+for note in melody:
+    tone = Sine(notes[note]).to_audio_segment(duration=duration)
+    tone = tone - 20  # Quieter
+    song += tone
+
+song.export("scale.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Apply Filter to Samples}
+    \textbf{Process samples with a function:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+import array
+
+def amplify_samples(sound, factor=1.5):
+    """Multiply all sample values by factor."""
+    samples = array.array(sound.array_type, sound.raw_data)
+
+    # Process each sample
+    for i in range(len(samples)):
+        # Multiply and clamp to valid range
+        new_val = int(samples[i] * factor)
+        samples[i] = max(-32768, min(32767, new_val))
+
+    # Create new sound from modified samples
+    return sound._spawn(samples.tobytes())
+
+sound = AudioSegment.from_wav("quiet.wav")
+louder = amplify_samples(sound, factor=2.0)
+louder.export("amplified.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Normalize Sound Levels}
+    \textbf{Make sound as loud as possible without clipping:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def normalize(sound):
+    """Normalize sound to maximum volume."""
+    # Calculate how much we can increase
+    headroom = sound.max_dBFS
+
+    # Apply gain to maximize volume
+    normalized = sound.apply_gain(-headroom)
+
+    return normalized
+
+# Make quiet sound louder
+quiet_sound = AudioSegment.from_wav("quiet.wav")
+loud_sound = normalize(quiet_sound)
+loud_sound.export("normalized.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Useful for making all sounds in a project have consistent volume!
+\end{frame}
+
+\begin{frame}[fragile]{Detecting Silence}
+    \textbf{Find silent parts of audio:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+from pydub.silence import detect_silence
+
+sound = AudioSegment.from_wav("speech.wav")
+
+# Find silent parts (returns list of [start, end] in ms)
+silent_ranges = detect_silence(
+    sound,
+    min_silence_len=1000,  # Minimum 1 second
+    silence_thresh=-40     # dB threshold
+)
+
+print(f"Found {len(silent_ranges)} silent parts")
+for start, end in silent_ranges:
+    duration = (end - start) / 1000
+    print(f"Silence from {start}ms to {end}ms ({duration}s)")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Useful for automatically editing recordings!
+\end{frame}
+
+\begin{frame}[fragile]{Removing Silence}
+    \textbf{Strip silence from beginning and end:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+from pydub.silence import split_on_silence
+
+sound = AudioSegment.from_wav("recording.wav")
+
+# Split on silence and remove silent chunks
+chunks = split_on_silence(
+    sound,
+    min_silence_len=500,    # Minimum silence: 0.5 sec
+    silence_thresh=-40,     # dB threshold
+    keep_silence=100        # Keep 100ms of silence
+)
+
+# Concatenate non-silent chunks
+result = AudioSegment.empty()
+for chunk in chunks:
+    result += chunk
+
+result.export("no_silence.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Panning (Stereo Effect)}
+    \textbf{Move sound between left and right channels:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("mono_sound.wav")
+
+# Convert to stereo if needed
+if sound.channels == 1:
+    sound = sound.set_channels(2)
+
+# Pan left (-1) to right (+1)
+# -1 = full left, 0 = center, +1 = full right
+left_sound = sound.pan(-1.0)
+center_sound = sound.pan(0.0)
+right_sound = sound.pan(1.0)
+
+# Create sweeping pan effect
+sweep = left_sound[:1000] + center_sound[:1000] + right_sound[:1000]
+sweep.export("pan_sweep.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Creates spatial audio effects!
+\end{frame}
+
+\begin{frame}[fragile]{Example: Sound Effect Generator}
+    \textbf{Create custom sound effects:}
+
+    \begin{lstlisting}
+from pydub.generators import Sine, Square
+from pydub import AudioSegment
+
+def create_laser_sound():
+    """Create sci-fi laser sound."""
+    # Start high, sweep down
+    duration = 500
+    sound = AudioSegment.silent(duration=0)
+
+    # Descending frequency
+    for freq in range(800, 200, -50):
+        tone = Square(freq).to_audio_segment(duration=50)
+        tone = tone - 20
+        sound += tone
+
+    # Add fade out
+    sound = sound.fade_out(100)
+    return sound
+
+laser = create_laser_sound()
+laser.export("laser.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Beat Generator}
+    \textbf{Create a simple drum beat:}
+
+    \begin{lstlisting}
+from pydub.generators import Sine
+from pydub import AudioSegment
+
+# Create drum sounds
+kick = Sine(60).to_audio_segment(duration=100) - 10
+snare = Sine(200).to_audio_segment(duration=80) - 10
+hihat = Sine(8000).to_audio_segment(duration=50) - 20
+
+# Create pattern (16th notes)
+silence = AudioSegment.silent(duration=200)
+beat = AudioSegment.silent(duration=0)
+
+pattern = [
+    kick, silence, hihat, silence,
+    snare, silence, hihat, silence,
+    kick, silence, hihat, silence,
+    snare, silence, hihat, silence
+]
+
+for sound in pattern:
+    beat += sound
+
+beat.export("beat.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Combining Effects}
+    \textbf{Chain multiple effects together:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def process_voice(filename):
+    """Apply multiple effects to voice."""
+    sound = AudioSegment.from_wav(filename)
+
+    # 1. Normalize volume
+    headroom = sound.max_dBFS
+    sound = sound.apply_gain(-headroom)
+
+    # 2. Add slight echo
+    echo = AudioSegment.silent(duration=100) + sound
+    echo = echo - 15
+    sound = sound.overlay(echo)
+
+    # 3. Fade in and out
+    sound = sound.fade_in(500).fade_out(500)
+
+    return sound
+
+result = process_voice("voice.wav")
+result.export("voice_processed.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Sound Processing Patterns}
+    \textbf{Common patterns we've learned:}
+
+    \vspace{1em}
+
+    \textbf{1. Temporal effects:}
+    \begin{itemize}
+        \item Echo/delay (overlay with delayed copy)
+        \item Reverb (multiple echoes)
+        \item Crossfade (smooth transitions)
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{2. Sample manipulation:}
+    \begin{itemize}
+        \item Amplification (multiply samples)
+        \item Normalization (maximize volume)
+        \item Custom filters (process each sample)
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{3. Generation:}
+    \begin{itemize}
+        \item Tones and melodies
+        \item Noise and effects
+        \item Programmatic sound creation
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Similarities to Image Processing}
+    \begin{center}
+        \begin{tabular}{l|l}
+            \textbf{Images} & \textbf{Sounds} \\
+            \hline
+            Blur (average pixels) & Echo (delay + mix) \\
+            Brightness & Volume \\
+            Sharpen & ? (frequency boost) \\
+            Collage & Splice/mix \\
+            Transform pixels & Transform samples \\
+            Generate patterns & Generate tones \\
+            Filters & Effects \\
+        \end{tabular}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Same programming concepts, different media!}
+\end{frame}
+
+\begin{frame}{Practice Problems}
+    \textbf{Try these:}
+
+    \begin{enumerate}
+        \item Create a function that adds a subtle echo to any sound
+
+        \item Make a "robot voice" effect by mixing the original with lower frequencies
+
+        \item Create a doorbell sound using two tones
+
+        \item Build a function that removes the first and last second of silence from audio
+
+        \item Generate a siren sound that sweeps between two frequencies
+
+        \item Create a "backwards echo" effect (echo before the sound)
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Advanced Challenge}
+    \textbf{Final Project Idea: Sound Effect Library}
+
+    \vspace{1em}
+
+    Create a Python module with functions for:
+    \begin{itemize}
+        \item Various echo/reverb effects
+        \item Pitch shifting
+        \item Time stretching
+        \item Sound generation (tones, noise, effects)
+        \item Audio analysis (find peaks, measure volume)
+        \item Format conversion
+        \item Batch processing multiple files
+    \end{itemize}
+
+    \vspace{1em}
+
+    Make it reusable for different projects!
+\end{frame}
+
+\begin{frame}{Coming Up}
+    \textbf{Next lecture: Building Bigger Programs}
+
+    \vspace{1em}
+
+    We'll learn:
+    \begin{itemize}
+        \item Organizing media code with functions
+        \item Creating reusable modules
+        \item Structuring larger programs
+        \item Debugging complex media programs
+        \item Testing strategies
+        \item Building a media processing library
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textit{From individual filters to complete applications!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Summary}
+    \textbf{Today we learned:}
+    \begin{itemize}
+        \item Accessing and modifying individual samples
+        \item Creating echo and reverb effects
+        \item Changing speed and pitch
+        \item Precise splicing and mixing
+        \item Generating sounds from scratch
+        \item Detecting and removing silence
+        \item Panning and stereo effects
+        \item Combining multiple effects
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Key insight:} Sound manipulation uses the same algorithmic thinking as image processing!
+\end{frame}
+
+\end{document}

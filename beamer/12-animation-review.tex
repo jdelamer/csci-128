@@ -1,0 +1,383 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Animation and Course Review}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large From still images to animation!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Create simple \textcolor{marigold}{animations} from image sequences
+        \item<2-> Understand \textcolor{stfxblue}{frame-based} animation
+        \item<3-> Review key course concepts
+        \item<4-> Connect everything we've learned
+        \item<5-> Plan your final project
+        \item<6-> Look ahead to future learning
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textit{\textcolor{marigold}{\textbf{Bringing it all together!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Animation Basics}
+    \textcolor{marigold}{\textbf{Animation = Sequence of images displayed rapidly}}
+
+    \vspace{1em}
+
+    \textbf{Key concepts:}
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{\textbf{Frame:}} One image in the sequence
+        \item<2-> \textcolor{marigold}{\textbf{Frame rate:}} Images per second (FPS)
+        \item<3-> \textbf{24 FPS:} Film standard
+        \item<4-> \textbf{30 FPS:} Video standard
+        \item<5-> \textbf{60 FPS:} Smooth video games
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<6->{\textcolor{marigold}{\textbf{Illusion of motion from still images!}}}
+\end{frame}
+
+\begin{frame}[fragile]{Creating Animation Frames}
+    \begin{lstlisting}
+from PIL import Image
+
+def create_fade_animation(img, num_frames=10):
+    """Create frames that fade image to black."""
+    frames = []
+
+    for i in range(num_frames):
+        factor = 1.0 - (i / num_frames)
+        frame = img.copy()
+        pixels = frame.load()
+        width, height = frame.size
+
+        for x in range(width):
+            for y in range(height):
+                r, g, b = pixels[x, y]
+                pixels[x, y] = (
+                    int(r * factor),
+                    int(g * factor),
+                    int(b * factor)
+                )
+
+        frames.append(frame)
+        frame.save(f"frame_{i:03d}.jpg")
+
+    return frames
+
+img = Image.open("photo.jpg")
+create_fade_animation(img)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Creating GIF Animations}
+    \begin{lstlisting}
+from PIL import Image
+
+def create_gif(frames, output="animation.gif", duration=100):
+    """Save frames as animated GIF.
+
+    duration: milliseconds per frame
+    """
+    frames[0].save(
+        output,
+        save_all=True,
+        append_images=frames[1:],
+        duration=duration,
+        loop=0  # 0 = loop forever
+    )
+
+# Create animation
+img = Image.open("photo.jpg")
+frames = create_fade_animation(img, num_frames=20)
+create_gif(frames, "fade.gif", duration=50)
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Creates a looping \textcolor{marigold}{animated GIF!}
+\end{frame}
+
+\begin{frame}{Course Review: What We've Learned}
+    \textbf{Week 1-2: \textcolor{marigold}{Images}}
+    \begin{itemize}
+        \item<1-> Python basics, variables, functions
+        \item<2-> Digital images as pixel data
+        \item<3-> RGB color model
+        \item<4-> Basic filters and effects
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \onslide<5->{\textbf{Week 3: Advanced Images}}
+    \begin{itemize}
+        \item<5-> Transformations (rotate, mirror, scale)
+        \item<6-> Collages and compositing
+        \item<7-> Position-based effects
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \onslide<8->{\textbf{Week 4: \textcolor{stfxblue}{Sound}}}
+    \begin{itemize}
+        \item<8-> Digital sound as samples
+        \item<9-> Sound effects (echo, mixing)
+        \item<10-> Generating tones
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Course Review: What We've Learned (cont.)}
+    \textbf{Week 5: \textcolor{marigold}{Program Organization}}
+    \begin{itemize}
+        \item<1-> Functions and modules
+        \item<2-> Building libraries
+        \item<3-> Testing and debugging
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \onslide<4->{\textbf{Week 6: Text and Files}}
+    \begin{itemize}
+        \item<4-> File I/O operations
+        \item<5-> Adding text to images
+        \item<6-> Creating logs and reports
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \onslide<7->{\textbf{Week 7: \textcolor{stfxblue}{Data and Animation}}}
+    \begin{itemize}
+        \item<7-> CSV and JSON data
+        \item<8-> Data-driven applications
+        \item<9-> Creating animations
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Key Programming Concepts}
+    \textbf{You now understand:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{\textbf{Variables:}} Store and manipulate data
+        \item \textbf{Functions:} Organize and reuse code
+        \item \textbf{Loops:} Repeat operations efficiently
+        \item \textbf{Conditionals:} Make decisions in code
+        \item \textbf{Data structures:} Lists, dictionaries, strings
+        \item \textbf{Files:} Persist data between runs
+        \item \textbf{Modules:} Organize larger programs
+        \item \textbf{Debugging:} Find and fix problems
+    \end{itemize}
+
+    \vspace{1em}
+
+    These concepts apply to ANY programming language!
+\end{frame}
+
+\begin{frame}{Media Computation Skills}
+    \textbf{You can now:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Load, modify, and save images
+        \item Apply filters and transformations
+        \item Create collages and compositions
+        \item Process digital sound
+        \item Add text and watermarks to images
+        \item Batch process multiple files
+        \item Generate reports and catalogs
+        \item Create simple animations
+        \item Build complete media applications
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Real skills for real projects!}
+\end{frame}
+
+\begin{frame}{Final Project Ideas}
+    \textbf{Put it all together:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Photo filter application with multiple effects
+        \item Automated image watermarking tool
+        \item Image gallery generator
+        \item Sound effect library and mixer
+        \item Batch image processor with CSV configuration
+        \item Animated meme generator
+        \item Photo collage maker
+        \item Image metadata analyzer
+        \item Custom Instagram-style filter pack
+        \item Slideshow creator with transitions
+    \end{itemize}
+
+    \vspace{1em}
+
+    Choose something YOU'RE interested in!
+\end{frame}
+
+\begin{frame}{Project Requirements}
+    \textbf{Your final project should:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item Use functions to organize code
+        \item Process images or sound (or both!)
+        \item Read from or write to files
+        \item Include error handling
+        \item Be well-documented
+        \item Demonstrate multiple concepts from class
+        \item Actually work!
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Aim for useful and creative!}
+\end{frame}
+
+\begin{frame}{Beyond This Course}
+    \textbf{Continue learning:}
+
+    \vspace{1em}
+
+    \textbf{More Python:}
+    \begin{itemize}
+        \item Object-oriented programming
+        \item Web development (Flask, Django)
+        \item Data science (pandas, NumPy)
+        \item Machine learning (scikit-learn)
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{More media:}
+    \begin{itemize}
+        \item OpenCV for computer vision
+        \item MoviePy for video editing
+        \item Advanced audio with librosa
+        \item 3D graphics with PyGame
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{Other languages:}
+    \begin{itemize}
+        \item JavaScript for web
+        \item Java or C++ for systems
+        \item SQL for databases
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Resources}
+    \textbf{Keep learning:}
+
+    \vspace{1em}
+
+    \textbf{Documentation:}
+    \begin{itemize}
+        \item Python.org official documentation
+        \item Pillow documentation
+        \item Pydub documentation
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{Online learning:}
+    \begin{itemize}
+        \item Real Python tutorials
+        \item Python tutorials on YouTube
+        \item Coursera/edX Python courses
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{Practice:}
+    \begin{itemize}
+        \item Build personal projects
+        \item Contribute to open source
+        \item Join coding communities
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Final Advice}
+    \textbf{To succeed in programming:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item \textbf{Practice regularly:} Code every day
+        \item \textbf{Build projects:} Learning by doing
+        \item \textbf{Read others' code:} Learn from examples
+        \item \textbf{Ask questions:} No question is stupid
+        \item \textbf{Debug systematically:} Don't guess
+        \item \textbf{Start simple:} Then add complexity
+        \item \textbf{Have fun:} Enjoy creating things!
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{You are now a programmer!}
+\end{frame}
+
+\begin{frame}{Thank You!}
+    \begin{center}
+        \LARGE Thank you for a great course!
+
+        \vspace{2em}
+
+        \large Questions about final projects?
+
+        \vspace{2em}
+
+        \normalsize
+        Good luck with your projects!
+
+        \vspace{1em}
+
+        Keep coding and creating!
+    \end{center}
+\end{frame}
+
+\end{document}

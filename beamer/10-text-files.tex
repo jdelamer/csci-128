@@ -1,0 +1,724 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Text Manipulation and Files}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large Text as another form of media!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Process \textcolor{stfxblue}{text} as data
+        \item<2-> Read and write \textcolor{marigold}{text files}
+        \item<3-> Parse structured text data
+        \item<4-> Manipulate strings effectively
+        \item<5-> Add text to images (captions, watermarks)
+        \item<6-> Create image catalogs with text descriptions
+        \item<7-> Process media metadata
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textit{Text is data just like \textcolor{marigold}{images} and \textcolor{stfxblue}{sounds!}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Why Text Processing Matters}
+    \textbf{Text in media computation:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{\textbf{Image metadata:}} Read EXIF data, filenames, captions
+        \item<2-> \textcolor{marigold}{\textbf{Batch processing:}} Read lists of files to process
+        \item<3-> \textcolor{stfxblue}{\textbf{Watermarks:}} Add text to images
+        \item<4-> \textcolor{marigold}{\textbf{Reports:}} Generate descriptions of processed media
+        \item<5-> \textcolor{stfxblue}{\textbf{Configuration:}} Read settings from text files
+        \item<6-> \textcolor{marigold}{\textbf{Logs:}} Track what processing was done
+        \item<7-> \textcolor{stfxblue}{\textbf{Captions:}} Add titles and labels to images
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<8->{\textcolor{marigold}{\textbf{Text ties everything together!}}}
+\end{frame}
+
+\begin{frame}[fragile]{Review: String Basics}
+    \textbf{Strings are sequences of characters:}
+
+    \begin{lstlisting}
+# Creating strings
+message = "Hello, World!"
+filename = 'photo.jpg'
+multiline = """This is a
+multi-line string"""
+
+# String operations
+print(len(message))        # 13
+print(message[0])          # H
+print(message[7:12])       # World
+print(message.upper())     # HELLO, WORLD!
+print(message.lower())     # hello, world!
+
+# Checking contents
+print("photo" in filename) # True
+print(filename.endswith(".jpg"))  # True
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Working with Filenames}
+    \textbf{Extract information from filenames:}
+
+    \begin{lstlisting}
+import os
+
+filename = "vacation_2024_beach_01.jpg"
+
+# Split into parts
+parts = filename.split("_")
+theme = parts[0]      # "vacation"
+year = parts[1]       # "2024"
+location = parts[2]   # "beach"
+
+# Get extension
+name, ext = os.path.splitext(filename)
+print(name)  # vacation_2024_beach_01
+print(ext)   # .jpg
+
+# Build new filename
+output = f"processed_{name}{ext}"
+print(output)  # processed_vacation_2024_beach_01.jpg
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Reading Text Files}
+    \textbf{Read file contents:}
+
+    \begin{lstlisting}
+# Read entire file
+with open("notes.txt", "r") as file:
+    content = file.read()
+    print(content)
+
+# Read line by line
+with open("notes.txt", "r") as file:
+    for line in file:
+        line = line.strip()  # Remove newline
+        print(line)
+
+# Read all lines into list
+with open("notes.txt", "r") as file:
+    lines = file.readlines()
+    print(f"File has {len(lines)} lines")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    \textbf{Always use} \texttt{with} \textbf{to automatically close files!}
+\end{frame}
+
+\begin{frame}[fragile]{Writing Text Files}
+    \textbf{Create and write to files:}
+
+    \begin{lstlisting}
+# Write to file (overwrites existing)
+with open("output.txt", "w") as file:
+    file.write("First line\n")
+    file.write("Second line\n")
+
+# Append to file
+with open("log.txt", "a") as file:
+    file.write("New log entry\n")
+
+# Write multiple lines
+lines = ["Line 1\n", "Line 2\n", "Line 3\n"]
+with open("output.txt", "w") as file:
+    file.writelines(lines)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Remember:} \texttt{write()} doesn't add newlines automatically!
+\end{frame}
+
+\begin{frame}[fragile]{Example: Process List of Images}
+    \textbf{Read filenames from text file and process them:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+# images.txt contains:
+# beach.jpg
+# sunset.jpg
+# mountain.jpg
+
+with open("images.txt", "r") as file:
+    for line in file:
+        filename = line.strip()
+
+        try:
+            img = Image.open(filename)
+            # Apply grayscale
+            img = img.convert("L")
+            output = f"gray_{filename}"
+            img.save(output)
+            print(f"Processed: {filename}")
+        except FileNotFoundError:
+            print(f"Error: {filename} not found")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Create Processing Log}
+    \textbf{Record what was done to each image:}
+
+    \begin{lstlisting}
+from PIL import Image
+from datetime import datetime
+
+def log_processing(filename, operation, logfile="log.txt"):
+    """Add entry to processing log."""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(logfile, "a") as file:
+        file.write(f"{timestamp} | {filename} | {operation}\n")
+
+# Process image and log it
+img = Image.open("photo.jpg")
+log_processing("photo.jpg", "Loaded")
+
+img = img.convert("L")
+log_processing("photo.jpg", "Converted to grayscale")
+
+img.save("photo_gray.jpg")
+log_processing("photo.jpg", "Saved as photo_gray.jpg")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Creates audit trail of all processing!
+\end{frame}
+
+\begin{frame}[fragile]{Parsing Structured Text}
+    \textbf{Process comma-separated values:}
+
+    \begin{lstlisting}
+# data.txt contains:
+# filename,filter,brightness
+# photo1.jpg,sepia,1.2
+# photo2.jpg,grayscale,1.0
+# photo3.jpg,vintage,1.5
+
+with open("data.txt", "r") as file:
+    lines = file.readlines()
+    header = lines[0].strip().split(",")
+
+    for line in lines[1:]:
+        parts = line.strip().split(",")
+        filename = parts[0]
+        filter_type = parts[1]
+        brightness = float(parts[2])
+
+        print(f"Apply {filter_type} to {filename}")
+        print(f"  Brightness: {brightness}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Using CSV Module}
+    \textbf{Python's CSV module makes this easier:}
+
+    \begin{lstlisting}
+import csv
+
+with open("data.csv", "r") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        print(f"Filename: {row['filename']}")
+        print(f"Filter: {row['filter']}")
+        print(f"Brightness: {row['brightness']}")
+        print()
+
+# Writing CSV
+data = [
+    {"filename": "photo1.jpg", "width": 800, "height": 600},
+    {"filename": "photo2.jpg", "width": 1024, "height": 768}
+]
+
+with open("images.csv", "w", newline='') as file:
+    fieldnames = ["filename", "width", "height"]
+    writer = csv.DictWriter(file, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(data)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Image Catalog}
+    \textbf{Generate text catalog of images:}
+
+    \begin{lstlisting}
+from PIL import Image
+import os
+
+def create_catalog(directory, output_file="catalog.txt"):
+    """Create text catalog of all images in directory."""
+    with open(output_file, "w") as file:
+        file.write("IMAGE CATALOG\n")
+        file.write("=" * 50 + "\n\n")
+
+        for filename in os.listdir(directory):
+            if filename.endswith(('.jpg', '.png', '.gif')):
+                path = os.path.join(directory, filename)
+                img = Image.open(path)
+                width, height = img.size
+                mode = img.mode
+
+                file.write(f"File: {filename}\n")
+                file.write(f"  Size: {width}x{height}\n")
+                file.write(f"  Mode: {mode}\n")
+                file.write(f"  Pixels: {width * height:,}\n")
+                file.write("\n")
+
+    print(f"Catalog created: {output_file}")
+
+create_catalog("photos")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Adding Text to Images}
+    \textbf{Use Pillow's ImageDraw to add text:}
+
+    \begin{lstlisting}
+from PIL import Image, ImageDraw, ImageFont
+
+# Load image
+img = Image.open("photo.jpg")
+draw = ImageDraw.Draw(img)
+
+# Add text
+text = "Summer 2024"
+position = (10, 10)
+color = (255, 255, 255)  # White
+
+# Simple text (default font)
+draw.text(position, text, fill=color)
+
+# Save result
+img.save("captioned.jpg")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Common uses:} Watermarks, captions, labels, timestamps
+\end{frame}
+
+\begin{frame}[fragile]{Custom Fonts for Text}
+    \textbf{Use TrueType fonts for better appearance:}
+
+    \begin{lstlisting}
+from PIL import Image, ImageDraw, ImageFont
+
+img = Image.open("photo.jpg")
+draw = ImageDraw.Draw(img)
+
+try:
+    # Load custom font
+    font = ImageFont.truetype("arial.ttf", 36)
+except:
+    # Fallback to default
+    font = ImageFont.load_default()
+
+# Add text with custom font
+text = "Copyright 2024"
+position = (20, 20)
+color = (255, 255, 255)
+
+draw.text(position, text, fill=color, font=font)
+
+img.save("watermarked.jpg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Centered Text on Image}
+    \textbf{Calculate position to center text:}
+
+    \begin{lstlisting}
+from PIL import Image, ImageDraw, ImageFont
+
+img = Image.open("photo.jpg")
+draw = ImageDraw.Draw(img)
+
+text = "MY PHOTO"
+font = ImageFont.truetype("arial.ttf", 48)
+
+# Get text size
+bbox = draw.textbbox((0, 0), text, font=font)
+text_width = bbox[2] - bbox[0]
+text_height = bbox[3] - bbox[1]
+
+# Calculate centered position
+img_width, img_height = img.size
+x = (img_width - text_width) // 2
+y = (img_height - text_height) // 2
+
+# Draw centered text
+draw.text((x, y), text, fill=(255, 255, 255), font=font)
+
+img.save("centered.jpg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Text with Outline}
+    \textbf{Make text more visible:}
+
+    \begin{lstlisting}
+from PIL import Image, ImageDraw, ImageFont
+
+img = Image.open("photo.jpg")
+draw = ImageDraw.Draw(img)
+
+text = "ADVENTURE"
+position = (50, 50)
+font = ImageFont.truetype("arial.ttf", 60)
+
+# Draw outline (black)
+outline_color = (0, 0, 0)
+for dx in [-2, 0, 2]:
+    for dy in [-2, 0, 2]:
+        draw.text((position[0]+dx, position[1]+dy),
+                  text, fill=outline_color, font=font)
+
+# Draw main text (white)
+draw.text(position, text, fill=(255, 255, 255), font=font)
+
+img.save("outlined_text.jpg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Timestamp Watermark}
+    \textbf{Add timestamp to image:}
+
+    \begin{lstlisting}
+from PIL import Image, ImageDraw, ImageFont
+from datetime import datetime
+
+def add_timestamp(image, position="bottom-right"):
+    """Add current timestamp to image."""
+    draw = ImageDraw.Draw(image)
+
+    # Get current time
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Calculate position
+    width, height = image.size
+    if position == "bottom-right":
+        x = width - 200
+        y = height - 30
+    elif position == "top-left":
+        x, y = 10, 10
+
+    # Add text
+    draw.text((x, y), timestamp, fill=(255, 255, 255))
+
+    return image
+
+img = Image.open("photo.jpg")
+img = add_timestamp(img)
+img.save("timestamped.jpg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Text Processing: Word Count}
+    \textbf{Analyze text files:}
+
+    \begin{lstlisting}
+def analyze_text_file(filename):
+    """Count words, lines, and characters."""
+    with open(filename, "r") as file:
+        content = file.read()
+        lines = content.split("\n")
+        words = content.split()
+
+        print(f"File: {filename}")
+        print(f"Characters: {len(content)}")
+        print(f"Lines: {len(lines)}")
+        print(f"Words: {len(words)}")
+
+        # Most common words
+        word_counts = {}
+        for word in words:
+            word = word.lower().strip(".,!?")
+            word_counts[word] = word_counts.get(word, 0) + 1
+
+        # Top 5 words
+        sorted_words = sorted(word_counts.items(),
+                             key=lambda x: x[1], reverse=True)
+        print("\nTop 5 words:")
+        for word, count in sorted_words[:5]:
+            print(f"  {word}: {count}")
+
+analyze_text_file("notes.txt")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Configuration Files}
+    \textbf{Read settings from text file:}
+
+    \begin{lstlisting}
+# config.txt contains:
+# brightness=1.5
+# contrast=1.2
+# output_format=png
+# watermark_text=Copyright 2024
+
+def load_config(filename):
+    """Load configuration from text file."""
+    config = {}
+    with open(filename, "r") as file:
+        for line in file:
+            line = line.strip()
+            if line and not line.startswith("#"):
+                key, value = line.split("=")
+                config[key.strip()] = value.strip()
+    return config
+
+config = load_config("config.txt")
+brightness = float(config.get("brightness", 1.0))
+contrast = float(config.get("contrast", 1.0))
+output_format = config.get("output_format", "jpg")
+watermark = config.get("watermark_text", "")
+
+print(f"Brightness: {brightness}")
+print(f"Contrast: {contrast}")
+print(f"Format: {output_format}")
+print(f"Watermark: {watermark}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Batch Processor with Instructions}
+    \textbf{Read processing instructions from file:}
+
+    \begin{lstlisting}
+# instructions.txt:
+# beach.jpg grayscale brighten
+# sunset.jpg sepia darken
+# mountain.jpg negative
+
+from PIL import Image
+import image_filters
+
+with open("instructions.txt", "r") as file:
+    for line in file:
+        parts = line.strip().split()
+        filename = parts[0]
+        operations = parts[1:]
+
+        print(f"Processing {filename}:")
+        img = Image.open(filename)
+
+        for op in operations:
+            if op == "grayscale":
+                img = image_filters.grayscale(img)
+            elif op == "brighten":
+                img = image_filters.brighten(img, 30)
+            elif op == "darken":
+                img = image_filters.darken(img, 30)
+            print(f"  Applied: {op}")
+
+        output = f"processed_{filename}"
+        img.save(output)
+        print(f"  Saved: {output}\n")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Creating Reports}
+    \textbf{Generate HTML report of processed images:}
+
+    \begin{lstlisting}
+def create_html_report(images, output="report.html"):
+    """Create HTML report with image previews."""
+    with open(output, "w") as file:
+        file.write("<html><head><title>Image Report</title></head>\n")
+        file.write("<body>\n")
+        file.write("<h1>Image Processing Report</h1>\n")
+
+        for img_info in images:
+            file.write(f"<div style='margin: 20px;'>\n")
+            file.write(f"<h2>{img_info['filename']}</h2>\n")
+            file.write(f"<img src='{img_info['filename']}' ")
+            file.write(f"width='400'><br>\n")
+            file.write(f"Size: {img_info['width']}x{img_info['height']}<br>\n")
+            file.write(f"Filter: {img_info['filter']}<br>\n")
+            file.write("</div>\n")
+
+        file.write("</body></html>")
+
+images = [
+    {"filename": "photo1.jpg", "width": 800,
+     "height": 600, "filter": "grayscale"},
+    {"filename": "photo2.jpg", "width": 1024,
+     "height": 768, "filter": "sepia"}
+]
+
+create_html_report(images)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Error Handling with Files}
+    \textbf{Handle file errors gracefully:}
+
+    \begin{lstlisting}
+def safe_read_file(filename):
+    """Read file with error handling."""
+    try:
+        with open(filename, "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"Error: {filename} not found")
+        return None
+    except PermissionError:
+        print(f"Error: No permission to read {filename}")
+        return None
+    except Exception as e:
+        print(f"Error reading {filename}: {e}")
+        return None
+
+content = safe_read_file("data.txt")
+if content is not None:
+    print("File contents:")
+    print(content)
+else:
+    print("Could not read file")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{File Paths and Organization}
+    \textbf{Organize your project files:}
+
+    \vspace{1em}
+
+    \textbf{Good structure:}
+    \begin{itemize}
+        \item \texttt{input/} - Original images
+        \item \texttt{output/} - Processed images
+        \item \texttt{data/} - Text files, CSV files
+        \item \texttt{logs/} - Processing logs
+        \item \texttt{config/} - Configuration files
+        \item \texttt{reports/} - Generated reports
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Use} \texttt{os.path.join()} \textbf{for paths:}
+    \begin{itemize}
+        \item Works on all operating systems
+        \item Handles path separators correctly
+        \item Example: \texttt{os.path.join("output", "processed.jpg")}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Complete Media Processor}
+    \textbf{Putting it all together:}
+
+    \begin{lstlisting}
+from PIL import Image
+import image_filters
+import os
+
+def process_with_log(input_dir, output_dir, log_file):
+    """Process images and create log."""
+    # Create output directory if needed
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    with open(log_file, "w") as log:
+        log.write("Processing Log\n")
+        log.write("=" * 50 + "\n\n")
+
+        for filename in os.listdir(input_dir):
+            if filename.endswith(('.jpg', '.png')):
+                input_path = os.path.join(input_dir, filename)
+                output_path = os.path.join(output_dir,
+                                          f"processed_{filename}")
+
+                img = Image.open(input_path)
+                img = image_filters.grayscale(img)
+                img.save(output_path)
+
+                log.write(f"Processed: {filename}\n")
+                log.write(f"  Input: {input_path}\n")
+                log.write(f"  Output: {output_path}\n\n")
+
+process_with_log("input", "output", "processing_log.txt")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Practice Problems}
+    \textbf{Try these:}
+
+    \begin{enumerate}
+        \item Read a list of filenames from a text file and rename them all with a prefix
+
+        \item Create a function that adds captions to multiple images from a CSV file
+
+        \item Write a program that creates an inventory of all images in a directory
+
+        \item Build a watermark tool that reads text and position from a config file
+
+        \item Create a batch processor that reads instructions from a text file
+
+        \item Generate an HTML gallery page with thumbnails and descriptions
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Summary}
+    \textbf{Key concepts:}
+    \begin{itemize}
+        \item Text is data just like images and sounds
+        \item Read files with \texttt{open(filename, "r")}
+        \item Write files with \texttt{open(filename, "w")}
+        \item Always use \texttt{with} statement
+        \item Parse structured data with \texttt{split()} or CSV module
+        \item Add text to images with ImageDraw
+        \item Create logs and reports for tracking
+        \item Handle file errors gracefully
+        \item Organize files into logical directories
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next time:} Web Data and Information
+\end{frame}
+
+\end{document}

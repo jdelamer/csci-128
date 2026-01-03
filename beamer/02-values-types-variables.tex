@@ -1,0 +1,826 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Values, Types, Variables, and Input}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large Building blocks of Python programs
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Understand different \textcolor{stfxblue}{data types} in Python
+        \item<2-> Learn how to store data in \textcolor{marigold}{variables}
+        \item<3-> Use the \textcolor{stfxblue}{assignment operator}
+        \item<4-> Get \textcolor{marigold}{input} from users
+        \item<5-> Write simple interactive programs
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<6->{\textit{These are fundamental concepts you'll use in \textcolor{marigold}{\textbf{every program!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Review: What We Know So Far}
+    \begin{lstlisting}
+# We can print text
+print("Hello, world!")
+
+# We can print numbers and calculations
+print(42)
+print(5 + 3)
+
+# We can add comments
+# This is a comment
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{But we're missing something important...}
+    \begin{itemize}
+        \item<2-> How do we \textcolor{marigold}{remember} values?
+        \item<3-> How do we \textcolor{stfxblue}{reuse} results?
+        \item<4-> How do we get \textcolor{marigold}{input} from users?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Values}
+    \textcolor{stfxblue}{\textbf{A value}} is a piece of data that a program works with
+
+    \vspace{1em}
+
+    \textbf{Examples of values:}
+    \begin{itemize}
+        \item<2-> \texttt{42} - a \textcolor{stfxblue}{number}
+        \item<3-> \texttt{"Hello"} - \textcolor{marigold}{text}
+        \item<4-> \texttt{3.14159} - a \textcolor{stfxblue}{decimal number}
+        \item<5-> \texttt{True} - a \textcolor{marigold}{logical value}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<6->{Values are also called \textcolor{stfxblue}{\textbf{literals}} because they literally represent themselves.}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\texttt{42} is literally the number 42}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Types}
+    \textcolor{marigold}{\textbf{Every value has a type}}
+
+    \vspace{1em}
+
+    The \textcolor{stfxblue}{\textbf{type}} determines:
+    \begin{itemize}
+        \item<2-> What the value represents
+        \item<3-> What operations you can perform on it
+        \item<4-> How it's stored in memory
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<5->{\Large \textcolor{stfxblue}{Why do types matter?}}
+    \end{center}
+
+    \vspace{1em}
+
+    \onslide<6->{Because computers are very literal! The number \textcolor{stfxblue}{\texttt{5}} and the text \textcolor{marigold}{\texttt{"5"}} are completely different things.}
+\end{frame}
+
+\begin{frame}{Common Python Types}
+    \begin{center}
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \textbf{Type} & \textbf{Description} & \textbf{Examples} \\
+            \hline
+            \texttt{int} & Integer (whole number) & \texttt{42, -17, 0, 1000} \\
+            \hline
+            \texttt{float} & Floating-point (decimal) & \texttt{3.14, -0.5, 2.0} \\
+            \hline
+            \texttt{str} & String (text) & \texttt{"Hello", 'Python'} \\
+            \hline
+            \texttt{bool} & Boolean (True/False) & \texttt{True, False} \\
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Note:} Strings must be in quotes (single or double)
+\end{frame}
+
+\begin{frame}[fragile]{The type() Function}
+    Python can tell you the type of any value:
+
+    \begin{lstlisting}
+print(type(42))
+print(type(3.14))
+print(type("Hello"))
+print(type(True))
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Output:}
+    \begin{verbatim}
+<class 'int'>
+<class 'float'>
+<class 'str'>
+<class 'bool'>
+    \end{verbatim}
+
+    \vspace{1em}
+
+    Don't worry about the word "class" - it just means "type"
+\end{frame}
+
+\begin{frame}[fragile]{Type Matters!}
+    \textbf{Same operator, different behavior:}
+
+    \begin{lstlisting}
+# Adding numbers
+print(5 + 3)        # Output: 8
+
+# Adding strings
+print("5" + "3")    # Output: 53
+
+# This causes an error!
+print(5 + "3")      # TypeError!
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textcolor{red}{\textbf{Python won't guess what you meant - you must be explicit!}}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Types}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Use the type() function to check:}
+    \begin{enumerate}
+        \item What is the type of \texttt{100}?
+        \item What is the type of \texttt{100.0}?
+        \item What is the type of \texttt{"100"}?
+        \item What happens if you try: \texttt{10 * "hello"}?
+        \item What about: \texttt{"hello" * 3}?
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Experiment and see what happens!}
+\end{frame}
+
+\begin{frame}{Variables}
+    \begin{center}
+        \Large \textcolor{marigold}{\textbf{Variables let you store and reuse values}}
+    \end{center}
+
+    \vspace{1em}
+
+    Think of a variable as a \textcolor{stfxblue}{labeled box}:
+    \begin{itemize}
+        \item<2-> The \textcolor{stfxblue}{\textbf{name}} is the label on the box
+        \item<3-> The \textcolor{marigold}{\textbf{value}} is what's inside the box
+        \item<4-> You can \textcolor{stfxblue}{change} what's in the box anytime
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<5->{Variables are one of the \textcolor{marigold}{\textbf{most important}} concepts in programming!}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Creating Variables: Assignment}
+    Use the \textcolor{stfxblue}{\textbf{assignment operator}} \texttt{=} to create variables:
+
+    \begin{lstlisting}
+# Create a variable called 'age' and store 20 in it
+age = 20
+
+# Create a variable called 'name' and store "Alice" in it
+name = "Alice"
+
+# Create a variable for pi
+pi = 3.14159
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \pause
+
+    \textcolor{red}{\textbf{Important:}} The \texttt{=} sign means \textcolor{marigold}{"assign"} not "equals"!
+    \begin{itemize}
+        \item<3-> Right side is evaluated first
+        \item<4-> Result is stored in the variable on the left
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Using Variables}
+    Once created, you can use variables anywhere:
+
+    \begin{lstlisting}
+# Create variables
+age = 20
+name = "Alice"
+
+# Use them in print statements
+print(name)
+print("Age:", age)
+
+# Use them in calculations
+next_year = age + 1
+print("Next year:", next_year)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Output:}
+    \begin{verbatim}
+Alice
+Age: 20
+Next year: 21
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Variables Can Change}
+    The value in a variable can be updated:
+
+    \begin{lstlisting}
+# Start with a value
+score = 10
+print("Score:", score)
+
+# Change it
+score = 20
+print("Score:", score)
+
+# Update based on current value
+score = score + 5
+print("Score:", score)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Output:}
+    \begin{verbatim}
+Score: 10
+Score: 20
+Score: 25
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Assignment}
+    This looks weird but it's valid Python:
+
+    \begin{lstlisting}
+x = 5
+x = x + 1
+print(x)  # Output: 6
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{How it works:}
+    \begin{enumerate}
+        \item<2-> \texttt{x = 5} - Store 5 in variable x
+        \item<3-> \texttt{x = x + 1}:
+            \begin{itemize}
+                \item Get current value of x (which is 5)
+                \item Add 1 to it (5 + 1 = 6)
+                \item Store result back in x
+            \end{itemize}
+        \item<4-> Now x contains 6
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \onslide<5->{\textcolor{marigold}{\textbf{Remember:}} Right side is evaluated first, then stored in left side!}
+\end{frame}
+
+\begin{frame}{Choosing Variable Names}
+    \textcolor{red}{\textbf{Rules (required):}}
+    \begin{itemize}
+        \item<1-> Must start with a letter or underscore
+        \item<2-> Can contain letters, numbers, and underscores
+        \item<3-> Cannot be a Python keyword (like \texttt{print}, \texttt{if}, etc.)
+        \item<4-> Case-sensitive: \texttt{age} and \texttt{Age} are different
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<5->{\textcolor{stfxblue}{\textbf{Conventions (recommended):}}}
+    \begin{itemize}
+        \item<5-> Use \textcolor{marigold}{descriptive} names: \texttt{student\_count} not \texttt{sc}
+        \item<6-> Use lowercase with underscores: \texttt{first\_name}
+        \item<7-> Avoid single letters except for simple counters
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textcolor{marigold}{Good names make code easier to understand!}}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Good vs Bad Variable Names}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Good:}
+            \begin{lstlisting}
+student_name = "Bob"
+total_price = 19.99
+num_pixels = 1024
+is_valid = True
+            \end{lstlisting}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Not so good:}
+            \begin{lstlisting}
+x = "Bob"
+tp = 19.99
+n = 1024
+flag = True
+            \end{lstlisting}
+        \end{column}
+    \end{columns}
+
+    \vspace{1em}
+
+    \textbf{Ask yourself:} If I read this code in 6 months, will I understand what the variable represents?
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Variables}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Write code to:}
+    \begin{enumerate}
+        \item Store your name in a variable
+        \item Store your age in a variable
+        \item Calculate your age in 10 years
+        \item Print a message: "In 10 years, [name] will be [age]"
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Bonus:} Can you calculate how many days old you are (roughly)?
+\end{frame}
+
+\begin{frame}{Getting Input from Users}
+    \begin{center}
+        \Large \textcolor{marigold}{Programs are more interesting when they're interactive!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{The \textcolor{stfxblue}{\texttt{input()}} function:}
+    \begin{itemize}
+        \item<2-> Displays a prompt to the user
+        \item<3-> Waits for the user to type something
+        \item<4-> Returns what the user typed as a \textcolor{marigold}{string}
+    \end{itemize}
+    \vspace{1em}
+
+    \onslide<5->{This lets users provide data to your program!}
+\end{frame}
+
+\begin{frame}[fragile]{Using input()}
+    \textbf{Basic syntax:}
+
+    \begin{lstlisting}
+variable_name = input("Your prompt here: ")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Example:}
+    \begin{lstlisting}
+name = input("What is your name? ")
+print("Hello,", name)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{When you run this:}
+    \begin{verbatim}
+What is your name? Alice
+Hello, Alice
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Important: input() Returns a String}
+    \textcolor{red}{\textbf{Everything from input() is text!}}
+
+    \begin{lstlisting}
+age = input("How old are you? ")
+print(type(age))  # <class 'str'>
+
+# This won't work as expected:
+next_year = age + 1  # TypeError!
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \pause
+
+    Even if the user types a number, Python treats it as text (a string).
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<3->{\textcolor{marigold}{\textbf{We need to convert it to a number!}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Type Conversion}
+    \textbf{Convert between types using:}
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{\texttt{int()}} - Convert to integer
+        \item<2-> \textcolor{stfxblue}{\texttt{float()}} - Convert to floating-point
+        \item<3-> \textcolor{stfxblue}{\texttt{str()}} - Convert to string
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<4->{
+    \begin{lstlisting}
+# Get input and convert to int
+age_text = input("How old are you? ")
+age = int(age_text)
+
+# Or do it in one line:
+age = int(input("How old are you? "))
+
+# Now we can do math with it
+next_year = age + 1
+print("Next year you'll be", next_year)
+    \end{lstlisting}
+    }
+\end{frame}
+
+\begin{frame}[fragile]{Type Conversion Examples}
+    \begin{lstlisting}
+# String to int
+int("42")        # Result: 42
+int("3.14")      # Error! Can't convert decimal string to int
+
+# String to float
+float("3.14")    # Result: 3.14
+float("42")      # Result: 42.0
+
+# Number to string
+str(42)          # Result: "42"
+str(3.14)        # Result: "3.14"
+
+# Int to float and vice versa
+float(42)        # Result: 42.0
+int(3.14)        # Result: 3 (truncates decimal)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{A Complete Interactive Program}
+    \begin{lstlisting}
+# Get the user's name
+name = input("What is your name? ")
+
+# Get the user's age
+age = int(input("How old are you? "))
+
+# Calculate age in 10 years
+future_age = age + 10
+
+# Display result
+print("Hello,", name)
+print("In 10 years, you will be", future_age)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{This program:}
+    \begin{itemize}
+        \item Gets input from the user
+        \item Stores it in variables
+        \item Performs a calculation
+        \item Displays the result
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Temperature Converter}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Write a program that:}
+    \begin{enumerate}
+        \item Asks the user for a temperature in Celsius
+        \item Converts it to Fahrenheit
+        \item Prints the result
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Formula:} $F = C \times 9/5 + 32$
+
+    \vspace{1em}
+
+    \textbf{Example run:}
+    \begin{verbatim}
+Enter temperature in Celsius: 0
+That is 32.0 degrees Fahrenheit
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Expressions}
+    \textbf{An expression is anything that produces a value}
+
+    \vspace{1em}
+
+    \textbf{Examples of expressions:}
+    \begin{itemize}
+        \item \texttt{5 + 3}
+        \item \texttt{x * 2}
+        \item \texttt{input("Enter a number: ")}
+        \item \texttt{int("42")}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Expressions can be:}
+    \begin{itemize}
+        \item Simple literals: \texttt{42}
+        \item Variables: \texttt{age}
+        \item Operations: \texttt{x + y}
+        \item Function calls: \texttt{len("hello")}
+        \item Combinations: \texttt{(x + y) * 2}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Statements vs Expressions}
+    \textbf{Statement:} An instruction that Python executes
+    \begin{itemize}
+        \item Assignment: \texttt{x = 5}
+        \item Print: \texttt{print("Hello")}
+        \item Doesn't necessarily produce a value
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Expression:} Something that evaluates to a value
+    \begin{itemize}
+        \item \texttt{5 + 3} evaluates to 8
+        \item \texttt{x * 2} evaluates to some number
+        \item Can be part of a statement
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \texttt{x = 5 + 3} is a statement that contains an expression
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Operator Precedence}
+    \textbf{Python follows mathematical order of operations:}
+
+    \begin{lstlisting}
+print(2 + 3 * 4)      # Output: 14, not 20
+print((2 + 3) * 4)    # Output: 20
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Order (highest to lowest):}
+    \begin{enumerate}
+        \item Parentheses: \texttt{()}
+        \item Exponentiation: \texttt{**}
+        \item Multiplication, Division, Remainder: \texttt{*, /, \%}
+        \item Addition, Subtraction: \texttt{+, -}
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Tip:} Use parentheses to make your intent clear!
+\end{frame}
+
+\begin{frame}[fragile]{String Operations}
+    Strings have special operations too:
+
+    \begin{lstlisting}
+# Concatenation (combining strings)
+greeting = "Hello" + " " + "World"
+print(greeting)  # Output: Hello World
+
+# Repetition
+laugh = "ha" * 3
+print(laugh)  # Output: hahahaha
+
+# Length
+message = "Python"
+print(len(message))  # Output: 6
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Note:} \texttt{len()} is a function that returns the length of a string
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Mad Libs}
+    \begin{center}
+        \Large \textbf{Lab Activity!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Create a Mad Libs program:}
+    \begin{enumerate}
+        \item Ask the user for:
+            \begin{itemize}
+                \item A noun
+                \item A verb
+                \item An adjective
+                \item A number
+            \end{itemize}
+        \item Use these to create a funny sentence
+        \item Print the result
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Example:} "The [adjective] [noun] decided to [verb] [number] times!"
+\end{frame}
+
+\begin{frame}[fragile]{Lab: Simple Calculator}
+    \textbf{Create a calculator program that:}
+    \begin{enumerate}
+        \item Asks the user for two numbers
+        \item Performs all basic operations (+, -, *, /)
+        \item Displays all results
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Example output:}
+    \begin{verbatim}
+Enter first number: 10
+Enter second number: 3
+10 + 3 = 13
+10 - 3 = 7
+10 * 3 = 30
+10 / 3 = 3.3333333333333335
+    \end{verbatim}
+
+    \vspace{1em}
+
+    \textbf{Bonus:} Also calculate the remainder using \texttt{\%}
+\end{frame}
+
+\begin{frame}[fragile]{Lab: Circle Calculator}
+    \textbf{Write a program that:}
+    \begin{enumerate}
+        \item Asks the user for the radius of a circle
+        \item Calculates the area: $A = \pi r^2$
+        \item Calculates the circumference: $C = 2\pi r$
+        \item Displays both results
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Hints:}
+    \begin{itemize}
+        \item Use \texttt{3.14159} for $\pi$
+        \item Use \texttt{**} for exponentiation
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Example:}
+    \begin{verbatim}
+Enter radius: 5
+Area: 78.53975
+Circumference: 31.4159
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Key Takeaways}
+    \textbf{Today you learned:}
+    \begin{itemize}
+        \item Python has different types: int, float, str, bool
+        \item Variables store values for later use
+        \item Use \texttt{=} to assign values to variables
+        \item Use \texttt{input()} to get user input
+        \item Convert types with \texttt{int()}, \texttt{float()}, \texttt{str()}
+        \item Expressions produce values, statements execute actions
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{These concepts form the foundation of all programming!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Common Mistakes to Avoid}
+    \begin{enumerate}
+        \item Forgetting to convert input to numbers
+            \begin{itemize}
+                \item \texttt{age = int(input("Age: "))}
+            \end{itemize}
+
+        \item Trying to use undefined variables
+            \begin{itemize}
+                \item Must assign before using!
+            \end{itemize}
+
+        \item Mixing types inappropriately
+            \begin{itemize}
+                \item Can't add string and number directly
+            \end{itemize}
+
+        \item Confusing \texttt{=} (assignment) with equality
+            \begin{itemize}
+                \item \texttt{x = 5} assigns, doesn't test equality
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{For Next Class}
+    \textbf{Before next session:}
+    \begin{itemize}
+        \item Complete the lab exercises
+        \item Read Chapter 2 of the textbook
+        \item Experiment with variables and input
+        \item Try creating your own small programs
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next session:}
+    \begin{itemize}
+        \item Introduction to pictures
+        \item How images are represented in computers
+        \item Loading and displaying images with Python
+        \item Your first image manipulation!
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{Questions?}
+    \end{center}
+\end{frame}
+
+\end{document}

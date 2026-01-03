@@ -1,0 +1,532 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Introduction to Computing and Programming}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Welcome to CSCI 128!}
+    \begin{center}
+        \Large What will you learn in this course?
+    \end{center}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> How to write computer programs in \textcolor{stfxblue}{\textbf{Python}}
+        \item<2-> How to manipulate media: \textcolor{marigold}{pictures, sounds, and text}
+        \item<3-> How computers represent and process information
+        \item<4-> How to solve problems \textcolor{stfxblue}{computationally}
+        \item<5-> A foundation in computer science thinking
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<6->{\textcolor{marigold}{\textbf{This is a skill that will distinguish you in any field!}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{About This Course}
+    \textbf{Why \textcolor{marigold}{Media Computation}?}
+
+    \begin{itemize}
+        \item Traditional programming courses start with abstract concepts
+        \item We'll start by doing \textcolor{stfxblue}{interesting things} with pictures and sounds
+        \item More engaging and motivating
+        \item Same programming concepts, but with \textcolor{marigold}{visible results}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{What You Need:}
+    \begin{itemize}
+        \item Curiosity and willingness to experiment
+        \item Persistence (programming requires trial and error)
+        \item No prior programming experience needed!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{What is a Computer?}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{A computer is:}
+            \begin{itemize}
+                \item A machine that processes information
+                \item Follows precise instructions
+                \item Stores and retrieves data
+                \item Performs calculations
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Types of computers:}
+            \begin{itemize}
+                \item Desktop/Laptop
+                \item Smartphone
+                \item Embedded systems
+                \item Servers
+                \item Supercomputers
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textit{What computers all have in common: They execute programs!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{What is a Program?}
+    \textbf{A program is:}
+    \begin{itemize}
+        \item A sequence of instructions that tells a computer what to do
+        \item Written in a programming language
+        \item Can be executed (run) by the computer
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Programming languages are formal languages:}
+    \begin{itemize}
+        \item Precise syntax (grammar rules)
+        \item No ambiguity allowed
+        \item Unlike natural languages (English, French, etc.)
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textcolor{marigold}{\Large\textbf{Think of it like a recipe, but the chef is very literal!}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Why Python?}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Advantages:}
+            \begin{itemize}
+                \item<1-> \textcolor{stfxblue}{Easy to read and write}
+                \item<2-> Powerful and versatile
+                \item<3-> Huge community and libraries
+                \item<4-> Used in industry and research
+                \item<5-> \textcolor{marigold}{Great for beginners}
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Used for:}
+            \begin{itemize}
+                \item<6-> Web development
+                \item<7-> \textcolor{stfxblue}{Data science}
+                \item<8-> \textcolor{stfxblue}{Machine learning}
+                \item<9-> Scientific computing
+                \item<10-> Automation
+                \item<11-> \textcolor{marigold}{\textbf{Media processing!}}
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<12->{Python is one of the most popular programming languages in the world!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{How Computers Store Information}
+    \textbf{\textcolor{stfxblue}{Binary System:}}
+    \begin{itemize}
+        \item Computers store everything as \textcolor{marigold}{\textbf{0s and 1s}} (bits)
+        \item Everything: numbers, text, pictures, sounds, videos
+        \item \textcolor{stfxblue}{8 bits = 1 byte}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Key Components:}
+    \begin{itemize}
+        \item<2-> \textcolor{stfxblue}{\textbf{CPU (Processor):}} Does the calculations and executes instructions
+        \item<3-> \textcolor{marigold}{\textbf{RAM (Memory):}} Temporary storage while programs run
+        \item<4-> \textcolor{stfxblue}{\textbf{Storage (Hard Drive/SSD):}} Permanent storage for files
+        \item<5-> \textbf{Input/Output:} Keyboard, mouse, screen, etc.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Your First Python Program}
+    \begin{center}
+        \Large Let's write the traditional first program!
+    \end{center}
+
+    \vspace{2em}
+
+    \pause
+
+    \begin{lstlisting}
+print("Hello, world!")
+    \end{lstlisting}
+
+    \vspace{2em}
+
+    \pause
+
+    \textbf{What this does:}
+    \begin{itemize}
+        \item<3-> \textcolor{stfxblue}{\texttt{print()}} is a function that displays output
+        \item<4-> The text in quotes is called a \textcolor{marigold}{\textit{string}}
+        \item<5-> When you run this, it displays: \texttt{Hello, world!}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{The print() Function}
+    \textbf{Basic usage:}
+
+    \begin{lstlisting}
+print("Welcome to CSCI 128")
+print("This is fun!")
+print("I am learning Python")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Output:}
+    \begin{verbatim}
+Welcome to CSCI 128
+This is fun!
+I am learning Python
+    \end{verbatim}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Each \texttt{print()} statement outputs on a new line
+        \item Text must be in quotes (single or double)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Print Statements}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Task:} Write Python code to print:
+    \begin{enumerate}
+        \item Your name
+        \item Your favorite hobby
+        \item Why you're taking this course
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Example:}
+    \begin{lstlisting}
+print("My name is Alice")
+print("I love painting")
+print("I want to learn programming")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{What is Computation?}
+    \textcolor{stfxblue}{\textbf{Computation}} is the process of calculating or processing information
+
+    \vspace{1em}
+
+    \textbf{Computers can:}
+    \begin{itemize}
+        \item<2-> Perform mathematical operations
+        \item<3-> Compare values
+        \item<4-> Store and retrieve data
+        \item<5-> Make decisions based on conditions
+        \item<6-> Repeat operations many times
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textit{Programming is about telling the computer how to perform computations to solve problems}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Using Python as a Calculator}
+    Python can perform arithmetic operations:
+
+    \vspace{1em}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Operations:}
+            \begin{itemize}
+                \item \textcolor{stfxblue}{\texttt{+}} Addition
+                \item \textcolor{stfxblue}{\texttt{-}} Subtraction
+                \item \textcolor{stfxblue}{\texttt{*}} Multiplication
+                \item \textcolor{stfxblue}{\texttt{/}} Division
+                \item \textcolor{marigold}{\texttt{**}} Exponentiation
+                \item \textcolor{marigold}{\texttt{\%}} Remainder
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \textbf{Examples:}
+            \begin{itemize}
+                \item \texttt{5 + 3} → 8
+                \item \texttt{10 - 4} → 6
+                \item \texttt{6 * 7} → 42
+                \item \texttt{15 / 3} → 5.0
+                \item \texttt{2 ** 3} → 8
+                \item \texttt{17 \% 5} → 2
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Printing Calculations}
+    You can print the results of calculations:
+
+    \begin{lstlisting}
+print(5 + 3)
+print(10 * 4)
+print(100 / 4)
+print(2 ** 10)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Output:}
+    \begin{verbatim}
+8
+40
+25.0
+1024
+    \end{verbatim}
+
+    \vspace{1em}
+
+    Notice: No quotes needed for numbers!
+\end{frame}
+
+\begin{frame}[fragile]{Combining Text and Numbers}
+    You can print multiple things at once:
+
+    \begin{lstlisting}
+print("The answer is:", 42)
+print("5 + 3 =", 5 + 3)
+print("2 to the power of 8 is", 2**8)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Output:}
+    \begin{verbatim}
+The answer is: 42
+5 + 3 = 8
+2 to the power of 8 is 256
+    \end{verbatim}
+
+    \vspace{1em}
+
+    Separate items with commas in the \texttt{print()} function
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Calculator}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Calculate and print:}
+    \begin{enumerate}
+        \item How many hours are in a week?
+        \item How many seconds are in a day?
+        \item What is $15^3$?
+        \item What is the remainder when 100 is divided by 7?
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Hint:} Think about what operations you need!
+\end{frame}
+
+\begin{frame}[fragile]{Comments in Code}
+    \textbf{Comments} are notes in your code that Python ignores
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+# This is a comment
+print("Hello")  # Comments can go after code too
+
+# Use comments to explain what your code does
+# This helps you and others understand it later
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Best practices:}
+    \begin{itemize}
+        \item Use \texttt{\#} to start a comment
+        \item Explain \textit{why} you're doing something, not just \textit{what}
+        \item Keep comments clear and concise
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Errors are Normal!}
+    \begin{center}
+        \Large \textcolor{red}{\textbf{You WILL make mistakes.}} \textcolor{stfxblue}{\textbf{That's okay!}}
+    \end{center}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Common beginner errors:}
+    \begin{itemize}
+        \item Forgetting quotation marks around text
+        \item Misspelling \texttt{print}
+        \item Forgetting parentheses
+        \item Mismatched quotes
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{When you get an error:}
+    \begin{itemize}
+        \item \textcolor{stfxblue}{Read the error message carefully}
+        \item Check the line number indicated
+        \item Look for typos
+        \item \textcolor{marigold}{Don't panic! Errors are learning opportunities}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Common Error Example}
+    \textbf{Error:}
+    \begin{lstlisting}
+print(Hello, world!)
+    \end{lstlisting}
+
+    \textbf{Error message:}
+    \begin{verbatim}
+NameError: name 'Hello' is not defined
+    \end{verbatim}
+
+    \vspace{1em}
+
+    \textbf{Problem:} Missing quotes around the text!
+
+    \vspace{1em}
+
+    \textbf{Fix:}
+    \begin{lstlisting}
+print("Hello, world!")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{The Programming Process}
+    \begin{enumerate}
+        \item<1-> \textbf{Understand the problem}
+            \begin{itemize}
+                \item What are you trying to accomplish?
+            \end{itemize}
+
+        \item<2-> \textbf{Plan your solution}
+            \begin{itemize}
+                \item What steps are needed?
+            \end{itemize}
+
+        \item<3-> \textbf{Write the code}
+            \begin{itemize}
+                \item Translate your plan into Python
+            \end{itemize}
+
+        \item<4-> \textbf{Test and debug}
+            \begin{itemize}
+                \item Run it, find errors, fix them
+            \end{itemize}
+
+        \item<5-> \textbf{Refine and improve}
+            \begin{itemize}
+                \item Make it better, clearer, more efficient
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Key Takeaways}
+    \textbf{Today you learned:}
+    \begin{itemize}
+        \item<1-> What computers and programs are
+        \item<2-> Why we're learning \textcolor{stfxblue}{Python}
+        \item<3-> How to use \textcolor{stfxblue}{\texttt{print()}} to display output
+        \item<4-> How to perform calculations in Python
+        \item<5-> How to write comments
+        \item<6-> That \textcolor{marigold}{errors are normal} and part of learning!
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textcolor{marigold}{\Large\textbf{You are now a programmer!}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{For Next Class}
+    \textbf{Before next session:}
+    \begin{itemize}
+        \item Make sure your Python environment is set up
+        \item Experiment with \texttt{print()} statements
+        \item Try different calculations
+        \item Read Chapter 1 of the textbook
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next session:}
+    \begin{itemize}
+        \item Values and types
+        \item Variables
+        \item User input
+        \item Your first lab!
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{Questions?}
+    \end{center}
+\end{frame}
+
+\end{document}

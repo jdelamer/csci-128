@@ -1,0 +1,720 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Sound Processing Basics}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large From pictures to sounds!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Understand sound as \textcolor{stfxblue}{digital data}
+        \item<2-> Learn about \textcolor{marigold}{samples}, frequency, and amplitude
+        \item<3-> Load and save sound files in Python
+        \item<4-> Access and modify sound samples
+        \item<5-> Create simple sound effects
+        \item<6-> Apply programming concepts to audio
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textit{Just like pictures are made of \textcolor{marigold}{pixels}, sounds are made of \textcolor{stfxblue}{\textbf{samples!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Sound as Data}
+    \textbf{Digital sound is similar to digital images:}
+
+    \vspace{1em}
+
+    \begin{center}
+        \begin{tabular}{l|l}
+            \textbf{Pictures} & \textbf{Sounds} \\
+            \hline
+            Made of \textcolor{marigold}{pixels} & Made of \textcolor{stfxblue}{samples} \\
+            2D grid & 1D sequence over time \\
+            RGB values (0-255) & Amplitude values \\
+            Width × Height & Duration × Sample rate \\
+            Colors represent light & Numbers represent air pressure \\
+        \end{tabular}
+    \end{center}
+
+    \vspace{1em}
+
+    \onslide<2->{Both are just \textcolor{marigold}{\textbf{sequences of numbers!}}}
+\end{frame}
+
+\begin{frame}{How Sound Works}
+    \textbf{Physical sound:}
+    \begin{itemize}
+        \item<1-> Vibrations in air (pressure waves)
+        \item<2-> Our ears detect these vibrations
+        \item<3-> Different \textcolor{stfxblue}{frequencies} = different pitches
+        \item<4-> Different \textcolor{marigold}{amplitudes} = different volumes
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Digital sound:}
+    \begin{itemize}
+        \item<6-> Measure air pressure thousands of times per second
+        \item<7-> Each measurement is a \textcolor{marigold}{\textbf{sample}}
+        \item<8-> Store as numbers (positive/negative)
+        \item<9-> Play back by recreating the pressure waves
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sampling Rate}
+    \textcolor{stfxblue}{\textbf{Sampling rate}}: How many samples per second
+
+    \vspace{1em}
+
+    \textbf{Common rates:}
+    \begin{itemize}
+        \item<1-> \textcolor{marigold}{\textbf{44,100 Hz (44.1 kHz)}}: CD quality audio
+        \item<2-> \textbf{48,000 Hz}: Professional audio/video
+        \item<3-> \textbf{22,050 Hz}: Lower quality (half of CD)
+        \item<4-> \textbf{8,000 Hz}: Telephone quality
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<5->{\textbf{Example:} 1 second of CD-quality audio = \textcolor{marigold}{\textbf{44,100 samples}}}
+
+    \vspace{1em}
+
+    \onslide<6->{\textcolor{stfxblue}{\textbf{Higher sampling rate}} = better quality but larger files}
+
+    \vspace{0.5em}
+
+    \onslide<7->{Just like higher resolution images!}
+\end{frame}
+
+\begin{frame}{Sample Values}
+    \textbf{Each sample is a number representing \textcolor{marigold}{air pressure}}
+
+    \vspace{1em}
+
+    \textbf{Common formats:}
+    \begin{itemize}
+        \item<1-> \textbf{8-bit samples}: -128 to 127
+        \item<2-> \textcolor{stfxblue}{\textbf{16-bit samples}}: -32,768 to 32,767 (CD quality)
+        \item<3-> \textbf{32-bit samples}: Even more precision
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \begin{itemize}
+        \item<5-> \textcolor{stfxblue}{\textbf{0}} = neutral (no pressure change)
+        \item<6-> \textcolor{marigold}{\textbf{Positive values}} = increased pressure
+        \item<7-> \textcolor{marigold}{\textbf{Negative values}} = decreased pressure
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<8->{The sequence of values creates the \textcolor{stfxblue}{\textbf{waveform!}}}
+\end{frame}
+
+\begin{frame}{Stereo vs Mono}
+    \textbf{\textcolor{stfxblue}{Mono} (monophonic):}
+    \begin{itemize}
+        \item<1-> One channel
+        \item<2-> Same sound from all speakers
+        \item<3-> Smaller file size
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{\textcolor{marigold}{Stereo} (stereophonic):}
+    \begin{itemize}
+        \item<5-> Two channels (left and right)
+        \item<6-> Different sound from each speaker
+        \item<7-> Creates sense of space and direction
+        \item<8-> Double the file size
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<9->{Similar to grayscale vs RGB images!}
+\end{frame}
+
+\begin{frame}[fragile]{Python Sound Libraries}
+    \textbf{Built-in wave module} (for WAV files):
+
+    \begin{lstlisting}
+import wave
+
+# Open a WAV file
+sound = wave.open("sound.wav", "rb")
+
+# Get properties
+print(f"Channels: {sound.getnchannels()}")
+print(f"Sample width: {sound.getsampwidth()}")
+print(f"Frame rate: {sound.getframerate()}")
+print(f"Frames: {sound.getnframes()}")
+
+sound.close()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    The \textcolor{stfxblue}{\texttt{wave}} module works with WAV files (like BMP for images).
+\end{frame}
+
+\begin{frame}[fragile]{Using Pydub (Easier)}
+    \textbf{\textcolor{marigold}{Pydub} library} (simpler, more formats):
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load sound (supports WAV, MP3, etc.)
+sound = AudioSegment.from_file("sound.wav")
+
+# Play it
+play(sound)
+
+# Get properties
+print(f"Duration: {len(sound)} ms")
+print(f"Frame rate: {sound.frame_rate} Hz")
+print(f"Channels: {sound.channels}")
+print(f"Sample width: {sound.sample_width} bytes")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Install: \texttt{pip install pydub}
+\end{frame}
+
+\begin{frame}[fragile]{Loading and Saving Sounds}
+    \textbf{Load various formats:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+# Load different formats
+wav_sound = AudioSegment.from_wav("sound.wav")
+mp3_sound = AudioSegment.from_mp3("song.mp3")
+ogg_sound = AudioSegment.from_ogg("effect.ogg")
+
+# Or use generic loader
+sound = AudioSegment.from_file("audio.m4a")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Save sounds:}
+
+    \begin{lstlisting}
+# Export to different formats
+sound.export("output.wav", format="wav")
+sound.export("output.mp3", format="mp3")
+sound.export("output.ogg", format="ogg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Accessing Sample Data}
+    \textbf{Get raw sample data:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+import array
+
+sound = AudioSegment.from_wav("sound.wav")
+
+# Get raw samples as array
+samples = array.array(sound.array_type, sound.raw_data)
+
+print(f"Number of samples: {len(samples)}")
+print(f"First 10 samples: {samples[:10]}")
+
+# For stereo, samples alternate: L, R, L, R, ...
+# For mono, it's just a sequence: S, S, S, ...
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Now we can process samples like we processed pixels!
+\end{frame}
+
+\begin{frame}[fragile]{Simple Sound Information}
+    \textbf{Get basic sound properties:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def print_sound_info(filename):
+    sound = AudioSegment.from_file(filename)
+
+    duration_sec = len(sound) / 1000.0
+    print(f"File: {filename}")
+    print(f"Duration: {duration_sec:.2f} seconds")
+    print(f"Sample rate: {sound.frame_rate} Hz")
+    print(f"Channels: {sound.channels}")
+    print(f"Bits per sample: {sound.sample_width * 8}")
+    print(f"File size: ~{len(sound.raw_data)} bytes")
+
+print_sound_info("sound.wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Increasing Volume}
+    \textbf{Make sound louder or quieter:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("sound.wav")
+
+# Increase volume by 6 dB (decibels)
+louder = sound + 6
+
+# Decrease volume by 3 dB
+quieter = sound - 3
+
+# Or use gain
+louder = sound.apply_gain(6)
+quieter = sound.apply_gain(-3)
+
+louder.export("louder.wav", format="wav")
+quieter.export("quieter.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Similar to adjusting image brightness!
+\end{frame}
+
+\begin{frame}[fragile]{Normalizing Volume}
+    \textbf{Normalize to maximum volume without clipping:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("quiet_sound.wav")
+
+# Find maximum possible gain
+max_gain = sound.max_dBFS
+
+# Normalize (make as loud as possible)
+normalized = sound.apply_gain(-max_gain)
+
+normalized.export("normalized.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    This is like auto-adjusting image brightness to use full range!
+\end{frame}
+
+\begin{frame}[fragile]{Reversing Sound}
+    \textbf{Play sound backwards:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("sound.wav")
+
+# Reverse the sound
+reversed_sound = sound.reverse()
+
+reversed_sound.export("reversed.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Like flipping an image horizontally, but in time!
+
+    \vspace{1em}
+
+    \textbf{Try it:} Record yourself saying a word, reverse it, and play it!
+\end{frame}
+
+\begin{frame}[fragile]{Combining Sounds (Overlay)}
+    \textbf{Mix two sounds together:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound1 = AudioSegment.from_wav("sound1.wav")
+sound2 = AudioSegment.from_wav("sound2.wav")
+
+# Overlay sounds (mix them)
+mixed = sound1.overlay(sound2)
+
+# Overlay at specific position (in milliseconds)
+mixed = sound1.overlay(sound2, position=1000)  # 1 second in
+
+mixed.export("mixed.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Like compositing images, but with audio!
+\end{frame}
+
+\begin{frame}[fragile]{Concatenating Sounds}
+    \textbf{Play sounds one after another:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound1 = AudioSegment.from_wav("hello.wav")
+sound2 = AudioSegment.from_wav("world.wav")
+
+# Concatenate (sound1 then sound2)
+combined = sound1 + sound2
+
+# Or with a gap (500 ms of silence)
+silence = AudioSegment.silent(duration=500)
+combined = sound1 + silence + sound2
+
+combined.export("hello_world.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Like arranging images in a sequence!
+\end{frame}
+
+\begin{frame}[fragile]{Extracting Part of a Sound (Slicing)}
+    \textbf{Get a portion of a sound:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("long_sound.wav")
+
+# Time in milliseconds
+start_time = 1000   # 1 second
+end_time = 3000     # 3 seconds
+
+# Extract from 1 to 3 seconds
+clip = sound[start_time:end_time]
+
+# First 5 seconds
+first_part = sound[:5000]
+
+# Last 2 seconds
+last_part = sound[-2000:]
+
+clip.export("clip.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    Like cropping an image!
+\end{frame}
+
+\begin{frame}[fragile]{Repeating Sounds}
+    \textbf{Loop a sound multiple times:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("beep.wav")
+
+# Repeat 5 times
+repeated = sound * 5
+
+repeated.export("beep_beep_beep.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Create rhythm:}
+
+    \begin{lstlisting}
+beep = AudioSegment.from_wav("beep.wav")
+silence = AudioSegment.silent(duration=200)
+
+# Beep... Beep... Beep...
+rhythm = (beep + silence) * 10
+
+rhythm.export("rhythm.wav", format="wav")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Fade In and Fade Out}
+    \textbf{Smooth transitions:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("music.wav")
+
+# Fade in first 2 seconds
+faded = sound.fade_in(2000)
+
+# Fade out last 3 seconds
+faded = sound.fade_out(3000)
+
+# Both
+faded = sound.fade_in(2000).fade_out(3000)
+
+faded.export("faded.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Creates smooth volume transitions at start/end.
+\end{frame}
+
+\begin{frame}[fragile]{Converting Stereo to Mono}
+    \textbf{Reduce channels:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+stereo_sound = AudioSegment.from_wav("stereo.wav")
+
+# Convert to mono (mix left and right channels)
+mono_sound = stereo_sound.set_channels(1)
+
+mono_sound.export("mono.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Like converting RGB to grayscale!
+
+    \vspace{1em}
+
+    \textbf{File size:} Mono is roughly half the size of stereo.
+\end{frame}
+
+\begin{frame}[fragile]{Changing Sample Rate}
+    \textbf{Resample audio:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+sound = AudioSegment.from_wav("sound.wav")
+print(f"Original rate: {sound.frame_rate} Hz")
+
+# Change to different sample rate
+resampled = sound.set_frame_rate(22050)  # Half quality
+high_quality = sound.set_frame_rate(48000)  # Higher
+
+resampled.export("lower_quality.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Lower rate} = smaller file, lower quality
+
+    \textbf{Higher rate} = larger file, better quality
+
+    \vspace{0.5em}
+
+    Like changing image resolution!
+\end{frame}
+
+\begin{frame}[fragile]{Example: Sound File Converter}
+    \textbf{Convert between formats:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def convert_sound(input_file, output_file, output_format):
+    """Convert sound to different format."""
+    sound = AudioSegment.from_file(input_file)
+    sound.export(output_file, format=output_format)
+    print(f"Converted {input_file} to {output_file}")
+
+# Usage
+convert_sound("music.mp3", "music.wav", "wav")
+convert_sound("speech.wav", "speech.mp3", "mp3")
+convert_sound("effect.wav", "effect.ogg", "ogg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Create Simple Beep}
+    \textbf{Generate a tone:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+from pydub.generators import Sine
+
+# Generate 1 second of 440 Hz tone (A note)
+frequency = 440  # Hz
+duration = 1000  # milliseconds
+
+tone = Sine(frequency).to_audio_segment(duration=duration)
+
+# Make it quieter (reduce volume)
+tone = tone - 20  # -20 dB
+
+tone.export("beep.wav", format="wav")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    Creating sounds from scratch, like drawing shapes!
+\end{frame}
+
+\begin{frame}[fragile]{Example: Sound Analysis Function}
+    \textbf{Analyze multiple sound files:}
+
+    \begin{lstlisting}
+from pydub import AudioSegment
+import os
+
+def analyze_sound_folder(folder):
+    """Analyze all WAV files in folder."""
+    for filename in os.listdir(folder):
+        if filename.endswith(".wav"):
+            path = os.path.join(folder, filename)
+            sound = AudioSegment.from_wav(path)
+            duration = len(sound) / 1000.0
+
+            print(f"{filename}:")
+            print(f"  Duration: {duration:.2f} sec")
+            print(f"  Channels: {sound.channels}")
+            print(f"  Sample rate: {sound.frame_rate} Hz")
+            print()
+
+analyze_sound_folder("sounds")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Key Concepts Review}
+    \textbf{Sound fundamentals:}
+    \begin{itemize}
+        \item Sound is stored as sequences of samples
+        \item Sample rate determines quality (44.1 kHz is CD quality)
+        \item Sample values represent air pressure
+        \item Stereo has two channels, mono has one
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Basic operations:}
+    \begin{itemize}
+        \item Load/save sounds with pydub
+        \item Adjust volume (gain)
+        \item Reverse, slice, repeat sounds
+        \item Combine sounds (overlay, concatenate)
+        \item Fade in/out
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sound vs Image Processing}
+    \begin{center}
+        \begin{tabular}{l|l}
+            \textbf{Images} & \textbf{Sounds} \\
+            \hline
+            Pixels & Samples \\
+            2D (x, y) & 1D (time) \\
+            RGB (3 values) & Amplitude (1 value per channel) \\
+            Flip/rotate & Reverse \\
+            Crop & Slice/extract \\
+            Blend & Overlay/mix \\
+            Brightness & Volume \\
+            Contrast & Dynamic range \\
+            Filters & Effects \\
+        \end{tabular}
+    \end{center}
+
+    \vspace{1em}
+
+    Same programming concepts, different media!
+\end{frame}
+
+\begin{frame}{Practice Problems}
+    \textbf{Try these:}
+
+    \begin{enumerate}
+        \item Load a sound file and print its properties (duration, sample rate, channels)
+
+        \item Create a function that makes any sound twice as loud
+
+        \item Take a sound and create a version that plays forward then backward
+
+        \item Combine three different sound effects into one file with 1-second gaps
+
+        \item Create a simple alarm sound by repeating a beep 5 times
+
+        \item Extract the first 10 seconds of a long audio file
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Coming Up}
+    \textbf{Next lecture: Advanced Sound Techniques}
+
+    \vspace{1em}
+
+    We'll learn:
+    \begin{itemize}
+        \item Modifying individual samples
+        \item Creating echoes and delays
+        \item Changing pitch and speed
+        \item Splicing sounds together
+        \item Creating new sounds from scratch
+        \item More complex sound effects
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textit{Get creative with sound manipulation!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Summary}
+    \textbf{Today we learned:}
+    \begin{itemize}
+        \item Sound is digital data (samples over time)
+        \item Sample rate and bit depth determine quality
+        \item Python's pydub library makes sound processing easy
+        \item Many operations are similar to image processing
+        \item We can load, modify, and save sounds
+        \item Volume, reversing, slicing, combining are basic operations
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Key insight:} All media (images, sounds, video, text) can be represented as data and manipulated with code!
+\end{frame}
+
+\end{document}

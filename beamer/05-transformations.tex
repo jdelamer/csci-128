@@ -1,0 +1,630 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Picture Transformations}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large Moving and transforming images!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Copy pixels from one image to another
+        \item<2-> \textcolor{marigold}{Mirror} images horizontally and vertically
+        \item<3-> \textcolor{stfxblue}{Rotate} images 90 degrees
+        \item<4-> \textcolor{marigold}{Crop} portions of images
+        \item<5-> \textcolor{stfxblue}{Scale} images up and down
+        \item<6-> Understand coordinate transformations
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textit{Today we manipulate \textcolor{marigold}{\textbf{image structure}}, not just color!}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Review: What We Know}
+    \textbf{So far we've learned:}
+    \begin{itemize}
+        \item<1-> How to load and save images
+        \item<2-> How to access and modify pixel \textcolor{marigold}{colors}
+        \item<3-> How to process all pixels with nested loops
+        \item<4-> How to create filters (grayscale, negative, etc.)
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Today's focus:}
+    \begin{itemize}
+        \item<6-> Not changing colors, but changing \textcolor{stfxblue}{\textbf{positions}}
+        \item<7-> Moving pixels to different locations
+        \item<8-> Creating new images from parts of old ones
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Copying Images}
+    \textbf{Why copy an image?}
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{Preserve} the original
+        \item<2-> Create a base for modifications
+        \item<3-> Combine multiple images
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Two approaches:}
+    \begin{enumerate}
+        \item<5-> Use Pillow's built-in \textcolor{marigold}{\texttt{copy()}} method
+        \item<6-> Copy pixel-by-pixel (to understand the process)
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+from PIL import Image
+
+# Method 1: Built-in copy
+img = Image.open("photo.jpg")
+img_copy = img.copy()
+
+# Method 2: Manual copy (we'll implement this)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Copying Pixel by Pixel}
+    \begin{lstlisting}
+from PIL import Image
+
+def copy_image(source_img):
+    # Create new image with same size
+    width, height = source_img.size
+    new_img = Image.new("RGB", (width, height))
+
+    src_pixels = source_img.load()
+    dst_pixels = new_img.load()
+
+    # Copy each pixel
+    for x in range(width):
+        for y in range(height):
+            dst_pixels[x, y] = src_pixels[x, y]
+
+    return new_img
+
+img = Image.open("photo.jpg")
+copy = copy_image(img)
+copy.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Mirroring: The Concept}
+    \textbf{\textcolor{marigold}{Horizontal mirror} (flip left-right):}
+    \begin{itemize}
+        \item<1-> Left side becomes right side
+        \item<2-> Right side becomes left side
+        \item<3-> Like looking in a mirror
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{\textcolor{stfxblue}{Vertical mirror} (flip top-bottom):}
+    \begin{itemize}
+        \item<5-> Top becomes bottom
+        \item<6-> Bottom becomes top
+        \item<7-> Like a reflection in water
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Key idea:}
+    \begin{itemize}
+        \item<9-> Read pixels from one location
+        \item<10-> Write to a \textcolor{marigold}{different, calculated} location
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Horizontal Mirror: The Math}
+    \textbf{For a horizontal mirror:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> Image width: \texttt{W}
+        \item<2-> Pixel at position \texttt{x}
+        \item<3-> Should map to position \textcolor{stfxblue}{\texttt{W - 1 - x}}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Examples (for width = 100):}
+    \begin{itemize}
+        \item<5-> \texttt{x = 0} maps to \texttt{100 - 1 - 0 = \textcolor{marigold}{99}}
+        \item<6-> \texttt{x = 10} maps to \texttt{100 - 1 - 10 = \textcolor{marigold}{89}}
+        \item<7-> \texttt{x = 99} maps to \texttt{100 - 1 - 99 = \textcolor{marigold}{0}}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textcolor{marigold}{First pixel becomes last, last becomes first!}}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Horizontal Mirror}
+    \begin{lstlisting}
+from PIL import Image
+
+def mirror_horizontal(img):
+    width, height = img.size
+    mirrored = Image.new("RGB", (width, height))
+
+    src_pixels = img.load()
+    dst_pixels = mirrored.load()
+
+    for x in range(width):
+        for y in range(height):
+            # Get pixel from left side
+            color = src_pixels[x, y]
+            # Put it on the right side
+            dst_pixels[width - 1 - x, y] = color
+
+    return mirrored
+
+img = Image.open("photo.jpg")
+mirrored = mirror_horizontal(img)
+mirrored.save("mirrored_h.jpg")
+mirrored.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Vertical Mirror}
+    \begin{lstlisting}
+from PIL import Image
+
+def mirror_vertical(img):
+    width, height = img.size
+    mirrored = Image.new("RGB", (width, height))
+
+    src_pixels = img.load()
+    dst_pixels = mirrored.load()
+
+    for x in range(width):
+        for y in range(height):
+            # Get pixel from top
+            color = src_pixels[x, y]
+            # Put it on the bottom
+            dst_pixels[x, height - 1 - y] = color
+
+    return mirrored
+
+img = Image.open("photo.jpg")
+mirrored = mirror_vertical(img)
+mirrored.save("mirrored_v.jpg")
+mirrored.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Mirror Transformations}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Tasks:}
+    \begin{enumerate}
+        \item Implement both mirror functions
+        \item Test them on a photo with text or an asymmetric image
+        \item What happens if you apply horizontal mirror twice?
+        \item What if you apply both horizontal and vertical mirror?
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Challenge:} Can you create a function that mirrors around both axes at once?
+\end{frame}
+
+\begin{frame}{Rotation: The Challenge}
+    \textbf{Rotating images is more complex:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item For 90° rotation, width and height swap!
+        \item Original: 800×600 → Rotated: 600×800
+        \item Need to map coordinates differently
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{90° clockwise rotation:}
+    \begin{itemize}
+        \item Top-left becomes top-right
+        \item Top-right becomes bottom-right
+        \item Bottom-right becomes bottom-left
+        \item Bottom-left becomes top-left
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Coordinate transformation:}
+    \begin{itemize}
+        \item \texttt{new\_x = height - 1 - y}
+        \item \texttt{new\_y = x}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Rotating 90° Clockwise}
+    \begin{lstlisting}
+from PIL import Image
+
+def rotate_90_clockwise(img):
+    width, height = img.size
+    # Note: dimensions are swapped!
+    rotated = Image.new("RGB", (height, width))
+
+    src_pixels = img.load()
+    dst_pixels = rotated.load()
+
+    for x in range(width):
+        for y in range(height):
+            color = src_pixels[x, y]
+            # Transform coordinates
+            new_x = height - 1 - y
+            new_y = x
+            dst_pixels[new_x, new_y] = color
+
+    return rotated
+
+img = Image.open("photo.jpg")
+rotated = rotate_90_clockwise(img)
+rotated.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Rotating 90° Counter-Clockwise}
+    \begin{lstlisting}
+from PIL import Image
+
+def rotate_90_counter_clockwise(img):
+    width, height = img.size
+    rotated = Image.new("RGB", (height, width))
+
+    src_pixels = img.load()
+    dst_pixels = rotated.load()
+
+    for x in range(width):
+        for y in range(height):
+            color = src_pixels[x, y]
+            # Different transformation
+            new_x = y
+            new_y = width - 1 - x
+            dst_pixels[new_x, new_y] = color
+
+    return rotated
+
+img = Image.open("photo.jpg")
+rotated = rotate_90_counter_clockwise(img)
+rotated.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Cropping Images}
+    \textbf{Cropping extracts a rectangular region:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Select a rectangular area
+        \item Copy just that region to a new image
+        \item New image is smaller than original
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Parameters needed:}
+    \begin{itemize}
+        \item Top-left corner: \texttt{(start\_x, start\_y)}
+        \item Width and height of crop region
+        \item Or: Bottom-right corner: \texttt{(end\_x, end\_y)}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Common uses:}
+    \begin{itemize}
+        \item Focus on subject
+        \item Remove unwanted borders
+        \item Extract specific regions for analysis
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Crop}
+    \begin{lstlisting}
+from PIL import Image
+
+def crop_image(img, start_x, start_y, width, height):
+    # Create new image with crop dimensions
+    cropped = Image.new("RGB", (width, height))
+
+    src_pixels = img.load()
+    dst_pixels = cropped.load()
+
+    # Copy the selected region
+    for x in range(width):
+        for y in range(height):
+            # Read from offset position in source
+            color = src_pixels[start_x + x, start_y + y]
+            # Write to normal position in destination
+            dst_pixels[x, y] = color
+
+    return cropped
+
+img = Image.open("photo.jpg")
+cropped = crop_image(img, 100, 50, 200, 300)
+cropped.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Pillow's Built-in Crop}
+    \textbf{Pillow has a convenient crop method:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+img = Image.open("photo.jpg")
+
+# Define crop box: (left, top, right, bottom)
+box = (100, 50, 300, 350)
+cropped = img.crop(box)
+
+cropped.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Parameters:}
+    \begin{itemize}
+        \item \texttt{left}: x-coordinate of left edge
+        \item \texttt{top}: y-coordinate of top edge
+        \item \texttt{right}: x-coordinate of right edge (exclusive)
+        \item \texttt{bottom}: y-coordinate of bottom edge (exclusive)
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textit{Use this for efficiency, but understand the manual version!}
+\end{frame}
+
+\begin{frame}{Scaling Images}
+    \textbf{Scaling changes image dimensions:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{Scale up:} Make image larger
+        \item \textbf{Scale down:} Make image smaller
+        \item Must decide what to do with pixels
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Challenges:}
+    \begin{itemize}
+        \item Scaling up: Need to create new pixels
+        \item Scaling down: Need to combine/discard pixels
+        \item Simple approach: Nearest neighbor
+        \item Better approach: Interpolation (built into Pillow)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Scaling with Pillow}
+    \begin{lstlisting}
+from PIL import Image
+
+img = Image.open("photo.jpg")
+width, height = img.size
+
+# Scale to specific dimensions
+scaled = img.resize((400, 300))
+
+# Scale by a factor
+new_width = width * 2
+new_height = height * 2
+scaled_up = img.resize((new_width, new_height))
+
+# Scale down by half
+scaled_down = img.resize((width // 2, height // 2))
+
+scaled.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Note:} \texttt{resize()} uses good interpolation by default
+\end{frame}
+
+\begin{frame}[fragile]{Maintaining Aspect Ratio}
+    \textbf{Often we want to scale proportionally:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+def scale_by_factor(img, factor):
+    width, height = img.size
+    new_width = int(width * factor)
+    new_height = int(height * factor)
+    return img.resize((new_width, new_height))
+
+def scale_to_width(img, new_width):
+    width, height = img.size
+    factor = new_width / width
+    new_height = int(height * factor)
+    return img.resize((new_width, new_height))
+
+img = Image.open("photo.jpg")
+half_size = scale_by_factor(img, 0.5)
+width_400 = scale_to_width(img, 400)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Transformations}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Create a transformation toolkit:}
+    \begin{enumerate}
+        \item Implement mirror functions (horizontal \& vertical)
+        \item Implement rotation functions (90° CW \& CCW)
+        \item Create a crop function
+        \item Create a scale function that maintains aspect ratio
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Test each function and save results!}
+
+    \vspace{0.5em}
+
+    \textbf{Challenge:} Can you rotate an image 180°? (Hint: Multiple ways!)
+\end{frame}
+
+\begin{frame}[fragile]{Combining Transformations}
+    \textbf{Transformations can be chained:}
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+img = Image.open("photo.jpg")
+
+# Crop, then mirror, then rotate
+img = crop_image(img, 50, 50, 400, 300)
+img = mirror_horizontal(img)
+img = rotate_90_clockwise(img)
+
+img.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Order matters!}
+    \begin{itemize}
+        \item Crop then rotate $\neq$ rotate then crop
+        \item Dimensions change with each transformation
+        \item Plan your sequence carefully
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Practical Applications}
+    \textbf{Real-world uses:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{Photo editing:} User wants to rotate/crop
+        \item \textbf{Thumbnails:} Scale down for web display
+        \item \textbf{Collages:} Combine multiple images
+        \item \textbf{Batch processing:} Auto-orient photos
+        \item \textbf{Data augmentation:} ML training (flip/rotate)
+        \item \textbf{Image standardization:} Same size for processing
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        These are foundational operations in image software!
+    \end{center}
+\end{frame}
+
+\begin{frame}{Key Takeaways}
+    \textbf{Today you learned:}
+    \begin{itemize}
+        \item How to copy images pixel by pixel
+        \item Coordinate transformations for mirroring
+        \item How to rotate images 90 degrees
+        \item How to crop regions from images
+        \item How to scale images up and down
+        \item How to maintain aspect ratios
+        \item How to chain transformations
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{You now have a complete image transformation toolkit!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{For Next Class}
+    \textbf{Before next session:}
+    \begin{itemize}
+        \item Complete all transformation functions
+        \item Experiment with chaining transformations
+        \item Try creating interesting combinations
+        \item Read Chapter 4 (continued) of the textbook
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next session:}
+    \begin{itemize}
+        \item Combining multiple images
+        \item Creating collages
+        \item Overlaying images
+        \item Blending effects
+        \item Lab: Build your own photo collage!
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{Questions?}
+    \end{center}
+\end{frame}
+
+\end{document}

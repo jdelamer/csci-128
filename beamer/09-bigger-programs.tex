@@ -1,0 +1,850 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Building Bigger Programs}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large From simple scripts to structured programs!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Understand \textcolor{stfxblue}{program organization} principles
+        \item<2-> Write \textcolor{marigold}{functions} for media processing
+        \item<3-> Create reusable modules
+        \item<4-> Structure larger programs effectively
+        \item<5-> Debug complex media programs
+        \item<6-> Test media processing code
+        \item<7-> Build a media processing library
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textit{Professional programs are \textcolor{marigold}{\textbf{organized, tested, and maintainable!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Review: What We Know So Far}
+    \textbf{Skills we've developed:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> Processing \textcolor{marigold}{images} (pixels, filters, transformations)
+        \item<2-> Processing \textcolor{stfxblue}{sounds} (samples, effects, mixing)
+        \item<3-> Variables, loops, and conditionals
+        \item<4-> Basic use of functions
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<5->{\textbf{Today:} We'll learn to organize all this into \textcolor{marigold}{\textbf{professional programs!}}}
+\end{frame}
+
+\begin{frame}{Why Functions Matter}
+    \textbf{Functions provide essential benefits:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item<1-> \textcolor{marigold}{\textbf{Reusability:}} Write once, use many times
+        \item<2-> \textcolor{stfxblue}{\textbf{Organization:}} Break complex problems into pieces
+        \item<3-> \textcolor{marigold}{\textbf{Abstraction:}} Hide implementation details
+        \item<4-> \textcolor{stfxblue}{\textbf{Testing:}} Test small pieces independently
+        \item<5-> \textcolor{marigold}{\textbf{Maintainability:}} Fix bugs in one place
+        \item<6-> \textcolor{stfxblue}{\textbf{Collaboration:}} Different people work on different functions
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{Functions are the \textcolor{marigold}{\textbf{building blocks}} of larger programs!}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Functions: Quick Review}
+    \textbf{Basic function structure:}
+
+    \begin{lstlisting}
+def function_name(parameters):
+    """Docstring explaining what it does."""
+    # Function body
+    result = # ... do something
+    return result
+
+# Call the function
+output = function_name(arguments)
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Key parts:}
+    \begin{itemize}
+        \item \texttt{def} keyword
+        \item Parameters (input)
+        \item Return value (output)
+        \item Docstring (documentation)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Image Processing Function Example}
+    \begin{lstlisting}
+from PIL import Image
+
+def grayscale(image):
+    """Convert image to grayscale using luminance formula.
+
+    Args:
+        image: PIL Image object
+
+    Returns:
+        Grayscale version of the image
+    """
+    pixels = image.load()
+    width, height = image.size
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            gray = int(0.299*r + 0.587*g + 0.114*b)
+            pixels[x, y] = (gray, gray, gray)
+
+    return image
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Sound Processing Function Example}
+    \begin{lstlisting}
+from pydub import AudioSegment
+
+def add_echo(sound, delay_ms=300, decay=0.6):
+    """Add echo effect to sound.
+
+    Args:
+        sound: AudioSegment object
+        delay_ms: Echo delay in milliseconds (default 300)
+        decay: Echo volume reduction 0-1 (default 0.6)
+
+    Returns:
+        Sound with echo effect applied
+    """
+    silence = AudioSegment.silent(duration=delay_ms)
+    echo = silence + sound
+    echo = echo - (20 * (1 - decay))
+    result = sound.overlay(echo)
+    return result
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Function Design Principles}
+    \textbf{Good functions are:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item<1-> \textcolor{stfxblue}{\textbf{Focused:}} Do one thing well
+        \item<2-> \textcolor{stfxblue}{\textbf{Short:}} Generally 10-50 lines
+        \item<3-> \textcolor{marigold}{\textbf{Named clearly:}} Name describes what it does
+        \item<4-> \textcolor{stfxblue}{\textbf{Documented:}} Include docstring
+        \item<5-> \textcolor{marigold}{\textbf{Tested:}} Verify it works correctly
+        \item<6-> \textcolor{stfxblue}{\textbf{Reusable:}} Work with different inputs
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \pause
+
+    \textcolor{red}{\textbf{Bad functions:}}
+    \begin{itemize}
+        \item<8-> Do many unrelated things
+        \item<9-> Have unclear names
+        \item<10-> Are hundreds of lines long
+        \item<11-> Have hard-coded values
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Breaking Down Complex Task}
+    \textbf{Bad: One giant function}
+
+    \begin{lstlisting}[numbers=none]
+def process_image(filename):
+    # 200 lines of code doing everything:
+    # - Load image
+    # - Apply multiple filters
+    # - Add text
+    # - Save result
+    # Hard to test, hard to reuse parts!
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Good: Multiple focused functions}
+
+    \begin{lstlisting}[numbers=none]
+def load_image(filename):
+    # Load and validate image
+
+def apply_vintage_effect(image):
+    # Apply sepia, vignette, etc.
+
+def add_watermark(image, text):
+    # Add text to image
+
+def save_image(image, filename):
+    # Save with error handling
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Building a Filter Library}
+    \textbf{Create reusable filter functions:}
+
+    \begin{lstlisting}
+# filters.py
+from PIL import Image
+
+def grayscale(img):
+    """Convert to grayscale."""
+    # Implementation here
+    return img
+
+def sepia(img):
+    """Apply sepia tone."""
+    # Implementation here
+    return img
+
+def brighten(img, amount=50):
+    """Increase brightness."""
+    # Implementation here
+    return img
+
+def vignette(img, strength=0.5):
+    """Add vignette effect."""
+    # Implementation here
+    return img
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Using Your Filter Library}
+    \begin{lstlisting}
+from PIL import Image
+import filters
+
+# Load image
+img = Image.open("photo.jpg")
+
+# Apply filters
+img = filters.grayscale(img)
+img = filters.brighten(img, amount=30)
+img = filters.vignette(img, strength=0.6)
+
+# Save result
+img.save("processed.jpg")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Benefits:}
+    \begin{itemize}
+        \item Clean main program
+        \item Reusable filters
+        \item Easy to test individual filters
+        \item Can share library across projects
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Creating Modules}
+    \textbf{Module = Python file with related functions}
+
+    \vspace{1em}
+
+    \textbf{Project structure:}
+    \begin{lstlisting}[numbers=none]
+my_project/
+    main.py           # Main program
+    image_filters.py  # Image processing functions
+    sound_effects.py  # Sound processing functions
+    utils.py          # Helper utilities
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Import and use:}
+    \begin{lstlisting}
+# In main.py
+import image_filters
+import sound_effects
+
+img = image_filters.grayscale(my_image)
+sound = sound_effects.add_echo(my_sound)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Module Example: image\_filters.py}
+    \begin{lstlisting}
+"""
+Image filtering functions for media computation.
+
+Author: Your Name
+Date: 2024
+"""
+
+from PIL import Image
+
+def grayscale(image):
+    """Convert image to grayscale."""
+    pixels = image.load()
+    width, height = image.size
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            gray = int(0.299*r + 0.587*g + 0.114*b)
+            pixels[x, y] = (gray, gray, gray)
+
+    return image
+
+def negative(image):
+    """Create negative of image."""
+    pixels = image.load()
+    width, height = image.size
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            pixels[x, y] = (255-r, 255-g, 255-b)
+
+    return image
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Helper Functions}
+    \textbf{Small utility functions used by larger ones:}
+
+    \begin{lstlisting}
+def clamp(value, min_val=0, max_val=255):
+    """Restrict value to valid pixel range."""
+    return max(min_val, min(value, max_val))
+
+def get_luminance(r, g, b):
+    """Calculate luminance from RGB."""
+    return int(0.299*r + 0.587*g + 0.114*b)
+
+def brighten(image, amount):
+    """Brighten image using helper functions."""
+    pixels = image.load()
+    width, height = image.size
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            # Use helper function
+            new_r = clamp(r + amount)
+            new_g = clamp(g + amount)
+            new_b = clamp(b + amount)
+            pixels[x, y] = (new_r, new_g, new_b)
+
+    return image
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Main Program Structure}
+    \textbf{Organize your main program:}
+
+    \begin{lstlisting}
+"""
+Photo processing application.
+"""
+from PIL import Image
+import image_filters
+
+def main():
+    """Main program entry point."""
+    # Get input from user
+    filename = input("Enter image filename: ")
+
+    # Load image
+    img = Image.open(filename)
+
+    # Process image
+    img = image_filters.grayscale(img)
+    img = image_filters.brighten(img, 30)
+
+    # Save result
+    output = "processed_" + filename
+    img.save(output)
+    print(f"Saved to {output}")
+
+if __name__ == "__main__":
+    main()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The if \_\_name\_\_ == "\_\_main\_\_" Pattern}
+    \textbf{What does this mean?}
+
+    \begin{lstlisting}
+if __name__ == "__main__":
+    main()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Purpose:}
+    \begin{itemize}
+        \item Code runs only when file is executed directly
+        \item Not when file is imported as module
+        \item Allows file to be both program and library
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Example:}
+    \begin{itemize}
+        \item Run \texttt{python3 filters.py} - main() executes
+        \item Import \texttt{import filters} - main() does NOT execute
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Error Handling in Functions}
+    \textbf{Handle errors gracefully:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+def load_image_safely(filename):
+    """Load image with error handling."""
+    try:
+        img = Image.open(filename)
+        return img
+    except FileNotFoundError:
+        print(f"Error: {filename} not found")
+        return None
+    except Exception as e:
+        print(f"Error loading {filename}: {e}")
+        return None
+
+# Use it
+img = load_image_safely("photo.jpg")
+if img is not None:
+    # Process image
+    pass
+else:
+    print("Could not load image")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Input Validation}
+    \textbf{Validate function inputs:}
+
+    \begin{lstlisting}
+def brighten(image, amount):
+    """Brighten image by amount (0-255)."""
+    # Validate input
+    if not isinstance(amount, (int, float)):
+        raise TypeError("amount must be a number")
+
+    if amount < 0 or amount > 255:
+        raise ValueError("amount must be between 0 and 255")
+
+    # Process image
+    pixels = image.load()
+    width, height = image.size
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            new_r = min(r + amount, 255)
+            new_g = min(g + amount, 255)
+            new_b = min(b + amount, 255)
+            pixels[x, y] = (int(new_r), int(new_g), int(new_b))
+
+    return image
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Testing Functions}
+    \textbf{Write simple tests:}
+
+    \begin{lstlisting}
+# test_filters.py
+from PIL import Image
+import image_filters
+
+def test_grayscale():
+    """Test grayscale function."""
+    # Create test image (3x3 red square)
+    img = Image.new("RGB", (3, 3), (255, 0, 0))
+
+    # Apply grayscale
+    result = image_filters.grayscale(img)
+
+    # Check all pixels are gray
+    pixels = result.load()
+    r, g, b = pixels[0, 0]
+    assert r == g == b, "Grayscale should have equal RGB"
+    print("test_grayscale: PASSED")
+
+def test_negative():
+    """Test negative function."""
+    # Create test image (white)
+    img = Image.new("RGB", (3, 3), (255, 255, 255))
+
+    # Apply negative
+    result = image_filters.negative(img)
+
+    # Check result is black
+    pixels = result.load()
+    r, g, b = pixels[0, 0]
+    assert (r, g, b) == (0, 0, 0), "Negative of white is black"
+    print("test_negative: PASSED")
+
+# Run tests
+test_grayscale()
+test_negative()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Debugging Strategies}
+    \textbf{When things go wrong:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item \textbf{Read error messages carefully}
+        \begin{itemize}
+            \item Python tells you what's wrong and where
+        \end{itemize}
+
+        \item \textbf{Print debugging}
+        \begin{itemize}
+            \item Add print statements to track values
+        \end{itemize}
+
+        \item \textbf{Test with simple inputs}
+        \begin{itemize}
+            \item Use small images, short sounds
+        \end{itemize}
+
+        \item \textbf{Test functions individually}
+        \begin{itemize}
+            \item Isolate the problem
+        \end{itemize}
+
+        \item \textbf{Use Python debugger (pdb)}
+        \begin{itemize}
+            \item Step through code line by line
+        \end{itemize}
+
+        \item \textbf{Check your assumptions}
+        \begin{itemize}
+            \item Verify data types, ranges, etc.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Print Debugging Example}
+    \begin{lstlisting}
+def mysterious_filter(image):
+    """Some filter that's not working right."""
+    pixels = image.load()
+    width, height = image.size
+
+    print(f"DEBUG: Image size: {width}x{height}")
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+
+            # Print first pixel
+            if x == 0 and y == 0:
+                print(f"DEBUG: First pixel: ({r}, {g}, {b})")
+
+            # Some calculation
+            new_r = r * 2  # Might overflow!
+
+            if new_r > 255:
+                print(f"DEBUG: Overflow at ({x}, {y}): {new_r}")
+
+            pixels[x, y] = (min(new_r, 255), g, b)
+
+    return image
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Complete Media Processor}
+    \textbf{Well-organized program structure:}
+
+    \begin{lstlisting}[numbers=none]
+media_processor/
+    main.py              # Main program
+    image_filters.py     # Image processing functions
+    sound_effects.py     # Sound processing functions
+    utils.py             # Utility functions
+    test_filters.py      # Tests for image filters
+    test_effects.py      # Tests for sound effects
+    README.md            # Documentation
+    examples/            # Example media files
+        sample.jpg
+        sample.wav
+    output/              # Processed files
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Each file has a clear purpose!}
+\end{frame}
+
+\begin{frame}[fragile]{Example: main.py}
+    \begin{lstlisting}
+"""
+Media Processing Application
+Process images and sounds with various effects.
+"""
+from PIL import Image
+from pydub import AudioSegment
+import image_filters
+import sound_effects
+
+def process_image(filename):
+    """Process an image file."""
+    print(f"Processing image: {filename}")
+    img = Image.open(filename)
+    img = image_filters.vintage_effect(img)
+    output = f"output/processed_{filename}"
+    img.save(output)
+    print(f"Saved to {output}")
+
+def process_sound(filename):
+    """Process a sound file."""
+    print(f"Processing sound: {filename}")
+    sound = AudioSegment.from_file(filename)
+    sound = sound_effects.add_echo(sound)
+    output = f"output/processed_{filename}"
+    sound.export(output, format="wav")
+    print(f"Saved to {output}")
+
+def main():
+    """Main program."""
+    print("Media Processor")
+    print("1. Process image")
+    print("2. Process sound")
+    choice = input("Choose option: ")
+
+    if choice == "1":
+        filename = input("Image filename: ")
+        process_image(filename)
+    elif choice == "2":
+        filename = input("Sound filename: ")
+        process_sound(filename)
+    else:
+        print("Invalid choice")
+
+if __name__ == "__main__":
+    main()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Documentation Best Practices}
+    \textbf{Good documentation includes:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item \textbf{Module docstring:} What the module does
+        \item \textbf{Function docstrings:} What each function does
+        \item \textbf{Parameter descriptions:} What inputs are expected
+        \item \textbf{Return value description:} What output is produced
+        \item \textbf{Examples:} How to use the function
+        \item \textbf{README file:} Overall project documentation
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Good documentation:}
+    \begin{itemize}
+        \item Saves you time later
+        \item Helps others use your code
+        \item Makes code more professional
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Well-Documented Function}
+    \begin{lstlisting}
+def apply_vignette(image, strength=0.5):
+    """
+    Apply vignette effect (darkened edges) to image.
+
+    The vignette effect darkens pixels based on their distance
+    from the center, creating a classic photographic look.
+
+    Args:
+        image (PIL.Image): Input image to process
+        strength (float): Darkness intensity 0.0-1.0 (default 0.5)
+                         0.0 = no effect, 1.0 = maximum darkness
+
+    Returns:
+        PIL.Image: Image with vignette effect applied
+
+    Example:
+        >>> from PIL import Image
+        >>> img = Image.open("photo.jpg")
+        >>> result = apply_vignette(img, strength=0.7)
+        >>> result.save("vignetted.jpg")
+
+    Raises:
+        ValueError: If strength is not between 0.0 and 1.0
+    """
+    # Implementation here
+    pass
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Code Style and Conventions}
+    \textbf{Python conventions (PEP 8):}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{Naming:}
+        \begin{itemize}
+            \item Functions: \texttt{lowercase\_with\_underscores}
+            \item Variables: \texttt{lowercase\_with\_underscores}
+            \item Constants: \texttt{UPPERCASE\_WITH\_UNDERSCORES}
+        \end{itemize}
+
+        \item \textbf{Spacing:}
+        \begin{itemize}
+            \item 4 spaces for indentation (not tabs)
+            \item Blank line between functions
+            \item Space after commas
+        \end{itemize}
+
+        \item \textbf{Line length:}
+        \begin{itemize}
+            \item Maximum 79 characters per line
+            \item Break long lines logically
+        \end{itemize}
+
+        \item \textbf{Comments:}
+        \begin{itemize}
+            \item Use \# for inline comments
+            \item Triple quotes for docstrings
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Version Control}
+    \textbf{Track changes to your code:}
+
+    \vspace{1em}
+
+    \textbf{Benefits of version control (Git):}
+    \begin{itemize}
+        \item Keep history of all changes
+        \item Revert to previous versions
+        \item Collaborate with others
+        \item Backup your work
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Basic Git workflow:}
+    \begin{enumerate}
+        \item \texttt{git init} - Initialize repository
+        \item \texttt{git add filename} - Stage changes
+        \item \texttt{git commit -m "message"} - Save changes
+        \item \texttt{git push} - Upload to GitHub
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textit{We'll cover this more in future courses!}
+\end{frame}
+
+\begin{frame}{Lab: Build Your Media Library}
+    \begin{center}
+        \Large \textbf{Lab Activity}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Create a complete media processing library:}
+
+    \begin{enumerate}
+        \item Create \texttt{image\_filters.py} with:
+        \begin{itemize}
+            \item At least 5 filter functions
+            \item Proper docstrings
+            \item Error handling
+        \end{itemize}
+
+        \item Create \texttt{sound\_effects.py} with:
+        \begin{itemize}
+            \item At least 3 effect functions
+            \item Proper docstrings
+            \item Error handling
+        \end{itemize}
+
+        \item Create \texttt{main.py} that:
+        \begin{itemize}
+            \item Imports your modules
+            \item Provides a menu interface
+            \item Processes user-selected files
+        \end{itemize}
+
+        \item Test all functions with example files
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Summary}
+    \textbf{Key concepts:}
+    \begin{itemize}
+        \item Functions organize code into reusable pieces
+        \item Modules group related functions
+        \item Good functions are focused, documented, and tested
+        \item Error handling makes programs robust
+        \item Testing verifies correctness
+        \item Documentation helps users and future you
+        \item Debug systematically with print statements
+        \item Follow Python style conventions
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next time:} Text Manipulation and Files
+\end{frame}
+
+\end{document}

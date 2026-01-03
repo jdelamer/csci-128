@@ -1,0 +1,817 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Combining Images and Collages}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large Creating art from multiple images!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Copy regions from one image to another
+        \item<2-> Paste images onto \textcolor{stfxblue}{canvases}
+        \item<3-> Create \textcolor{marigold}{photo collages}
+        \item<4-> Blend images together
+        \item<5-> Apply \textcolor{stfxblue}{chromakey} (green screen) effects
+        \item<6-> Build complex compositions
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textit{Combine everything you've learned to create \textcolor{marigold}{\textbf{amazing compositions!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Review: Our Toolkit So Far}
+    \textbf{We can now:}
+    \begin{itemize}
+        \item<1-> Load and save images
+        \item<2-> Modify pixel \textcolor{marigold}{colors} (filters)
+        \item<3-> Transform images (mirror, rotate, crop, scale)
+        \item<4-> Process all pixels systematically
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Today we add:}
+    \begin{itemize}
+        \item<6-> Working with \textcolor{stfxblue}{multiple images}
+        \item<7-> Copying regions between images
+        \item<8-> Creating \textcolor{marigold}{compositions}
+        \item<9-> Advanced effects
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Pasting One Image onto Another}
+    \textbf{The basic operation:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item<1-> Start with a \textcolor{stfxblue}{canvas} (background image)
+        \item<2-> Load a source image
+        \item<3-> Choose where to place it
+        \item<4-> Copy pixels from source to canvas
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Key decisions:}
+    \begin{itemize}
+        \item<6-> What size should the canvas be?
+        \item<7-> Where should we place the image?
+        \item<8-> What if the image goes off the edge?
+        \item<9-> Should we scale the image first?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a Canvas}
+    \begin{lstlisting}
+from PIL import Image
+
+# Create a blank white canvas
+canvas = Image.new("RGB", (800, 600), (255, 255, 255))
+
+# Or a black canvas
+canvas = Image.new("RGB", (800, 600), (0, 0, 0))
+
+# Or a colored canvas
+canvas = Image.new("RGB", (800, 600), (200, 220, 255))
+
+# Or load an existing image as the base
+canvas = Image.open("background.jpg")
+
+canvas.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{The \textcolor{stfxblue}{canvas} is the foundation of your composition}
+\end{frame}
+
+\begin{frame}[fragile]{Pasting an Image: Manual Method}
+    \begin{lstlisting}
+from PIL import Image
+
+def paste_image(canvas, source, x_offset, y_offset):
+    canvas_pixels = canvas.load()
+    source_pixels = source.load()
+    src_width, src_height = source.size
+
+    for x in range(src_width):
+        for y in range(src_height):
+            # Calculate destination position
+            dest_x = x_offset + x
+            dest_y = y_offset + y
+
+            # Check bounds
+            if (0 <= dest_x < canvas.size[0] and
+                0 <= dest_y < canvas.size[1]):
+                canvas_pixels[dest_x, dest_y] = \
+                    source_pixels[x, y]
+
+    return canvas
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Using Pillow's Paste Method}
+    \textbf{Pillow provides a convenient paste() method:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+# Load images
+canvas = Image.new("RGB", (800, 600), (255, 255, 255))
+photo = Image.open("photo.jpg")
+
+# Paste at position (100, 50)
+canvas.paste(photo, (100, 50))
+
+canvas.save("composition.jpg")
+canvas.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Parameters:}
+    \begin{itemize}
+        \item<2-> First: Image to paste
+        \item<3-> Second: \textcolor{marigold}{(x, y) position} for top-left corner
+        \item<4-> Optional third: Mask for transparency
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Simple Collage}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Create a simple 2-photo collage:}
+    \begin{enumerate}
+        \item Create a white 800×400 canvas
+        \item Load two photos
+        \item Scale them to 350×400 (or similar)
+        \item Paste one on the left side
+        \item Paste one on the right side
+        \item Save the result
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Hint:} Calculate positions to center them with a gap
+\end{frame}
+
+\begin{frame}{Creating a Grid Collage}
+    \textbf{Grid layouts are popular:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item 2×2 grid: 4 images
+        \item 3×3 grid: 9 images
+        \item 2×3 grid: 6 images
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Algorithm:}
+    \begin{enumerate}
+        \item Decide grid dimensions (rows × columns)
+        \item Calculate cell size
+        \item Calculate canvas size
+        \item Scale images to fit cells
+        \item Place each image in its grid position
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{2×2 Grid Collage}
+    \begin{lstlisting}
+from PIL import Image
+
+# Load and scale images
+img1 = Image.open("photo1.jpg").resize((300, 300))
+img2 = Image.open("photo2.jpg").resize((300, 300))
+img3 = Image.open("photo3.jpg").resize((300, 300))
+img4 = Image.open("photo4.jpg").resize((300, 300))
+
+# Create canvas
+canvas = Image.new("RGB", (600, 600))
+
+# Paste in grid positions
+canvas.paste(img1, (0, 0))      # Top-left
+canvas.paste(img2, (300, 0))    # Top-right
+canvas.paste(img3, (0, 300))    # Bottom-left
+canvas.paste(img4, (300, 300))  # Bottom-right
+
+canvas.save("grid_collage.jpg")
+canvas.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Generalized Grid Collage}
+    \begin{lstlisting}
+from PIL import Image
+
+def create_grid_collage(images, rows, cols, cell_size):
+    canvas_width = cols * cell_size
+    canvas_height = rows * cell_size
+    canvas = Image.new("RGB", (canvas_width, canvas_height))
+
+    for i, img in enumerate(images):
+        if i >= rows * cols:
+            break
+
+        # Calculate grid position
+        row = i // cols
+        col = i % cols
+        x = col * cell_size
+        y = row * cell_size
+
+        # Scale and paste
+        scaled = img.resize((cell_size, cell_size))
+        canvas.paste(scaled, (x, y))
+
+    return canvas
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Adding Borders and Spacing}
+    \textbf{Make collages more polished:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Add padding between images
+        \item Add borders around images
+        \item Use a colored background
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Approach:}
+    \begin{itemize}
+        \item Make canvas larger to account for gaps
+        \item Calculate positions with spacing
+        \item Optionally draw borders
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Grid Collage with Spacing}
+    \begin{lstlisting}
+def create_grid_with_spacing(images, rows, cols,
+                             cell_size, spacing):
+    canvas_width = cols * cell_size + (cols + 1) * spacing
+    canvas_height = rows * cell_size + (rows + 1) * spacing
+    canvas = Image.new("RGB", (canvas_width, canvas_height),
+                       (240, 240, 240))  # Light gray
+
+    for i, img in enumerate(images):
+        if i >= rows * cols:
+            break
+
+        row = i // cols
+        col = i % cols
+        x = (col + 1) * spacing + col * cell_size
+        y = (row + 1) * spacing + row * cell_size
+
+        scaled = img.resize((cell_size, cell_size))
+        canvas.paste(scaled, (x, y))
+
+    return canvas
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Blending Images}
+    \textbf{Blending combines two images:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Both images contribute to the result
+        \item Creates a "double exposure" effect
+        \item Controlled by an alpha (blend factor)
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Formula:}
+    \begin{center}
+        $\text{result} = \alpha \times \text{img1} + (1-\alpha) \times \text{img2}$
+    \end{center}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item $\alpha = 0.5$: Equal blend (50/50)
+        \item $\alpha = 0.7$: More of img1
+        \item $\alpha = 0.3$: More of img2
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Image Blending}
+    \begin{lstlisting}
+from PIL import Image
+
+def blend_images(img1, img2, alpha):
+    # Ensure same size
+    width, height = img1.size
+    img2 = img2.resize((width, height))
+
+    result = Image.new("RGB", (width, height))
+    pix1 = img1.load()
+    pix2 = img2.load()
+    result_pix = result.load()
+
+    for x in range(width):
+        for y in range(height):
+            r1, g1, b1 = pix1[x, y]
+            r2, g2, b2 = pix2[x, y]
+
+            r = int(alpha * r1 + (1 - alpha) * r2)
+            g = int(alpha * g1 + (1 - alpha) * g2)
+            b = int(alpha * b1 + (1 - alpha) * b2)
+
+            result_pix[x, y] = (r, g, b)
+
+    return result
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Using Pillow's Blend Method}
+    \textbf{Pillow has a built-in blend function:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+img1 = Image.open("photo1.jpg")
+img2 = Image.open("photo2.jpg")
+
+# Ensure same size
+img2 = img2.resize(img1.size)
+
+# Blend with 50/50 mix
+blended = Image.blend(img1, img2, 0.5)
+
+# More of img2 (alpha = 0.7 means 70% img2, 30% img1)
+blended2 = Image.blend(img1, img2, 0.7)
+
+blended.save("blended.jpg")
+blended.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Note:} Higher alpha = more of the second image
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Blending Effects}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Experiment with blending:}
+    \begin{enumerate}
+        \item Choose two different images
+        \item Blend them at alpha = 0.5
+        \item Try alpha = 0.25 and alpha = 0.75
+        \item Which looks best?
+        \item Try blending a photo with a solid color image
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Challenge:} Can you create a gradient blend where alpha varies across the image?
+\end{frame}
+
+\begin{frame}{Chromakey (Green Screen)}
+    \textbf{Chromakey replaces a specific color:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Used in movies and TV
+        \item Film subject in front of green/blue screen
+        \item Replace that color with a different background
+        \item Creates illusion of different location
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Algorithm:}
+    \begin{enumerate}
+        \item For each pixel in foreground image
+        \item If pixel is close to the key color (green)
+        \item Copy pixel from background instead
+        \item Otherwise, copy pixel from foreground
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Simple Chromakey Implementation}
+    \begin{lstlisting}
+from PIL import Image
+
+def chromakey(foreground, background, key_color,
+              threshold=50):
+    fg_pixels = foreground.load()
+    bg_pixels = background.load()
+    result = Image.new("RGB", foreground.size)
+    result_pixels = result.load()
+
+    for x in range(foreground.size[0]):
+        for y in range(foreground.size[1]):
+            r, g, b = fg_pixels[x, y]
+
+            # Calculate distance to key color
+            distance = abs(r - key_color[0]) + \
+                      abs(g - key_color[1]) + \
+                      abs(b - key_color[2])
+
+            if distance < threshold:
+                result_pixels[x, y] = bg_pixels[x, y]
+            else:
+                result_pixels[x, y] = (r, g, b)
+
+    return result
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Using Chromakey}
+    \begin{lstlisting}
+from PIL import Image
+
+# Load images
+foreground = Image.open("person_greenscreen.jpg")
+background = Image.open("beach.jpg")
+
+# Ensure same size
+background = background.resize(foreground.size)
+
+# Apply chromakey
+# Green screen color (approximately)
+green = (0, 255, 0)
+result = chromakey(foreground, background, green,
+                   threshold=100)
+
+result.save("composited.jpg")
+result.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Note:} Threshold controls how close to green is replaced
+\end{frame}
+
+\begin{frame}{Improving Chromakey}
+    \textbf{Challenges with simple chromakey:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Hard edges look unnatural
+        \item Shadows on green screen
+        \item Green spill on subject
+        \item Not all greens are the same
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Improvements:}
+    \begin{itemize}
+        \item Use HSV color space instead of RGB
+        \item Add edge feathering (gradual transparency)
+        \item Adjust threshold per-region
+        \item Color correction for spill
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textit{Professional compositing is complex, but the basics are here!}
+\end{frame}
+
+\begin{frame}{Overlaying with Transparency}
+    \textbf{Some images have transparent regions:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item PNG format supports alpha channel
+        \item Alpha = 0: Fully transparent
+        \item Alpha = 255: Fully opaque
+        \item In between: Partially transparent
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Mode "RGBA":}
+    \begin{itemize}
+        \item R = Red (0-255)
+        \item G = Green (0-255)
+        \item B = Blue (0-255)
+        \item A = Alpha (0-255)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Pasting with Transparency}
+    \begin{lstlisting}
+from PIL import Image
+
+# Load base image
+canvas = Image.open("background.jpg")
+
+# Load image with transparency (PNG)
+overlay = Image.open("logo.png")
+
+# Paste using the alpha channel as a mask
+# The third parameter tells it to use transparency
+canvas.paste(overlay, (100, 50), overlay)
+
+canvas.save("with_overlay.jpg")
+canvas.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{The third parameter (overlay) uses its alpha channel as a mask}
+
+    \vspace{0.5em}
+
+    Transparent pixels won't overwrite the canvas!
+\end{frame}
+
+\begin{frame}{Lab: Create a Photo Collage}
+    \begin{center}
+        \Large \textbf{Main Lab Activity!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Build a complete collage program that:}
+    \begin{enumerate}
+        \item Takes a list of image filenames
+        \item Creates a grid layout (you choose dimensions)
+        \item Scales all images to the same size
+        \item Adds spacing between images
+        \item Adds a title (use PIL's text capabilities or separate)
+        \item Saves the final result
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \textbf{Requirements:}
+    \begin{itemize}
+        \item Use at least 4 images
+        \item Include error handling for missing files
+        \item Make it reusable (parameters for grid size, etc.)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Bonus: Adding Text to Images}
+    \begin{lstlisting}
+from PIL import Image, ImageDraw, ImageFont
+
+# Create or load image
+img = Image.new("RGB", (400, 200), (255, 255, 255))
+
+# Create drawing context
+draw = ImageDraw.Draw(img)
+
+# Add text
+text = "My Photo Collage"
+position = (50, 80)
+color = (0, 0, 0)  # Black
+
+# Use default font
+draw.text(position, text, fill=color)
+
+# Or specify a font
+# font = ImageFont.truetype("arial.ttf", 36)
+# draw.text(position, text, fill=color, font=font)
+
+img.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Lab Extensions}
+    \textbf{Additional challenges:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item \textbf{Polaroid style:}
+            \begin{itemize}
+                \item Add white borders around each photo
+                \item Slight rotation for each image
+            \end{itemize}
+
+        \item \textbf{Gradient background:}
+            \begin{itemize}
+                \item Create a gradient-colored canvas
+            \end{itemize}
+
+        \item \textbf{Blended montage:}
+            \begin{itemize}
+                \item Blend overlapping images with varying alpha
+            \end{itemize}
+
+        \item \textbf{Picture-in-picture:}
+            \begin{itemize}
+                \item One large background, smaller images overlaid
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Creative Ideas}
+    \textbf{What else can you create?}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{Before/After:} Show image transformations
+        \item \textbf{Comic strip:} Sequential images with borders
+        \item \textbf{Photo booth:} Multiple shots in strip layout
+        \item \textbf{Meme templates:} Images with text overlays
+        \item \textbf{Contact sheet:} Many thumbnail images
+        \item \textbf{Desktop wallpaper:} Blend photos artistically
+        \item \textbf{Social media:} Profile banners, posts
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textit{The only limit is your creativity!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Best Practices for Compositions}
+    \textbf{Tips for great results:}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item \textbf{Plan your layout first}
+            \begin{itemize}
+                \item Sketch on paper
+                \item Calculate dimensions
+            \end{itemize}
+
+        \item \textbf{Consider aspect ratios}
+            \begin{itemize}
+                \item Crop images to same ratio
+                \item Or embrace different shapes
+            \end{itemize}
+
+        \item \textbf{Use consistent spacing}
+            \begin{itemize}
+                \item Makes it look professional
+            \end{itemize}
+
+        \item \textbf{Pay attention to resolution}
+            \begin{itemize}
+                \item Don't scale up too much (pixelation)
+                \item Start with high-quality sources
+            \end{itemize}
+
+        \item \textbf{Save in appropriate format}
+            \begin{itemize}
+                \item JPEG for photos, PNG for graphics
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Performance Considerations}
+    \textbf{Working with multiple images:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item Multiple large images use lots of memory
+        \item Scale images down before combining when possible
+        \item Process images one at a time
+        \item Close/delete images you're done with
+        \item Test with small images first
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+# Good practice
+img = Image.open("huge_photo.jpg")
+img = img.resize((800, 600))  # Scale first
+# Now work with smaller image
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Key Takeaways}
+    \textbf{Today you learned:}
+    \begin{itemize}
+        \item How to paste images onto canvases
+        \item How to create grid collages
+        \item How to add spacing and borders
+        \item How to blend images together
+        \item How to implement chromakey (green screen)
+        \item How to work with transparency
+        \item How to combine all techniques for creative compositions
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{You can now create complex image compositions!}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Real-World Applications}
+    \textbf{What you've learned is used in:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{Social media apps:} Instagram, Snapchat layouts
+        \item \textbf{Photo editing:} Photoshop, GIMP
+        \item \textbf{Film production:} Special effects, compositing
+        \item \textbf{E-commerce:} Product photography, catalogs
+        \item \textbf{Marketing:} Advertisements, posters
+        \item \textbf{Web design:} Image galleries, portfolios
+        \item \textbf{Game development:} Sprite sheets, textures
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        These are professional, industry-standard techniques!
+    \end{center}
+\end{frame}
+
+\begin{frame}{For Next Class}
+    \textbf{Before next session:}
+    \begin{itemize}
+        \item Complete your photo collage lab
+        \item Experiment with different layouts
+        \item Try the bonus challenges
+        \item Read Chapter 5 of the textbook
+        \item Think about: How could we automate repetitive tasks?
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next session:}
+    \begin{itemize}
+        \item Introduction to functions (formal)
+        \item Defining your own functions
+        \item Parameters and return values
+        \item Building reusable code libraries
+        \item Organizing your image processing code
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \textbf{Questions?}
+    \end{center}
+\end{frame}
+
+\end{document}

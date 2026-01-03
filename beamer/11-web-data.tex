@@ -1,0 +1,278 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Web Data and Information}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\term{Winter 2025}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large Working with structured data!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Work with \textcolor{stfxblue}{CSV data files}
+        \item<2-> Process structured image metadata
+        \item<3-> Create \textcolor{marigold}{data-driven} media applications
+        \item<4-> Generate reports combining text and images
+        \item<5-> Organize and analyze collections of media
+        \item<6-> Build image galleries from data
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<7->{\textit{\textcolor{marigold}{Data} + \textcolor{stfxblue}{Media} = \textcolor{marigold}{\textbf{Powerful applications!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{CSV Files Review}
+    \textcolor{stfxblue}{\textbf{CSV = Comma-Separated Values}}
+
+    \vspace{1em}
+
+    \begin{lstlisting}[numbers=none]
+filename,width,height,filter,date
+beach.jpg,1920,1080,sepia,2024-01-15
+sunset.jpg,1024,768,grayscale,2024-01-16
+mountain.jpg,800,600,vintage,2024-01-17
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Perfect for:}
+    \begin{itemize}
+        \item<2-> \textcolor{marigold}{Image metadata}
+        \item<3-> Processing instructions
+        \item<4-> Batch operations
+        \item<5-> Reports and catalogs
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Reading CSV with Python}
+    \begin{lstlisting}
+import csv
+
+with open("images.csv", "r") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        filename = row['filename']
+        width = int(row['width'])
+        height = int(row['height'])
+        filter_type = row['filter']
+
+        print(f"{filename}: {width}x{height}, {filter_type}")
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textcolor{stfxblue}{\texttt{DictReader}} gives us dictionaries with column names as keys!
+\end{frame}
+
+\begin{frame}[fragile]{Example: Batch Process from CSV}
+    \begin{lstlisting}
+import csv
+from PIL import Image
+import image_filters
+
+with open("batch.csv", "r") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        filename = row['filename']
+        filter_type = row['filter']
+        brightness = float(row['brightness'])
+
+        # Process image
+        img = Image.open(filename)
+
+        if filter_type == "grayscale":
+            img = image_filters.grayscale(img)
+        elif filter_type == "sepia":
+            img = image_filters.sepia(img)
+
+        img = image_filters.brighten(img, int(brightness * 50))
+
+        output = f"processed_{filename}"
+        img.save(output)
+        print(f"Saved {output}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Creating CSV Reports}
+    \begin{lstlisting}
+import csv
+from PIL import Image
+import os
+
+def create_image_report(directory, output_csv):
+    """Create CSV report of all images."""
+    with open(output_csv, "w", newline='') as file:
+        fieldnames = ['filename', 'width', 'height',
+                     'mode', 'size_kb']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for filename in os.listdir(directory):
+            if filename.endswith(('.jpg', '.png', '.gif')):
+                path = os.path.join(directory, filename)
+                img = Image.open(path)
+                size_kb = os.path.getsize(path) / 1024
+
+                writer.writerow({
+                    'filename': filename,
+                    'width': img.size[0],
+                    'height': img.size[1],
+                    'mode': img.mode,
+                    'size_kb': f"{size_kb:.2f}"
+                })
+
+create_image_report("photos", "report.csv")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{JSON Data Format}
+    \textcolor{marigold}{\textbf{JSON = JavaScript Object Notation}}
+
+    \begin{lstlisting}
+{
+  "title": "My Photo Gallery",
+  "images": [
+    {
+      "filename": "beach.jpg",
+      "caption": "Summer vacation",
+      "tags": ["beach", "sunset", "ocean"]
+    },
+    {
+      "filename": "mountain.jpg",
+      "caption": "Hiking trip",
+      "tags": ["mountain", "nature"]
+    }
+  ]
+}
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    \onslide<2->{JSON is great for \textcolor{stfxblue}{hierarchical} data!}
+\end{frame}
+
+\begin{frame}[fragile]{Reading JSON in Python}
+    \begin{lstlisting}
+import json
+
+with open("gallery.json", "r") as file:
+    data = json.load(file)
+
+title = data['title']
+print(f"Gallery: {title}")
+
+for img_info in data['images']:
+    filename = img_info['filename']
+    caption = img_info['caption']
+    tags = ", ".join(img_info['tags'])
+
+    print(f"\n{filename}")
+    print(f"  Caption: {caption}")
+    print(f"  Tags: {tags}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Creating HTML Galleries}
+    \begin{lstlisting}
+def create_html_gallery(images, output="gallery.html"):
+    """Generate HTML gallery from image list."""
+    with open(output, "w") as file:
+        file.write("<html><head>\n")
+        file.write("<title>Photo Gallery</title>\n")
+        file.write("<style>")
+        file.write("img { width: 300px; margin: 10px; }")
+        file.write("</style>\n")
+        file.write("</head><body>\n")
+        file.write("<h1>My Photo Gallery</h1>\n")
+
+        for img_info in images:
+            file.write("<div>\n")
+            file.write(f"<img src='{img_info['file']}'><br>\n")
+            file.write(f"<b>{img_info['title']}</b><br>\n")
+            file.write(f"{img_info['description']}<br>\n")
+            file.write("</div>\n")
+
+        file.write("</body></html>")
+
+images = [
+    {"file": "beach.jpg", "title": "Beach",
+     "description": "Summer 2024"},
+    {"file": "sunset.jpg", "title": "Sunset",
+     "description": "Beautiful evening"}
+]
+
+create_html_gallery(images)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Practice Problems}
+    \textbf{Try these:}
+
+    \begin{enumerate}
+        \item Create a CSV file listing all images in a directory with their dimensions
+
+        \item Read processing instructions from CSV and batch process images
+
+        \item Generate an HTML photo album from a JSON configuration file
+
+        \item Create a program that finds all images larger than a certain size
+
+        \item Build a tagging system using CSV to store image tags
+
+        \item Generate statistics about your image collection
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Summary}
+    \textbf{Key concepts:}
+    \begin{itemize}
+        \item CSV files store tabular data
+        \item JSON stores hierarchical data
+        \item Use csv module for reading/writing CSV
+        \item Use json module for JSON files
+        \item Combine data with media for powerful applications
+        \item Generate reports and galleries from data
+        \item Data-driven processing enables automation
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next time:} Animation and Course Review
+\end{frame}
+
+\end{document}
