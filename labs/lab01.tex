@@ -1,0 +1,415 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+%    numbers=left,
+ %   numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{01}
+\labtitle{Introduction to Computing and Programming}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Understand basic computer architecture and how programs execute
+    \item Set up Python development environment
+    \item Write and run your first Python programs
+    \item Use variables to store and manipulate data
+    \item Perform basic input and output operations
+    \item Work with different data types (integers, floats, strings)
+    \item Use Python as a calculator for mathematical operations
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} This lab is graded on attendance and effort. Formal submission required.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Make a genuine effort on all tasks
+    \item Ask questions when stuck
+    \item Get your work checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Welcome to your first computer science lab! Today you'll learn the fundamentals of programming by writing simple Python programs. Don't worry if you've never programmed before—everyone starts somewhere, and by the end of this lab, you'll have written several working programs!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Log into your computer
+    \item Open a terminal or command prompt
+    \item Verify Python is installed by typing: \texttt{python --version} or \texttt{python3 --version}
+    \item Open your text editor or IDE (IDLE, VS Code, PyCharm, etc.)
+    \item Create a folder called \texttt{csci128/lab01} for today's work
+\end{enumerate}
+
+\textbf{If Python is not installed:}
+\begin{itemize}
+    \item Download from \url{https://www.python.org/downloads/}
+    \item Install with default settings
+    \item Restart your terminal
+\end{itemize}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Hello, World! - Your First Program}
+
+Every programmer's journey begins with "Hello, World!" Let's write yours.
+
+\textbf{Instructions:}
+\begin{enumerate}
+    \item Create a new file called \texttt{hello.py}
+    \item Type the following code:
+\begin{lstlisting}
+# My first Python program
+print("Hello, World!")
+print("Welcome to CSCI 128!")
+\end{lstlisting}
+    \item Save the file
+    \item Run it from the terminal: \texttt{python hello.py}
+\end{enumerate}
+
+\textbf{What you should see:}
+\begin{verbatim}
+Hello, World!
+Welcome to CSCI 128!
+\end{verbatim}
+
+\begin{note}
+The \texttt{\#} symbol starts a comment. Comments are notes for humans and are ignored by Python.
+\end{note}
+
+\textbf{Experiment:}
+\begin{itemize}
+    \item Add a third print statement with your name
+    \item What happens if you forget the quotes?
+    \item What happens if you misspell \texttt{print}?
+\end{itemize}
+
+\task{Python as a Calculator}
+
+Python can perform mathematical calculations. Let's explore!
+
+\textbf{Create \texttt{calculator.py}:}
+\begin{lstlisting}
+# Python Calculator
+print("Addition:", 5 + 3)
+print("Subtraction:", 10 - 4)
+print("Multiplication:", 7 * 6)
+print("Division:", 20 / 4)
+print("Integer Division:", 20 // 3)
+print("Remainder:", 20 % 3)
+print("Exponentiation:", 2 ** 8)
+\end{lstlisting}
+
+\textbf{Run the program and observe the output.}
+
+\textbf{Experiments to try:}
+\begin{enumerate}
+    \item Calculate your age in days (age × 365)
+    \item Convert 100 degrees Fahrenheit to Celsius: $(F - 32) \times 5/9$
+    \item Calculate the area of a circle with radius 5: $\pi r^2$ (use 3.14159 for $\pi$)
+    \item What's the difference between \texttt{/} and \texttt{//}?
+    \item What does the \texttt{\%} operator do?
+\end{enumerate}
+
+\begin{hint}
+Order of operations matters! Use parentheses to group calculations: \texttt{(5 + 3) * 2} vs \texttt{5 + 3 * 2}
+\end{hint}
+
+\task{Working with Variables}
+
+Variables store data that can be used and changed throughout your program.
+
+\textbf{Create \texttt{variables.py}:}
+\begin{lstlisting}
+# Variables store information
+name = "Alice"
+age = 20
+height = 5.7
+is_student = True
+
+print("Name:", name)
+print("Age:", age)
+print("Height:", height, "feet")
+print("Is student?", is_student)
+
+# Variables can change
+age = age + 1
+print("Next year, age will be:", age)
+\end{lstlisting}
+
+\textbf{Now modify it with YOUR information:}
+\begin{enumerate}
+    \item Change the variables to your actual name, age, and height
+    \item Add a variable called \texttt{major} with your major (or intended major)
+    \item Add a variable called \texttt{credits} with how many credits you're taking
+    \item Print all the information in a nice format
+\end{enumerate}
+
+\textbf{Challenge:} Calculate and print your age in months and days.
+
+\task{User Input - Interactive Programs}
+
+Let's make programs that interact with users!
+
+\textbf{Create \texttt{greeting.py}:}
+\begin{lstlisting}
+# Interactive greeting program
+name = input("What is your name? ")
+print("Hello,", name, "!")
+print("Nice to meet you!")
+
+age = input("How old are you? ")
+print("You are", age, "years old.")
+\end{lstlisting}
+
+\textbf{Run it and enter your information when prompted.}
+
+\begin{warning}
+The \texttt{input()} function always returns a string (text). If you need a number, you must convert it!
+\end{warning}
+
+\task{Type Conversion and Math with Input}
+
+Now let's do math with user input.
+
+\textbf{Create \texttt{age\_calculator.py}:}
+\begin{lstlisting}
+# Age Calculator
+print("=== Age Calculator ===")
+name = input("Enter your name: ")
+birth_year = input("What year were you born? ")
+
+# Convert string to integer
+birth_year = int(birth_year)
+current_year = 2024
+age = current_year - birth_year
+
+print(name, ", you are approximately", age, "years old.")
+print("In 10 years, you will be", age + 10, "years old.")
+print("In dog years, that's", age * 7, "years!")
+\end{lstlisting}
+
+\textbf{Test your program with different inputs.}
+
+\textbf{Now create your own programs:}
+
+\begin{enumerate}
+    \item \textbf{Temperature Converter:} Ask for Fahrenheit, convert to Celsius
+    \item \textbf{Rectangle Calculator:} Ask for length and width, calculate area and perimeter
+    \item \textbf{Trip Calculator:} Ask for miles and MPG, calculate gallons needed
+\end{enumerate}
+
+\begin{hint}
+Formulas you might need:
+\begin{itemize}
+    \item Celsius = $(F - 32) \times 5/9$
+    \item Area = length $\times$ width
+    \item Perimeter = $2 \times ($length $+$ width$)$
+    \item Gallons = miles $/$ MPG
+\end{itemize}
+\end{hint}
+
+\task{Working with Strings}
+
+Strings (text) are an important data type. Let's explore what we can do with them.
+
+\textbf{Create \texttt{strings.py}:}
+\begin{lstlisting}
+# String operations
+first_name = "John"
+last_name = "Doe"
+
+# Concatenation (combining strings)
+full_name = first_name + " " + last_name
+print("Full name:", full_name)
+
+# String repetition
+print("=" * 40)
+
+# String methods
+print("Uppercase:", full_name.upper())
+print("Lowercase:", full_name.lower())
+print("Length:", len(full_name))
+
+# F-strings (formatted strings) - modern Python
+message = f"Hello, my name is {first_name} {last_name}!"
+print(message)
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Create variables for your favorite movie, book, and song
+    \item Print them in a formatted way using f-strings
+    \item Create a "business card" that prints your info nicely
+    \item Use string repetition to create borders around your text
+\end{enumerate}
+
+\textbf{Example output:}
+\begin{verbatim}
+========================================
+           DIGITAL BUSINESS CARD
+========================================
+Name: Alice Johnson
+Major: Computer Science
+Favorite Language: Python
+========================================
+\end{verbatim}
+
+\task{Data Types Exploration}
+
+Python has different types of data. Let's explore them!
+
+\textbf{Create \texttt{datatypes.py}:}
+\begin{lstlisting}
+# Exploring data types
+integer_num = 42
+float_num = 3.14159
+text = "Hello"
+boolean = True
+
+print("Integer:", integer_num, "Type:", type(integer_num))
+print("Float:", float_num, "Type:", type(float_num))
+print("String:", text, "Type:", type(text))
+print("Boolean:", boolean, "Type:", type(boolean))
+
+# Type conversions
+print("\n=== Type Conversions ===")
+num_as_string = "123"
+string_as_num = int(num_as_string)
+print(f"'{num_as_string}' as integer:", string_as_num)
+
+float_num = 3.9
+int_from_float = int(float_num)
+print(f"{float_num} as integer:", int_from_float)
+
+# What happens when you mix types?
+result = 5 + 3.5
+print(f"5 + 3.5 = {result}, type: {type(result)}")
+\end{lstlisting}
+
+\textbf{Questions to explore:}
+\begin{enumerate}
+    \item What happens when you add an integer and a float?
+    \item Can you add a string and an integer? Try it!
+    \item What happens when you convert a float to an int? (Is it rounded or truncated?)
+    \item Can you convert a string like "hello" to an integer?
+\end{enumerate}
+
+\task{Mini-Project: Personal Information System}
+
+Combine everything you've learned into one program!
+
+\textbf{Create \texttt{about\_me.py}:}
+
+Your program should:
+\begin{enumerate}
+    \item Print a welcome message with a decorative border
+    \item Ask the user for: name, age, hometown, favorite hobby
+    \item Calculate: age in months, age in days
+    \item Print a nicely formatted summary of all information
+    \item Include at least 3 fun facts calculated from the data
+\end{enumerate}
+
+\textbf{Example run:}
+\begin{verbatim}
+========================================
+    WELCOME TO THE INFO COLLECTOR
+========================================
+What is your name? Alice
+How old are you? 20
+What is your hometown? Seattle
+What is your favorite hobby? Reading
+
+========================================
+           YOUR INFORMATION
+========================================
+Name: Alice
+Age: 20 years
+That's approximately 240 months!
+Or about 7300 days!
+Hometown: Seattle
+Hobby: Reading
+
+Fun fact: In dog years, you'd be 140!
+Fun fact: You've lived through about 175200 hours!
+Fun fact: Your name has 5 letters!
+========================================
+\end{verbatim}
+
+Be creative! Add your own calculations and fun facts.
+
+\section{Bonus Challenges}
+
+If you finish early, try these additional challenges:
+
+\subsection*{Challenge 1: Mad Libs}
+Create a Mad Libs program that asks for various words (noun, verb, adjective, etc.) and creates a funny story.
+
+\subsection*{Challenge 2: Receipt Generator}
+Create a program that asks for item names and prices, then prints a formatted receipt with a total.
+
+\subsection*{Challenge 3: Unit Converter}
+Create a multi-purpose converter that can convert between:
+\begin{itemize}
+    \item Miles and kilometers
+    \item Pounds and kilograms
+    \item Feet and meters
+\end{itemize}
+
+\section{Common Errors and Solutions}
+
+\textbf{SyntaxError: invalid syntax}
+\begin{itemize}
+    \item Check for missing quotes, parentheses, or colons
+    \item Make sure you spelled keywords correctly
+\end{itemize}
+
+\textbf{NameError: name 'x' is not defined}
+\begin{itemize}
+    \item Variable doesn't exist yet
+    \item Check for typos in variable names
+\end{itemize}
+
+\textbf{ValueError: invalid literal for int()}
+\begin{itemize}
+    \item Trying to convert non-numeric string to int
+    \item Make sure input is a valid number
+\end{itemize}
+
+\textbf{TypeError: unsupported operand type(s)}
+\begin{itemize}
+    \item Mixing incompatible types (e.g., adding string to int)
+    \item Convert to correct type first
+\end{itemize}
+
+
+\end{document}
