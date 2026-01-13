@@ -1,0 +1,265 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{CSCI 128: Introduction to Computer Science}
+\rhead{Lab 02}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Lab 02: Values, Types, and Variables}}\\
+    \vspace{0.5em}
+    {\large Exploring Python's Building Blocks}\\
+    \vspace{1em}
+    \includegraphics[width=0.3\textwidth]{LogoWordsBottom.png}
+\end{center}
+
+\section*{Introduction}
+
+Welcome to your second lab! Today you'll explore the fundamental building blocks of Python programs: values, types, and variables. You'll learn how Python stores and manipulates different kinds of data, and practice using variables to make your programs more powerful and flexible.
+
+\section*{Getting Started}
+
+Open your Python environment (IDLE, Thonny, or your preferred IDE) and create a new file called \texttt{lab02.py}.
+
+\section{Exploring Data Types}
+
+Python has several built-in data types. Let's explore them!
+
+\subsection*{Activity 1: Type Detective}
+
+Write code to determine the type of each of these values. Use the \texttt{type()} function to investigate:
+
+\begin{lstlisting}
+# Example
+print(type(42))  # What type is this?
+
+# Now try these:
+# 1. 3.14159
+# 2. "Hello, World!"
+# 3. True
+# 4. 100
+# 5. "42"
+# 6. 0.0
+\end{lstlisting}
+
+\textbf{Question:} What's the difference between \texttt{42} and \texttt{"42"}? Try adding them together and see what happens!
+
+\subsection*{Activity 2: Type Conversion}
+
+Sometimes you need to convert between types. Experiment with these conversions:
+
+\begin{lstlisting}
+# Converting strings to numbers
+age_str = "25"
+age_num = int(age_str)
+print("Age as number:", age_num)
+
+# Converting numbers to strings
+score = 98.5
+score_str = str(score)
+print("Score as string:", score_str)
+
+# Try this: What happens when you convert 3.7 to an int?
+\end{lstlisting}
+
+\textbf{Challenge:} Ask the user for two numbers (as strings) using \texttt{input()}, convert them to integers, and print their sum.
+
+\section{Working with Variables}
+
+Variables are like labeled boxes that store values. They make your programs flexible and readable!
+
+\subsection*{Activity 3: Variable Playground}
+
+Create variables to store information about yourself:
+
+\begin{lstlisting}
+# Personal information
+name = "Your Name"
+age = 20
+height_inches = 68
+is_student = True
+favorite_number = 7.5
+
+# Print them all
+print("Name:", name)
+print("Age:", age)
+# Continue for the rest...
+\end{lstlisting}
+
+Now try updating variables:
+
+\begin{lstlisting}
+# Variables can change!
+score = 0
+print("Starting score:", score)
+
+score = score + 10
+print("After bonus:", score)
+
+score = score * 2
+print("After doubling:", score)
+\end{lstlisting}
+
+\subsection*{Activity 4: Variable Naming Challenge}
+
+Which of these are valid variable names in Python? Try them out and see!
+
+\begin{lstlisting}
+# Valid or not?
+# my_variable = 5
+# 2fast = 10
+# fast2 = 10
+# user-name = "Alice"
+# user_name = "Alice"
+# class = "CSCI 128"
+# my_class = "CSCI 128"
+\end{lstlisting}
+
+\textbf{Remember:} Variable names should be descriptive! Use \texttt{student\_count} instead of \texttt{sc}.
+
+\section{Fun with Math and Strings}
+
+\subsection*{Activity 5: Calculator}
+
+Create a simple calculator using variables:
+
+\begin{lstlisting}
+# Temperature converter
+fahrenheit = 72
+celsius = (fahrenheit - 32) * 5 / 9
+print(f"{fahrenheit}F is {celsius}C")
+
+# Circle calculator
+radius = 5
+pi = 3.14159
+area = pi * radius ** 2
+circumference = 2 * pi * radius
+print(f"Circle with radius {radius}:")
+print(f"  Area: {area}")
+print(f"  Circumference: {circumference}")
+\end{lstlisting}
+
+\textbf{Your Turn:} Create a rectangle calculator that computes area and perimeter given length and width.
+
+\subsection*{Activity 6: String Magic}
+
+Strings have special powers! Explore string operations:
+
+\begin{lstlisting}
+# String concatenation
+first_name = "Ada"
+last_name = "Lovelace"
+full_name = first_name + " " + last_name
+print(full_name)
+
+# String repetition
+cheer = "Go! "
+print(cheer * 5)
+
+# String formatting
+name = "Python"
+version = 3.11
+print(f"I love {name} {version}!")
+\end{lstlisting}
+
+\textbf{Challenge:} Ask the user for their name and favorite color, then print a personalized message like: ``Hello, Alice! Blue is a wonderful color!''
+
+\section{Interactive Programs}
+
+\subsection*{Activity 7: User Input}
+
+Make your programs interactive by getting input from users:
+
+\begin{lstlisting}
+# Simple greeting
+name = input("What's your name? ")
+print(f"Hello, {name}! Nice to meet you!")
+
+# Personalized fortune teller
+print("\nFortune Teller 3000")
+lucky_number = input("What's your lucky number? ")
+favorite_animal = input("What's your favorite animal? ")
+print(f"\nYour fortune: A {favorite_animal} will bring you {lucky_number} good things today!")
+\end{lstlisting}
+
+\textbf{Your Turn:} Create a ``Mad Libs'' style program that asks for several inputs (noun, verb, adjective, etc.) and uses them to create a funny story!
+
+\section{Putting It All Together}
+
+\subsection*{Final Challenge: Personal Profile Generator}
+
+Create a program that:
+\begin{enumerate}
+    \item Asks the user for their name, age, favorite hobby, and dream vacation destination
+    \item Calculates how old they'll be in 10 years
+    \item Creates a nicely formatted profile using all this information
+    \item Uses both variables and string formatting
+\end{enumerate}
+
+\textbf{Example Output:}
+\begin{verbatim}
+=== PERSONAL PROFILE ===
+Name: Alex Johnson
+Current Age: 20
+Age in 10 years: 30
+Favorite Hobby: Photography
+Dream Destination: Tokyo
+
+Fun Fact: In 10 years, you'll be traveling to Tokyo!
+\end{verbatim}
+
+\section*{Bonus Explorations}
+
+If you finish early, try these fun challenges:
+
+\begin{itemize}
+    \item Create a ``this or that'' quiz that asks users to choose between options
+    \item Build a simple tip calculator that computes 15\%, 18\%, and 20\% tips
+    \item Make a acronym generator that takes words and creates an acronym from their first letters
+    \item Design a ``year born'' calculator that figures out birth year from age
+\end{itemize}
+
+\section*{Reflection Questions}
+
+Think about these questions as you work:
+\begin{itemize}
+    \item Why is it important to use descriptive variable names?
+    \item When might you need to convert between types?
+    \item How do variables make programs more flexible than just using literal values?
+    \item What happens if you try to use a variable before assigning it a value?
+\end{itemize}
+
+\vspace{2em}
+
+\begin{center}
+\textit{Have fun exploring Python's building blocks! \\
+Every great program starts with these fundamentals.}
+\end{center}
+
+\end{document}

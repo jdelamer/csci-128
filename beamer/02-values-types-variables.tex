@@ -7,7 +7,7 @@
 % Python code styling
 \lstset{
     language=Python,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\scriptsize,
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
@@ -22,7 +22,7 @@
 \title{Values, Types, Variables, and Input}
 \course{CSCI 128: Introduction to Computer Science}
 \courseshort{CSCI 128}
-\term{Winter 2025}
+\term{Winter 2026}
 \author{Dr. Jean-Alexis Delamer}
 
 \begin{document}
@@ -278,8 +278,6 @@ next_year = age + 1
 print("Next year:", next_year)
     \end{lstlisting}
 
-    \vspace{1em}
-
     \textbf{Output:}
     \begin{verbatim}
 Alice
@@ -304,8 +302,6 @@ print("Score:", score)
 score = score + 5
 print("Score:", score)
     \end{lstlisting}
-
-    \vspace{1em}
 
     \textbf{Output:}
     \begin{verbatim}
@@ -484,17 +480,16 @@ next_year = age + 1  # TypeError!
     \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Type Conversion}
+\begin{frame}{Type Conversion}
     \textbf{Convert between types using:}
     \begin{itemize}
         \item<1-> \textcolor{stfxblue}{\texttt{int()}} - Convert to integer
         \item<2-> \textcolor{stfxblue}{\texttt{float()}} - Convert to floating-point
         \item<3-> \textcolor{stfxblue}{\texttt{str()}} - Convert to string
     \end{itemize}
+\end{frame}
 
-    \vspace{1em}
-
-    \onslide<4->{
+\begin{frame}[fragile]{Type Conversion Example}
     \begin{lstlisting}
 # Get input and convert to int
 age_text = input("How old are you? ")
@@ -507,7 +502,6 @@ age = int(input("How old are you? "))
 next_year = age + 1
 print("Next year you'll be", next_year)
     \end{lstlisting}
-    }
 \end{frame}
 
 \begin{frame}[fragile]{Type Conversion Examples}
@@ -545,8 +539,6 @@ future_age = age + 10
 print("Hello,", name)
 print("In 10 years, you will be", future_age)
     \end{lstlisting}
-
-    \vspace{1em}
 
     \textbf{This program:}
     \begin{itemize}
@@ -679,12 +671,6 @@ print(len(message))  # Output: 6
 \end{frame}
 
 \begin{frame}[fragile]{Try It: Mad Libs}
-    \begin{center}
-        \Large \textbf{Lab Activity!}
-    \end{center}
-
-    \vspace{1em}
-
     \textbf{Create a Mad Libs program:}
     \begin{enumerate}
         \item Ask the user for:
@@ -703,7 +689,7 @@ print(len(message))  # Output: 6
     \textbf{Example:} "The [adjective] [noun] decided to [verb] [number] times!"
 \end{frame}
 
-\begin{frame}[fragile]{Lab: Simple Calculator}
+\begin{frame}[fragile]{Simple Calculator}
     \textbf{Create a calculator program that:}
     \begin{enumerate}
         \item Asks the user for two numbers
@@ -722,13 +708,10 @@ Enter second number: 3
 10 * 3 = 30
 10 / 3 = 3.3333333333333335
     \end{verbatim}
-
-    \vspace{1em}
-
     \textbf{Bonus:} Also calculate the remainder using \texttt{\%}
 \end{frame}
 
-\begin{frame}[fragile]{Lab: Circle Calculator}
+\begin{frame}[fragile]{Circle Calculator}
     \textbf{Write a program that:}
     \begin{enumerate}
         \item Asks the user for the radius of a circle
@@ -795,32 +778,6 @@ Circumference: 31.4159
                 \item \texttt{x = 5} assigns, doesn't test equality
             \end{itemize}
     \end{enumerate}
-\end{frame}
-
-\begin{frame}{For Next Class}
-    \textbf{Before next session:}
-    \begin{itemize}
-        \item Complete the lab exercises
-        \item Read Chapter 2 of the textbook
-        \item Experiment with variables and input
-        \item Try creating your own small programs
-    \end{itemize}
-
-    \vspace{1em}
-
-    \textbf{Next session:}
-    \begin{itemize}
-        \item Introduction to pictures
-        \item How images are represented in computers
-        \item Loading and displaying images with Python
-        \item Your first image manipulation!
-    \end{itemize}
-
-    \vspace{1em}
-
-    \begin{center}
-        \textbf{Questions?}
-    \end{center}
 \end{frame}
 
 \end{document}
