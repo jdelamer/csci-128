@@ -1,0 +1,98 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 3: Pictures and Pixels}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz should take approximately 15 minutes.
+    \item Answer all questions in the space provided.
+    \item Show your work where applicable.
+    \item No calculators or electronic devices allowed.
+\end{itemize}
+\end{rules}
+
+\showgrade
+
+\begin{questions}
+
+\question[4] Short answer questions about digital images:
+
+\begin{parts}
+\part What does RGB stand for and what does each value represent?
+
+\vspace{0.8in}
+
+\part What is the range of valid values for each color channel in the RGB color model?
+
+\vspace{0.5in}
+
+\part What color is represented by RGB(255, 0, 0)?
+
+\vspace{0.3in}
+
+\part What color is represented by RGB(0, 0, 0)?
+
+\vspace{0.3in}
+\end{parts}
+
+\question[4] Fill in the blanks to complete the code that loads an image and gets its dimensions:
+
+\begin{lstlisting}
+from PIL import _______
+
+img = Image.____("photo.jpg")
+width, height = img._____
+pixels = img._____()
+\end{lstlisting}
+
+\vspace{0.5in}
+
+\question[5] Write code to access the pixel at position (10, 20) in an image, get its RGB values, and change it to pure blue (0, 0, 255).
+
+\vspace{2in}
+
+\question[4] What will be the color of the pixel after this code executes?
+
+\begin{lstlisting}
+pixels[50, 75] = (100, 150, 200)
+r, g, b = pixels[50, 75]
+pixels[50, 75] = (r + 50, g - 50, b + 55)
+\end{lstlisting}
+
+Answer: RGB(\underline{\hspace{0.5in}}, \underline{\hspace{0.5in}}, \underline{\hspace{0.5in}})
+
+\vspace{0.3in}
+
+\question[3] Write nested loops to process every pixel in an image with width=800 and height=600:
+
+\vspace{2in}
+
+\end{questions}
+
+\end{document}

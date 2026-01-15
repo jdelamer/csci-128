@@ -1,0 +1,112 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz: Values, Types, and Variables}
+\examdate{Winter 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz should take approximately 15 minutes.
+    \item Answer all questions in the space provided.
+    \item Show your work where applicable.
+    \item No calculators or electronic devices allowed.
+\end{itemize}
+\end{rules}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[5] For each of the following Python expressions, write the value and its data type:
+
+\begin{parts}
+\part \texttt{5 + 3 * 2}
+
+\vspace{0.5in}
+
+\part \texttt{"Hello" + "World"}
+
+\vspace{0.5in}
+
+\part \texttt{10 / 3}
+
+\vspace{0.5in}
+
+\part \texttt{10 // 3}
+
+\vspace{0.5in}
+
+\part \texttt{7 \% 3}
+
+\vspace{0.5in}
+\end{parts}
+
+\question[3] What is the output of the following code?
+
+\begin{lstlisting}
+x = 5
+y = 10
+x = y
+y = 20
+print(x)
+\end{lstlisting}
+
+\vspace{0.5in}
+
+\question[4] Write a Python program that asks the user for their name and age, then prints a message saying "Hello [name], you are [age] years old."
+
+\newpage
+
+\question[3] Identify and correct the error(s) in the following code:
+
+\begin{lstlisting}
+name = input("Enter your name: ")
+age = input("Enter your age: ")
+next_year_age = age + 1
+print("Next year you will be " + next_year_age)
+\end{lstlisting}
+
+\vspace{1.5in}
+
+\question[5] Circle the valid Python variable names:
+
+\begin{choices}
+\choice \texttt{my\_variable}
+\choice \texttt{2nd\_place}
+\choice \texttt{first-name}
+\choice \texttt{firstName}
+\choice \texttt{\_count}
+\choice \texttt{for}
+\choice \texttt{total\_sum}
+\choice \texttt{my variable}
+\end{choices}
+
+\end{questions}
+
+\end{document}

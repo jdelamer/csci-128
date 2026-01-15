@@ -1,0 +1,93 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 4: Picture Filters}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz should take approximately 15 minutes.
+    \item Answer all questions in the space provided.
+    \item Show your work where applicable.
+    \item No calculators or electronic devices allowed.
+\end{itemize}
+\end{rules}
+
+\showgrade
+
+\begin{questions}
+
+\question[5] Write a function that converts an image to grayscale using the luminance formula: \texttt{gray = 0.299*R + 0.587*G + 0.114*B}
+
+\vspace{2.5in}
+
+\question[3] What does a negative filter do to an image? Write the formula to calculate the negative of each color channel.
+
+\vspace{1.2in}
+
+\question[4] Complete the code to increase the brightness of every pixel by 50:
+
+\begin{lstlisting}
+def brighten(img, amount):
+    width, height = img.size
+    pixels = img.load()
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            # Complete this part
+            new_r = _________________
+            new_g = _________________
+            new_b = _________________
+            pixels[x, y] = (new_r, new_g, new_b)
+
+    return img
+\end{lstlisting}
+
+\question[4] A pixel has RGB values (200, 100, 50). What will be the RGB values after applying:
+
+\begin{parts}
+\part A negative filter?
+
+\vspace{0.5in}
+
+\part A brightness increase of 30?
+
+\vspace{0.5in}
+
+\part Setting all values to their average (simple grayscale)?
+
+\vspace{0.5in}
+\end{parts}
+
+\question[4] Explain why we need to use \texttt{max(0, min(255, value))} or similar clamping when modifying pixel values.
+
+\vspace{1.5in}
+
+\end{questions}
+
+\end{document}

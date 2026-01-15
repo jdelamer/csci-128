@@ -1,0 +1,112 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 5: Picture Transformations}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz should take approximately 15 minutes.
+    \item Answer all questions in the space provided.
+    \item Show your work where applicable.
+    \item No calculators or electronic devices allowed.
+\end{itemize}
+\end{rules}
+
+\showgrade
+
+\begin{questions}
+
+\question[5] For an image with width=100 and height=80, what are the new coordinates after each transformation?
+
+\begin{parts}
+\part Horizontal mirror: pixel at (10, 20) maps to (\underline{\hspace{0.5in}}, \underline{\hspace{0.5in}})
+
+Formula: \underline{\hspace{2in}}
+
+\vspace{0.3in}
+
+\part Vertical mirror: pixel at (30, 15) maps to (\underline{\hspace{0.5in}}, \underline{\hspace{0.5in}})
+
+Formula: \underline{\hspace{2in}}
+
+\vspace{0.3in}
+
+\part 90° clockwise rotation: pixel at (10, 20) maps to (\underline{\hspace{0.5in}}, \underline{\hspace{0.5in}})
+
+What are the dimensions of the rotated image? \underline{\hspace{1in}} × \underline{\hspace{1in}}
+
+\vspace{0.3in}
+\end{parts}
+
+\question[4] Complete the code to mirror an image horizontally:
+
+\begin{lstlisting}
+def mirror_horizontal(img):
+    width, height = img.size
+    mirrored = Image.new("RGB", (width, height))
+
+    src_pixels = img.load()
+    dst_pixels = mirrored.load()
+
+    for x in range(width):
+        for y in range(height):
+            color = src_pixels[x, y]
+            dst_pixels[______________, y] = color
+
+    return mirrored
+\end{lstlisting}
+
+\question[3] Write code to crop a 200×150 region starting at position (50, 30) from an image:
+
+\vspace{2in}
+
+\question[4] True or False:
+
+\begin{parts}
+\part Applying a horizontal mirror twice returns the original image. \underline{\hspace{0.8in}}
+
+\part Rotating an image 90° clockwise changes its dimensions. \underline{\hspace{0.8in}}
+
+\part Cropping always produces an image smaller than the original. \underline{\hspace{0.8in}}
+
+\part The order of transformations doesn't matter (e.g., crop then rotate = rotate then crop). \underline{\hspace{0.8in}}
+\end{parts}
+
+\question[4] An image is 800×600 pixels. What will be its dimensions after:
+
+\begin{parts}
+\part Scaling by a factor of 0.5? \underline{\hspace{1.5in}}
+
+\part Rotating 90° clockwise? \underline{\hspace{1.5in}}
+
+\part Cropping to 300×200? \underline{\hspace{1.5in}}
+\end{parts}
+
+\end{questions}
+
+\end{document}

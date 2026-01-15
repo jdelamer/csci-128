@@ -1,0 +1,97 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 8: Advanced Sound Techniques}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz should take approximately 15 minutes.
+    \item Answer all questions in the space provided.
+    \item Show your work where applicable.
+    \item No calculators or electronic devices allowed.
+\end{itemize}
+\end{rules}
+
+\showgrade
+
+\begin{questions}
+
+\question[5] Explain how an echo effect is created in digital audio. What two key parameters are needed?
+
+\vspace{1.8in}
+
+\question[5] Complete the code to create a simple echo effect by overlaying a delayed, quieter version:
+
+\begin{lstlisting}
+from pydub import AudioSegment
+
+def add_echo(sound, delay_ms, volume_decrease):
+    # Create silence for delay
+    silence = AudioSegment.silent(duration=______)
+
+    # Make echo quieter
+    echo = sound - ___________
+
+    # Add delay before echo
+    delayed_echo = _______ + echo
+
+    # Overlay on original
+    return sound.overlay(____________)
+\end{lstlisting}
+
+\question[4] What is the difference between overlaying two sounds and concatenating them?
+
+\vspace{1.5in}
+
+\question[3] If you mix two sound clips of equal volume together, why might the result be distorted or clipped?
+
+\vspace{1.3in}
+
+\question[4] Write code to splice together three sound files (intro.mp3, middle.mp3, outro.mp3) in sequence:
+
+\vspace{2in}
+
+\question[4] Short answer:
+
+\begin{parts}
+\part What does normalization do to a sound file?
+
+\vspace{0.8in}
+
+\part Why would you fade in or fade out audio?
+
+\vspace{0.8in}
+
+\part What is the purpose of splitting stereo sound into left and right channels?
+
+\vspace{0.8in}
+\end{parts}
+
+\end{questions}
+
+\end{document}
