@@ -38,6 +38,7 @@
 \end{rules}
 
 \showgrade
+\printanswers
 
 \newpage
 
@@ -48,23 +49,43 @@
 \begin{parts}
 \part \texttt{5 + 3 * 2}
 
-\vspace{0.5in}
+\begin{solution}
+Value: 11, Type: int
+\end{solution}
+
+\vspace{0.25in}
 
 \part \texttt{"Hello" + "World"}
 
-\vspace{0.5in}
+\begin{solution}
+Value: "HelloWorld", Type: str
+\end{solution}
+
+\vspace{0.25in}
 
 \part \texttt{10 / 3}
 
-\vspace{0.5in}
+\begin{solution}
+Value: 3.333..., Type: float
+\end{solution}
+
+\vspace{0.25in}
 
 \part \texttt{10 // 3}
 
-\vspace{0.5in}
+\begin{solution}
+Value: 3, Type: int
+\end{solution}
+
+\vspace{0.25in}
 
 \part \texttt{7 \% 3}
 
-\vspace{0.5in}
+\begin{solution}
+Value: 1, Type: int
+\end{solution}
+
+\vspace{0.25in}
 \end{parts}
 
 \question[3] What is the output of the following code?
@@ -77,9 +98,30 @@ y = 20
 print(x)
 \end{lstlisting}
 
-\vspace{0.5in}
+\begin{solution}
+The output is: 10
+
+Explanation: x is assigned 5, then x is reassigned to the value of y (which is 10). When y is then changed to 20, x remains 10 because it holds the value, not a reference to y.
+\end{solution}
+
+\vspace{0.25in}
 
 \question[4] Write a Python program that asks the user for their name and age, then prints a message saying "Hello [name], you are [age] years old."
+
+\begin{solution}
+\begin{lstlisting}
+name = input("Enter your name: ")
+age = input("Enter your age: ")
+print("Hello " + name + ", you are " + age + " years old.")
+\end{lstlisting}
+
+Alternative solution:
+\begin{lstlisting}
+name = input("Enter your name: ")
+age = input("Enter your age: ")
+print(f"Hello {name}, you are {age} years old.")
+\end{lstlisting}
+\end{solution}
 
 \newpage
 
@@ -92,7 +134,23 @@ next_year_age = age + 1
 print("Next year you will be " + next_year_age)
 \end{lstlisting}
 
-\vspace{1.5in}
+\begin{solution}
+Errors:
+\begin{itemize}
+    \item \texttt{age} is a string (from input), so adding 1 to it causes a TypeError
+    \item \texttt{next\_year\_age} needs to be converted to string for concatenation
+\end{itemize}
+
+Corrected code:
+\begin{lstlisting}
+name = input("Enter your name: ")
+age = input("Enter your age: ")
+next_year_age = int(age) + 1
+print("Next year you will be " + str(next_year_age))
+\end{lstlisting}
+\end{solution}
+
+\vspace{0.5in}
 
 \question[5] Circle the valid Python variable names:
 
@@ -106,6 +164,24 @@ print("Next year you will be " + next_year_age)
 \choice \texttt{total\_sum}
 \choice \texttt{my variable}
 \end{choices}
+
+\begin{solution}
+Valid variable names (should be circled):
+\begin{itemize}
+    \item \texttt{my\_variable} - Valid
+    \item \texttt{firstName} - Valid
+    \item \texttt{\_count} - Valid
+    \item \texttt{total\_sum} - Valid
+\end{itemize}
+
+Invalid variable names:
+\begin{itemize}
+    \item \texttt{2nd\_place} - Invalid (starts with a number)
+    \item \texttt{first-name} - Invalid (contains hyphen)
+    \item \texttt{for} - Invalid (reserved keyword)
+    \item \texttt{my variable} - Invalid (contains space)
+\end{itemize}
+\end{solution}
 
 \end{questions}
 
