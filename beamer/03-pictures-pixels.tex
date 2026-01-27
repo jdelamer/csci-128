@@ -8,7 +8,7 @@
 % Python code styling
 \lstset{
     language=Python,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\scriptsize,
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
@@ -23,7 +23,7 @@
 \title{Introduction to Pictures and Pixels}
 \course{CSCI 128: Introduction to Computer Science}
 \courseshort{CSCI 128}
-\term{Winter 2025}
+\term{Winter 2026}
 \author{Dr. Jean-Alexis Delamer}
 
 \begin{document}
@@ -500,7 +500,6 @@ from PIL import Image
 
 img = Image.open("beach.jpg")
 pixels = img.load()  # Load pixel data
-
 width, height = img.size
 
 # Now access pixels more efficiently
@@ -510,7 +509,6 @@ for x in range(width):
         # Do something with the color
         # Modify if needed
         pixels[x, y] = (r, g, b)
-
 img.show()
     \end{lstlisting}
 
@@ -676,10 +674,8 @@ small_img.save("small_photo.jpg")
 \begin{frame}{For Next Class}
     \textbf{Before next session:}
     \begin{itemize}
-        \item Make sure Pillow is installed
         \item Find a few images to experiment with
         \item Try loading and inspecting different images
-        \item Read Chapter 3 of the textbook
         \item Experiment with changing pixel colors
     \end{itemize}
 

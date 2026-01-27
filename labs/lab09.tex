@@ -1,0 +1,816 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{09}
+\labtitle{Text Manipulation and Files}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Read and write text files in Python
+    \item Process text data line by line
+    \item Use string methods for text manipulation
+    \item Parse structured text data
+    \item Work with CSV files
+    \item Add text captions to images
+    \item Generate text reports from data
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your file processing programs
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Text is everywhere in computing! Today you'll learn to read and write text files, process data, and combine text with images. These skills are essential for data processing, report generation, and automation. By the end of this lab, you'll be able to process log files, read CSV data, and add captions to images!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab09}
+    \item Create subfolders: \texttt{data}, \texttt{images}, \texttt{output}
+    \item Ensure Pillow is installed: \texttt{pip install Pillow}
+    \item Have some sample images ready
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Reading Text Files}
+
+Learn to read data from text files.
+
+\textbf{First, create a sample text file.}
+
+\textbf{Create \texttt{data/sample.txt}:}
+\begin{verbatim}
+Hello, World!
+This is a text file.
+It has multiple lines.
+Each line is a string.
+Programming is fun!
+\end{verbatim}
+
+\textbf{Create \texttt{read\_file.py}:}
+\begin{lstlisting}
+"""
+Reading text files in Python
+"""
+
+# Method 1: Read entire file as one string
+print("Method 1: Read entire file")
+with open("data/sample.txt", "r") as file:
+    content = file.read()
+    print(content)
+    print(f"Total characters: {len(content)}")
+
+print("\n" + "="*50 + "\n")
+
+# Method 2: Read all lines into a list
+print("Method 2: Read all lines")
+with open("data/sample.txt", "r") as file:
+    lines = file.readlines()
+    print(f"Number of lines: {len(lines)}")
+    for i, line in enumerate(lines):
+        print(f"Line {i}: {repr(line)}")
+
+print("\n" + "="*50 + "\n")
+
+# Method 3: Read line by line (memory efficient)
+print("Method 3: Process line by line")
+with open("data/sample.txt", "r") as file:
+    for line_num, line in enumerate(file, 1):
+        # Remove trailing newline
+        line = line.strip()
+        print(f"{line_num}: {line} ({len(line)} chars)")
+
+print("\n" + "="*50 + "\n")
+
+# Method 4: Read first N lines
+print("Method 4: Read first 3 lines")
+with open("data/sample.txt", "r") as file:
+    for i in range(3):
+        line = file.readline()
+        print(f"  {line.strip()}")
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Create your own text file with different content
+    \item Count the number of words in the file
+    \item Find the longest line
+    \item Read only lines that contain a specific word
+\end{enumerate}
+
+\begin{note}
+The \texttt{with} statement automatically closes the file when done. Always use \texttt{with} when working with files!
+\end{note}
+
+\task{Writing Text Files}
+
+Create and write data to text files.
+
+\textbf{Create \texttt{write\_file.py}:}
+\begin{lstlisting}
+"""
+Writing text files in Python
+"""
+
+# Method 1: Write string to file (overwrites existing file)
+print("Writing to file...")
+with open("output/output.txt", "w") as file:
+    file.write("Hello, this is my output file.\n")
+    file.write("This is the second line.\n")
+    file.write("Python makes file I/O easy!\n")
+
+print("Created output/output.txt")
+
+# Method 2: Write multiple lines at once
+lines = [
+    "Line 1\n",
+    "Line 2\n",
+    "Line 3\n"
+]
+
+with open("output/output2.txt", "w") as file:
+    file.writelines(lines)
+
+print("Created output/output2.txt")
+
+# Method 3: Append to existing file
+with open("output/output.txt", "a") as file:
+    file.write("This line is appended.\n")
+    file.write("So is this one.\n")
+
+print("Appended to output/output.txt")
+
+# Method 4: Generate report
+with open("output/report.txt", "w") as file:
+    file.write("="*50 + "\n")
+    file.write("PROCESSING REPORT\n")
+    file.write("="*50 + "\n\n")
+
+    file.write("Files processed: 42\n")
+    file.write("Errors encountered: 0\n")
+    file.write("Total time: 2.5 seconds\n\n")
+
+    file.write("Status: SUCCESS\n")
+    file.write("="*50 + "\n")
+
+print("Created output/report.txt")
+
+# Method 5: Write formatted data
+data = [
+    ("Alice", 25, "Boston"),
+    ("Bob", 30, "Seattle"),
+    ("Charlie", 35, "Denver")
+]
+
+with open("output/people.txt", "w") as file:
+    file.write("NAME       AGE  CITY\n")
+    file.write("-" * 30 + "\n")
+    for name, age, city in data:
+        file.write(f"{name:<10} {age:<4} {city}\n")
+
+print("Created output/people.txt")
+
+# Verify what we wrote
+print("\nContents of people.txt:")
+with open("output/people.txt", "r") as file:
+    print(file.read())
+\end{lstlisting}
+
+\textbf{Writing experiments:}
+\begin{enumerate}
+    \item Create a log file with timestamps
+    \item Write your name 100 times to a file
+    \item Generate a multiplication table and save to file
+    \item Create a shopping list file from a Python list
+\end{enumerate}
+
+\task{String Manipulation for Text Processing}
+
+Use string methods to process text data.
+
+\textbf{Create \texttt{string\_processing.py}:}
+\begin{lstlisting}
+"""
+String manipulation techniques
+"""
+
+# Sample text data
+text = "  Hello, World! This is Python.  "
+
+print("Original text:", repr(text))
+print()
+
+# Cleaning and trimming
+print("1. Cleaning:")
+print("  strip():", repr(text.strip()))
+print("  lstrip():", repr(text.lstrip()))
+print("  rstrip():", repr(text.rstrip()))
+print()
+
+# Case conversion
+print("2. Case conversion:")
+print("  upper():", text.upper())
+print("  lower():", text.lower())
+print("  title():", text.title())
+print("  capitalize():", text.capitalize())
+print()
+
+# Searching
+print("3. Searching:")
+print("  'Python' in text:", "Python" in text)
+print("  startswith('  Hello'):", text.startswith("  Hello"))
+print("  endswith('Python.  '):", text.endswith("Python.  "))
+print("  find('World'):", text.find("World"))
+print("  count('o'):", text.count('o'))
+print()
+
+# Splitting and joining
+print("4. Splitting and joining:")
+words = text.strip().split()
+print("  split():", words)
+print("  split(','):", text.split(','))
+print("  join:", '-'.join(words))
+print()
+
+# Replacing
+print("5. Replacing:")
+print("  replace('World', 'Python'):", text.replace('World', 'Python'))
+print("  replace('o', 'O'):", text.replace('o', 'O'))
+print()
+
+# Checking content
+print("6. Content checking:")
+print("  isdigit():", "123".isdigit())
+print("  isalpha():", "abc".isalpha())
+print("  isalnum():", "abc123".isalnum())
+print("  isspace():", "   ".isspace())
+print()
+
+# Practical example: Parse log entry
+log_entry = "2024-01-15 14:30:45 ERROR File not found: data.txt"
+parts = log_entry.split()
+date = parts[0]
+time = parts[1]
+level = parts[2]
+message = ' '.join(parts[3:])
+
+print("7. Parsing log entry:")
+print(f"  Date: {date}")
+print(f"  Time: {time}")
+print(f"  Level: {level}")
+print(f"  Message: {message}")
+\end{lstlisting}
+
+\textbf{String processing challenges:}
+\begin{enumerate}
+    \item Count vowels and consonants in text
+    \item Extract email addresses from text
+    \item Convert text to "title case" (capitalize first letter of each word)
+    \item Remove all punctuation from text
+\end{enumerate}
+
+\task{Processing CSV Files}
+
+Work with comma-separated values data.
+
+\textbf{Create \texttt{data/students.csv}:}
+\begin{verbatim}
+name,age,major,gpa
+Alice Johnson,20,Computer Science,3.8
+Bob Smith,22,Mathematics,3.6
+Charlie Brown,21,Physics,3.9
+Diana Prince,19,Engineering,3.7
+Eve Wilson,23,Computer Science,3.5
+\end{verbatim}
+
+\textbf{Create \texttt{process\_csv.py}:}
+\begin{lstlisting}
+"""
+Processing CSV files
+"""
+
+# Method 1: Manual CSV parsing
+print("Method 1: Manual parsing")
+with open("data/students.csv", "r") as file:
+    lines = file.readlines()
+
+    # First line is header
+    header = lines[0].strip().split(',')
+    print("Columns:", header)
+    print()
+
+    # Process data lines
+    students = []
+    for line in lines[1:]:
+        values = line.strip().split(',')
+        student = {
+            'name': values[0],
+            'age': int(values[1]),
+            'major': values[2],
+            'gpa': float(values[3])
+        }
+        students.append(student)
+
+    # Display students
+    for student in students:
+        print(f"{student['name']:20} Age: {student['age']:2} "
+              f"Major: {student['major']:20} GPA: {student['gpa']:.1f}")
+
+print("\n" + "="*70 + "\n")
+
+# Method 2: Using csv module
+import csv
+
+print("Method 2: Using csv module")
+with open("data/students.csv", "r") as file:
+    reader = csv.DictReader(file)
+
+    for row in reader:
+        print(f"{row['name']:20} {row['major']:20} GPA: {row['gpa']}")
+
+print("\n" + "="*70 + "\n")
+
+# Analysis: Find students with high GPA
+print("Students with GPA >= 3.7:")
+with open("data/students.csv", "r") as file:
+    reader = csv.DictReader(file)
+
+    for row in reader:
+        gpa = float(row['gpa'])
+        if gpa >= 3.7:
+            print(f"  {row['name']} - {gpa}")
+
+print()
+
+# Analysis: Count majors
+print("Major distribution:")
+major_counts = {}
+
+with open("data/students.csv", "r") as file:
+    reader = csv.DictReader(file)
+
+    for row in reader:
+        major = row['major']
+        major_counts[major] = major_counts.get(major, 0) + 1
+
+for major, count in major_counts.items():
+    print(f"  {major}: {count}")
+
+print()
+
+# Create new CSV file
+print("Creating filtered CSV...")
+with open("data/students.csv", "r") as infile:
+    with open("output/high_gpa.csv", "w") as outfile:
+        reader = csv.DictReader(infile)
+        writer = csv.DictWriter(outfile, fieldnames=reader.fieldnames)
+
+        writer.writeheader()
+        for row in reader:
+            if float(row['gpa']) >= 3.7:
+                writer.writerow(row)
+
+print("Created output/high_gpa.csv")
+\end{lstlisting}
+
+\textbf{CSV experiments:}
+\begin{enumerate}
+    \item Create your own CSV file with different data
+    \item Calculate average GPA
+    \item Find the youngest and oldest students
+    \item Create a CSV with only Computer Science majors
+    \item Add a new column (e.g., grade letter based on GPA)
+\end{enumerate}
+
+\task{Adding Text to Images}
+
+Combine text processing with image manipulation.
+
+\textbf{Create \texttt{add\_captions.py}:}
+\begin{lstlisting}
+"""
+Adding text captions to images
+"""
+from PIL import Image, ImageDraw, ImageFont
+
+def add_caption(img, text, position='bottom', bg_color=(0, 0, 0, 180),
+                text_color=(255, 255, 255), padding=20):
+    """
+    Add a text caption to an image.
+
+    Args:
+        img: PIL Image object
+        text: Caption text
+        position: 'top' or 'bottom'
+        bg_color: Background color (with alpha for transparency)
+        text_color: Text color
+        padding: Padding around text
+    """
+    # Create RGBA version for transparency
+    img_rgba = img.convert('RGBA')
+
+    # Create overlay for caption background
+    overlay = Image.new('RGBA', img_rgba.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+
+    # Calculate text size (approximate)
+    # Note: For better text sizing, use ImageFont
+    text_height = padding * 2
+
+    # Draw caption background
+    if position == 'bottom':
+        y_start = img_rgba.height - text_height - padding
+        box = [0, y_start, img_rgba.width, img_rgba.height]
+    else:  # top
+        box = [0, 0, img_rgba.width, text_height + padding]
+
+    draw.rectangle(box, fill=bg_color)
+
+    # Add text
+    text_x = padding
+    text_y = box[1] + padding // 2
+    draw.text((text_x, text_y), text, fill=text_color)
+
+    # Composite overlay onto image
+    result = Image.alpha_composite(img_rgba, overlay)
+
+    return result.convert('RGB')
+
+def add_watermark(img, text, position='bottom-right'):
+    """Add a small watermark to an image."""
+    img_rgba = img.convert('RGBA')
+    overlay = Image.new('RGBA', img_rgba.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+
+    # Position watermark
+    margin = 10
+    if position == 'bottom-right':
+        x = img_rgba.width - 150
+        y = img_rgba.height - 30
+    elif position == 'top-right':
+        x = img_rgba.width - 150
+        y = margin
+    elif position == 'bottom-left':
+        x = margin
+        y = img_rgba.height - 30
+    else:  # top-left
+        x = margin
+        y = margin
+
+    draw.text((x, y), text, fill=(255, 255, 255, 128))
+
+    result = Image.alpha_composite(img_rgba, overlay)
+    return result.convert('RGB')
+
+# Example usage
+img = Image.open("images/sample.jpg")
+
+# Add caption at bottom
+captioned = add_caption(img, "Beautiful Sunset in California",
+                        position='bottom')
+captioned.save("output/captioned.jpg")
+print("Created output/captioned.jpg")
+
+# Add caption at top
+top_caption = add_caption(img, "Photo of the Day", position='top')
+top_caption.save("output/top_caption.jpg")
+print("Created output/top_caption.jpg")
+
+# Add watermark
+watermarked = add_watermark(img, "(c) 2024 MyPhotos")
+watermarked.save("output/watermarked.jpg")
+print("Created output/watermarked.jpg")
+
+# Batch caption from CSV
+print("\nBatch processing with captions from CSV...")
+print("Create data/captions.csv with image names and captions")
+
+# Example CSV structure:
+# filename,caption
+# photo1.jpg,Summer Vacation
+# photo2.jpg,Family Reunion
+\end{lstlisting}
+
+\textbf{Create \texttt{batch\_caption.py}:}
+\begin{lstlisting}
+"""
+Batch add captions to images from CSV file
+"""
+from PIL import Image, ImageDraw
+import csv
+import os
+
+def simple_caption(img, text):
+    """Add simple text caption to image."""
+    img_copy = img.copy()
+    draw = ImageDraw.Draw(img_copy)
+
+    # Draw black bar at bottom
+    bar_height = 40
+    draw.rectangle(
+        [0, img_copy.height - bar_height, img_copy.width, img_copy.height],
+        fill=(0, 0, 0)
+    )
+
+    # Draw text
+    draw.text((10, img_copy.height - bar_height + 10), text, fill=(255, 255, 255))
+
+    return img_copy
+
+# Read captions from CSV
+captions = {}
+try:
+    with open("data/captions.csv", "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            captions[row['filename']] = row['caption']
+except FileNotFoundError:
+    print("Creating sample captions.csv file...")
+    with open("data/captions.csv", "w") as file:
+        file.write("filename,caption\n")
+        file.write("sample.jpg,Beautiful Landscape\n")
+        file.write("photo.jpg,Amazing Sunset\n")
+    print("Please edit data/captions.csv with your image filenames and captions")
+
+# Process images
+if captions:
+    for filename, caption in captions.items():
+        input_path = os.path.join("images", filename)
+
+        if os.path.exists(input_path):
+            try:
+                img = Image.open(input_path)
+                captioned = simple_caption(img, caption)
+
+                output_path = os.path.join("output", f"captioned_{filename}")
+                captioned.save(output_path)
+                print(f"[OK] Processed: {filename}")
+            except Exception as e:
+                print(f"[X] Error with {filename}: {e}")
+        else:
+            print(f"[!] File not found: {filename}")
+\end{lstlisting}
+
+\task{Mini-Project: Text Report Generator}
+
+Create a program that analyzes images and generates a text report.
+
+\textbf{Create \texttt{image\_report.py}:}
+\begin{lstlisting}
+"""
+Image Analysis Report Generator
+"""
+from PIL import Image
+import os
+from datetime import datetime
+
+def analyze_image(img_path):
+    """Analyze an image and return statistics."""
+    img = Image.open(img_path)
+    width, height = img.size
+    pixels = img.load()
+
+    # Calculate statistics
+    total_pixels = width * height
+    total_r, total_g, total_b = 0, 0, 0
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            total_r += r
+            total_g += g
+            total_b += b
+
+    avg_r = total_r / total_pixels
+    avg_g = total_g / total_pixels
+    avg_b = total_b / total_pixels
+
+    # Determine dominant color
+    if avg_r > avg_g and avg_r > avg_b:
+        dominant = "Red"
+    elif avg_g > avg_r and avg_g > avg_b:
+        dominant = "Green"
+    else:
+        dominant = "Blue"
+
+    # Calculate brightness
+    brightness = (avg_r + avg_g + avg_b) / 3
+
+    return {
+        'filename': os.path.basename(img_path),
+        'width': width,
+        'height': height,
+        'pixels': total_pixels,
+        'megapixels': total_pixels / 1_000_000,
+        'avg_red': avg_r,
+        'avg_green': avg_g,
+        'avg_blue': avg_b,
+        'dominant_color': dominant,
+        'brightness': brightness,
+        'format': img.format,
+        'mode': img.mode
+    }
+
+def generate_report(image_folder, output_file):
+    """Generate a text report for all images in a folder."""
+    # Find all image files
+    image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif')
+    image_files = [f for f in os.listdir(image_folder)
+                   if f.lower().endswith(image_extensions)]
+
+    if not image_files:
+        print(f"No images found in {image_folder}")
+        return
+
+    # Analyze all images
+    analyses = []
+    print(f"Analyzing {len(image_files)} images...")
+    for filename in image_files:
+        path = os.path.join(image_folder, filename)
+        try:
+            analysis = analyze_image(path)
+            analyses.append(analysis)
+            print(f"  [OK] {filename}")
+        except Exception as e:
+            print(f"  [X] {filename}: {e}")
+
+    # Generate report
+    with open(output_file, 'w') as f:
+        # Header
+        f.write("="*70 + "\n")
+        f.write("IMAGE ANALYSIS REPORT\n")
+        f.write("="*70 + "\n")
+        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"Folder: {image_folder}\n")
+        f.write(f"Images analyzed: {len(analyses)}\n")
+        f.write("="*70 + "\n\n")
+
+        # Individual image reports
+        for i, analysis in enumerate(analyses, 1):
+            f.write(f"IMAGE {i}: {analysis['filename']}\n")
+            f.write("-"*70 + "\n")
+            f.write(f"  Dimensions: {analysis['width']} x {analysis['height']}\n")
+            f.write(f"  Total pixels: {analysis['pixels']:,}\n")
+            f.write(f"  Megapixels: {analysis['megapixels']:.2f} MP\n")
+            f.write(f"  Format: {analysis['format']}\n")
+            f.write(f"  Mode: {analysis['mode']}\n")
+            f.write(f"  Average RGB: ({analysis['avg_red']:.1f}, "
+                   f"{analysis['avg_green']:.1f}, {analysis['avg_blue']:.1f})\n")
+            f.write(f"  Dominant color: {analysis['dominant_color']}\n")
+            f.write(f"  Brightness: {analysis['brightness']:.1f}/255\n")
+            f.write("\n")
+
+        # Summary statistics
+        f.write("="*70 + "\n")
+        f.write("SUMMARY\n")
+        f.write("="*70 + "\n")
+
+        total_pixels = sum(a['pixels'] for a in analyses)
+        avg_brightness = sum(a['brightness'] for a in analyses) / len(analyses)
+
+        f.write(f"Total images: {len(analyses)}\n")
+        f.write(f"Total pixels: {total_pixels:,}\n")
+        f.write(f"Average brightness: {avg_brightness:.1f}/255\n")
+
+        # Largest image
+        largest = max(analyses, key=lambda a: a['pixels'])
+        f.write(f"Largest image: {largest['filename']} "
+               f"({largest['width']}x{largest['height']})\n")
+
+        # Color distribution
+        colors = [a['dominant_color'] for a in analyses]
+        f.write(f"\nColor distribution:\n")
+        for color in set(colors):
+            count = colors.count(color)
+            f.write(f"  {color}: {count} images\n")
+
+        f.write("\n" + "="*70 + "\n")
+        f.write("END OF REPORT\n")
+        f.write("="*70 + "\n")
+
+    print(f"\nReport saved to: {output_file}")
+
+# Generate report
+generate_report("images", "output/image_report.txt")
+
+# Display the report
+print("\nReport contents:")
+print("-" * 70)
+with open("output/image_report.txt", "r") as f:
+    print(f.read())
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Log File Analyzer}
+Read a log file and create a summary report with error counts, timestamps, and patterns.
+
+\subsection*{Challenge 2: Text-based Game Save}
+Create a simple game that saves player progress to a text file and can load it later.
+
+\subsection*{Challenge 3: Markdown Generator}
+Generate Markdown-formatted documentation from Python docstrings.
+
+\subsection*{Challenge 4: Contact List Manager}
+Create a program to manage contacts (add, search, delete) stored in a CSV file.
+
+\subsection*{Challenge 5: Meme Generator}
+Create a meme generator that adds top and bottom text to images from user input.
+
+\section{Key Concepts}
+
+\textbf{File I/O concepts:}
+\begin{itemize}
+    \item \textbf{Reading modes:} 'r' (read), 'w' (write), 'a' (append)
+    \item \textbf{with statement:} Automatically closes files
+    \item \textbf{readlines():} Read all lines into list
+    \item \textbf{strip():} Remove whitespace and newlines
+    \item \textbf{split():} Divide string into parts
+    \item \textbf{CSV:} Comma-separated values format
+    \item \textbf{Text captions:} Adding text to images
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{File not found:}
+\begin{itemize}
+    \item Check file path is correct
+    \item Use relative paths from script location
+    \item Create necessary directories first
+\end{itemize}
+
+\textbf{Lines have extra newlines:}
+\begin{itemize}
+    \item Use \texttt{strip()} to remove trailing newlines
+    \item Or use \texttt{rstrip('\textbackslash n')}
+\end{itemize}
+
+\textbf{CSV parsing errors:}
+\begin{itemize}
+    \item Check for commas within data fields
+    \item Use csv module for complex CSV files
+    \item Verify CSV structure matches expectations
+\end{itemize}
+
+\textbf{Text not visible on images:}
+\begin{itemize}
+    \item Adjust text color for contrast
+    \item Add background rectangle behind text
+    \item Use larger font sizes
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item A program that reads and processes a text file
+    \item Your CSV processing program with data analysis
+    \item Images with text captions added
+    \item Your image report generator output
+    \item Explain the difference between 'r', 'w', and 'a' modes
+\end{enumerate}
+
+\section{What's Next}
+
+In Lab 10, we'll work with structured data, learn about JSON, and create data-driven media applications that combine all our skills!
+
+\end{document}

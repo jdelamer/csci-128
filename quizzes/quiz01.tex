@@ -1,0 +1,102 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 1}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lectures 1-2 (Introduction and Variables)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[2] What are the three main components of a computer system mentioned in class?
+\vspace{1.5in}
+
+\question[2] What is the difference between a programming language and a natural language?
+\vspace{1.5in}
+
+\question[3] Write a Python program that prints your name and your favorite programming concept on separate lines.
+\begin{lstlisting}[numbers=none]
+
+
+
+\end{lstlisting}
+\vspace{0.5in}
+
+\question[2] What is the result of the following expression?
+\begin{lstlisting}[numbers=none]
+print(15 + 3 * 2)
+\end{lstlisting}
+\vspace{0.5in}
+
+\question[3] Identify the data type of each of the following Python values:
+\begin{parts}
+    \part \texttt{42} \hfill Type: \underline{\hspace{1in}}
+    \part \texttt{"Hello"} \hfill Type: \underline{\hspace{1in}}
+    \part \texttt{3.14} \hfill Type: \underline{\hspace{1in}}
+\end{parts}
+
+\question[2] What is the difference between the \texttt{=} operator and the \texttt{==} operator in Python?
+\vspace{1.5in}
+
+\question[3] What will be printed by the following code?
+\begin{lstlisting}[numbers=none]
+x = 10
+y = 5
+x = x + y
+print(x)
+\end{lstlisting}
+Answer: \underline{\hspace{1in}}
+
+\question[3] Write Python code that:
+\begin{itemize}
+    \item Asks the user for their age
+    \item Converts it to an integer
+    \item Prints "In 10 years, you will be X" where X is their age plus 10
+\end{itemize}
+\begin{lstlisting}[numbers=none]
+
+
+
+
+\end{lstlisting}
+
+\end{questions}
+
+\end{document}

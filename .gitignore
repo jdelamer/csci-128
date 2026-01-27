@@ -1,8 +1,13 @@
 *.aux
 *.log
+<<<<<<< HEAD
 *.nav
 *.out
 *.snm
 *.vrb
 *.toc
 .DS_Store
+=======
+*.out
+*.pdf
+>>>>>>> a7aeeac (Modified:)

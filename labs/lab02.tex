@@ -1,0 +1,486 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    tabsize=4
+}
+
+% Lab information
+\labnumber{02}
+\labtitle{Introduction to Pictures and Pixels}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Winter 2026}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Understand how digital images are represented as grids of pixels
+    \item Learn about the RGB color model
+    \item Install and use the Pillow library for image processing
+    \item Load, display, and save images in Python
+    \item Access and modify individual pixel colors
+    \item Create images from scratch
+    \item Explore color mixing and representation
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Show your working programs to the instructor/TA
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Welcome to the visual side of programming! Today you'll learn how computers represent and manipulate images. By the end of this lab, you'll be able to load images, access their pixels, and even create your own images from scratch. This is where programming becomes visible and fun!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Install Pillow (Python Imaging Library):}
+\begin{enumerate}
+    \item Open a terminal/command prompt
+    \item Install Pillow: \texttt{pip install Pillow}
+    \item Or: \texttt{pip3 install Pillow}
+    \item Verify installation: \texttt{python -c "from PIL import Image; print('Success!')"}
+    \item Create a folder: \texttt{csci128/lab02}
+    \item Download sample images or use your own photos
+\end{enumerate}
+
+\textbf{Create a resources folder:}
+\begin{itemize}
+    \item Inside \texttt{lab02}, create a folder called \texttt{images}
+    \item Put a few sample images in this folder (JPG or PNG)
+    \item You can use your own photos or download free images
+\end{itemize}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Loading and Displaying Images}
+
+Let's start by loading and examining an image.
+
+\textbf{Create \texttt{load\_image.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load an image
+img = Image.open("images/sample.jpg")
+
+# Display the image
+img.show()
+
+# Get image information
+print("Image format:", img.format)
+print("Image size:", img.size)
+print("Image mode:", img.mode)
+print("Image width:", img.width)
+print("Image height:", img.height)
+
+# Calculate total pixels
+total_pixels = img.width * img.height
+print("Total pixels:", total_pixels)
+\end{lstlisting}
+
+\begin{note}
+Replace \texttt{"images/sample.jpg"} with the path to one of your images. Make sure the image exists in the specified location!
+\end{note}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Try loading different images (JPG, PNG, etc.)
+    \item What does the "mode" tell you? (Usually RGB for color images)
+    \item Calculate how many megapixels your image has (total pixels / 1,000,000)
+    \item What happens if you try to load an image that doesn't exist?
+\end{enumerate}
+
+\task{Understanding the RGB Color Model}
+
+Every pixel has a color made from Red, Green, and Blue components.
+
+\textbf{Create \texttt{rgb\_explorer.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load an image
+img = Image.open("images/sample.jpg")
+
+# Get pixel data
+pixels = img.load()
+
+# Access a specific pixel (x, y)
+x, y = 0, 0  # Top-left corner
+r, g, b = pixels[x, y]
+
+print(f"Pixel at ({x}, {y}):")
+print(f"  Red: {r}")
+print(f"  Green: {g}")
+print(f"  Blue: {b}")
+print(f"  Color: ({r}, {g}, {b})")
+
+# Try some other positions
+print("\nCenter pixel:")
+center_x = img.width // 2
+center_y = img.height // 2
+r, g, b = pixels[center_x, center_y]
+print(f"  Position: ({center_x}, {center_y})")
+print(f"  Color: ({r}, {g}, {b})")
+
+# Sample 5 random positions
+print("\nSampling different positions:")
+positions = [
+    (10, 10),
+    (50, 50),
+    (100, 100),
+    (img.width - 10, 10),
+    (10, img.height - 10)
+]
+
+for x, y in positions:
+    if x < img.width and y < img.height:
+        r, g, b = pixels[x, y]
+        print(f"  ({x:4d}, {y:4d}): RGB({r:3d}, {g:3d}, {b:3d})")
+\end{lstlisting}
+
+\textbf{Questions to explore:}
+\begin{enumerate}
+    \item What RGB values represent pure red? Pure green? Pure blue?
+    \item What RGB values represent white? Black?
+    \item What does RGB(128, 128, 128) look like?
+    \item Try to find a pixel in your image that's mostly red
+\end{enumerate}
+
+\begin{hint}
+RGB values range from 0 to 255:
+\begin{itemize}
+    \item (255, 0, 0) = Pure red
+    \item (0, 255, 0) = Pure green
+    \item (0, 0, 255) = Pure blue
+    \item (255, 255, 255) = White
+    \item (0, 0, 0) = Black
+\end{itemize}
+\end{hint}
+
+\task{Creating Your First Image}
+
+Let's create an image from scratch!
+
+\textbf{Create \texttt{create\_image.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a new 200x200 RGB image
+width = 200
+height = 200
+img = Image.new("RGB", (width, height))
+
+# Get pixel access
+pixels = img.load()
+
+# Fill with a solid color (red)
+for y in range(height):
+    for x in range(width):
+        pixels[x, y] = (255, 0, 0)
+
+# Save the image
+img.save("red_square.png")
+print("Created red_square.png")
+img.show()
+\end{lstlisting}
+
+\textbf{Now create these images:}
+\begin{enumerate}
+    \item A blue square (change the color)
+    \item A green rectangle (200x100)
+    \item A purple image (mix red and blue)
+    \item A gray image (equal amounts of R, G, and B)
+\end{enumerate}
+
+\begin{note}
+The nested loops scan every pixel. The outer loop (y) goes through rows, the inner loop (x) goes through columns.
+\end{note}
+
+\task{Creating a Gradient}
+
+Let's create something more interesting—a gradient!
+
+\textbf{Create \texttt{gradient.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a horizontal red gradient
+width = 256
+height = 100
+img = Image.new("RGB", (width, height))
+pixels = img.load()
+
+for y in range(height):
+    for x in range(width):
+        # Red value increases from left to right
+        red = x  # Goes from 0 to 255
+        pixels[x, y] = (red, 0, 0)
+
+img.save("red_gradient.png")
+print("Created red_gradient.png")
+img.show()
+
+# Create a vertical blue gradient
+img2 = Image.new("RGB", (width, height))
+pixels2 = img2.load()
+
+for y in range(height):
+    for x in range(width):
+        # Blue value increases from top to bottom
+        blue = (y * 255) // height  # Scale to 0-255
+        pixels2[x, y] = (0, 0, blue)
+
+img2.save("blue_gradient.png")
+print("Created blue_gradient.png")
+img2.show()
+\end{lstlisting}
+
+\textbf{Now create your own gradients:}
+\begin{enumerate}
+    \item A green vertical gradient
+    \item A gradient that goes from black to white
+    \item A gradient that goes from yellow (255, 255, 0) to purple (255, 0, 255)
+    \item A diagonal gradient (hint: use both x and y in your calculation)
+\end{enumerate}
+
+\task{Drawing Patterns}
+
+Use your knowledge of pixels to create patterns!
+
+\textbf{Create \texttt{patterns.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a checkerboard pattern
+size = 400
+square_size = 50
+img = Image.new("RGB", (size, size))
+pixels = img.load()
+
+for y in range(size):
+    for x in range(size):
+        # Determine which square we're in
+        square_x = x // square_size
+        square_y = y // square_size
+
+        # Alternate colors based on sum of squares
+        if (square_x + square_y) % 2 == 0:
+            pixels[x, y] = (255, 255, 255)  # White
+        else:
+            pixels[x, y] = (0, 0, 0)  # Black
+
+img.save("checkerboard.png")
+print("Created checkerboard.png")
+img.show()
+\end{lstlisting}
+
+\textbf{Now create these patterns:}
+
+\begin{enumerate}
+    \item \textbf{Vertical stripes:} Alternate between two colors every 20 pixels
+    \item \textbf{Horizontal stripes:} Similar to vertical but horizontal
+    \item \textbf{Color grid:} 4x4 grid where each cell is a different color
+    \item \textbf{Bullseye:} Concentric circles (hint: use distance from center)
+\end{enumerate}
+
+\begin{hint}
+For the bullseye, calculate distance from center:
+\begin{lstlisting}
+center_x = width // 2
+center_y = height // 2
+distance = ((x - center_x)**2 + (y - center_y)**2)**0.5
+\end{lstlisting}
+\end{hint}
+
+\task{Modifying Existing Images}
+
+Now let's modify real images by changing pixel colors.
+
+\textbf{Create \texttt{tint\_image.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load an image
+img = Image.open("images/sample.jpg")
+pixels = img.load()
+
+# Create a copy for modification
+width, height = img.size
+tinted = Image.new("RGB", (width, height))
+tinted_pixels = tinted.load()
+
+# Add a red tint to the image
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Increase red, keep others the same
+        new_r = min(r + 50, 255)  # Add 50, but cap at 255
+        tinted_pixels[x, y] = (new_r, g, b)
+
+tinted.save("red_tinted.jpg")
+print("Created red_tinted.jpg")
+tinted.show()
+\end{lstlisting}
+
+\textbf{Create these effects:}
+\begin{enumerate}
+    \item Blue tint (increase blue channel)
+    \item Green tint (increase green channel)
+    \item Darker image (multiply all values by 0.5)
+    \item Brighter image (add 30 to all channels)
+    \item Remove all red (set red channel to 0)
+\end{enumerate}
+
+\begin{warning}
+Always ensure RGB values stay in range 0-255! Use \texttt{min(value, 255)} and \texttt{max(value, 0)} to clamp values.
+\end{warning}
+
+\task{Mini-Project: Create Your Own Flag or Logo}
+
+Design a simple flag or logo using pixels!
+
+\textbf{Create \texttt{my\_flag.py}:}
+
+Requirements:
+\begin{enumerate}
+    \item Create a 300x200 pixel image
+    \item Use at least 3 different colors
+    \item Create a recognizable pattern (stripes, stars, etc.)
+    \item Add a border of a different color
+\end{enumerate}
+
+\textbf{Ideas:}
+\begin{itemize}
+    \item Three horizontal stripes (like France, Germany, Russia)
+    \item Three vertical stripes (like Italy, Ireland, Belgium)
+    \item A simple flag with a colored rectangle in the corner
+    \item A logo with your initials using colored blocks
+    \item A simple emoji face (circles for eyes, arc for smile)
+\end{itemize}
+
+\textbf{Example for horizontal tricolor:}
+\begin{lstlisting}
+from PIL import Image
+
+width = 300
+height = 200
+img = Image.new("RGB", (width, height))
+pixels = img.load()
+
+stripe_height = height // 3
+
+for y in range(height):
+    for x in range(width):
+        if y < stripe_height:
+            pixels[x, y] = (255, 0, 0)  # Red top
+        elif y < stripe_height * 2:
+            pixels[x, y] = (255, 255, 255)  # White middle
+        else:
+            pixels[x, y] = (0, 0, 255)  # Blue bottom
+
+img.save("my_flag.png")
+img.show()
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Rainbow Gradient}
+Create an image with a smooth rainbow gradient from left to right (red → orange → yellow → green → blue → purple).
+
+\subsection*{Challenge 2: Pixel Art}
+Create a small pixel art character or object (like in old video games). Use a 16x16 grid and scale it up.
+
+\subsection*{Challenge 3: Image Statistics}
+Write a program that analyzes an image and reports:
+\begin{itemize}
+    \item Average red, green, and blue values
+    \item Brightest pixel (highest RGB sum)
+    \item Darkest pixel (lowest RGB sum)
+    \item Most common color
+\end{itemize}
+
+\subsection*{Challenge 4: Two-Color Threshold}
+Convert an image to only two colors (black and white) based on brightness. If a pixel's average RGB value is above 128, make it white; otherwise, black.
+
+\section{Common Issues and Solutions}
+
+\textbf{PIL or Image not found}
+\begin{itemize}
+    \item Make sure Pillow is installed: \texttt{pip install Pillow}
+    \item Import is \texttt{from PIL import Image} (not \texttt{import Image})
+\end{itemize}
+
+\textbf{Image file not found}
+\begin{itemize}
+    \item Check the file path is correct
+    \item Use relative paths from where you run the script
+    \item Print the current directory: \texttt{import os; print(os.getcwd())}
+\end{itemize}
+
+\textbf{RGB values out of range}
+\begin{itemize}
+    \item Values must be 0-255
+    \item Use \texttt{min(value, 255)} and \texttt{max(value, 0)} to clamp
+\end{itemize}
+
+\textbf{Program is slow}
+\begin{itemize}
+    \item Large images have millions of pixels
+    \item Start with smaller images (500x500 or less)
+    \item Be patient—nested loops take time!
+\end{itemize}
+
+\section{Key Concepts Review}
+
+\textbf{Important things to remember:}
+\begin{itemize}
+    \item Images are grids of pixels
+    \item Each pixel has an (R, G, B) color value
+    \item RGB values range from 0 to 255
+    \item Coordinate (0, 0) is the top-left corner
+    \item x increases going right, y increases going down
+    \item Nested loops process all pixels: outer loop for y, inner for x
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your gradient program with at least 2 different gradients
+    \item Your pattern program showing a checkerboard or stripes
+    \item Your flag/logo creation
+    \item Demonstrate understanding of RGB values by explaining what (255, 255, 0) looks like
+\end{enumerate}
+
+\section{What's Next?}
+
+In Lab 03, we'll learn to apply filters to images (grayscale, negative, sepia) and create Instagram-like effects. Make sure you have some interesting photos to work with!
+
+\end{document}

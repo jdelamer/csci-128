@@ -1,0 +1,752 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{11}
+\labtitle{Animation Basics}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Understand how animation works (frames and frame rates)
+    \item Generate sequences of images programmatically
+    \item Create animated GIFs from image sequences
+    \item Implement simple motion and transitions
+    \item Create bouncing ball animations
+    \item Build animated text effects
+    \item Combine all learned skills into animations
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your animations
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Animation brings still images to life! Today you'll learn how to create animations by generating sequences of images and combining them. You'll understand frame rates, create moving objects, and build your own animated GIFs. This is where all your image processing skills come together to create something dynamic!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab11}
+    \item Create subfolders: \texttt{frames}, \texttt{output}, \texttt{images}
+    \item Ensure Pillow is installed: \texttt{pip install Pillow}
+    \item Have some sample images ready for animation
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Understanding Frames and Frame Rates}
+
+Learn the fundamentals of animation.
+
+\textbf{Create \texttt{frame\_basics.py}:}
+\begin{lstlisting}
+"""
+Understanding animation frames
+"""
+from PIL import Image, ImageDraw
+
+def create_frame(frame_number, total_frames):
+    """Create a single frame showing its number."""
+    width, height = 400, 300
+    img = Image.new('RGB', (width, height), (240, 240, 240))
+    draw = ImageDraw.Draw(img)
+
+    # Draw frame information
+    text = f"Frame {frame_number}/{total_frames}"
+    draw.text((150, 130), text, fill=(0, 0, 0))
+
+    # Draw progress bar
+    bar_width = int((frame_number / total_frames) * 300)
+    draw.rectangle([50, 200, 50 + bar_width, 220], fill=(0, 120, 255))
+    draw.rectangle([50, 200, 350, 220], outline=(0, 0, 0))
+
+    return img
+
+# Create sequence of frames
+total_frames = 10
+print(f"Creating {total_frames} frames...")
+
+frames = []
+for i in range(1, total_frames + 1):
+    frame = create_frame(i, total_frames)
+    frame.save(f"frames/frame_{i:03d}.png")
+    frames.append(frame)
+    print(f"  Created frame {i}")
+
+# Save as animated GIF
+frames[0].save(
+    'output/frame_demo.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=500,  # milliseconds per frame
+    loop=0  # 0 means loop forever
+)
+
+print("\nCreated output/frame_demo.gif")
+print("Animation specs:")
+print(f"  Frames: {total_frames}")
+print(f"  Duration per frame: 500ms")
+print(f"  Total duration: {total_frames * 0.5} seconds")
+print(f"  Frame rate: 2 FPS")
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Change duration to 100ms (10 FPS)
+    \item Create 30 frames instead of 10
+    \item Add different visual elements to frames
+    \item Try duration=50 for 20 FPS
+\end{enumerate}
+
+\begin{note}
+Frame rate = 1000ms / duration. So 500ms duration = 2 FPS, 100ms = 10 FPS, 50ms = 20 FPS.
+\end{note}
+
+\task{Moving Objects - Horizontal Motion}
+
+Animate an object moving across the screen.
+
+\textbf{Create \texttt{moving\_circle.py}:}
+\begin{lstlisting}
+"""
+Animate a circle moving horizontally
+"""
+from PIL import Image, ImageDraw
+
+def create_moving_circle_frame(x_pos, canvas_width=400, canvas_height=300):
+    """Create frame with circle at x_pos."""
+    img = Image.new('RGB', (canvas_width, canvas_height), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Draw circle
+    radius = 20
+    y_pos = canvas_height // 2
+
+    draw.ellipse(
+        [x_pos - radius, y_pos - radius, x_pos + radius, y_pos + radius],
+        fill=(255, 0, 0),
+        outline=(0, 0, 0)
+    )
+
+    return img
+
+# Animation parameters
+canvas_width = 400
+canvas_height = 300
+num_frames = 30
+start_x = 30
+end_x = canvas_width - 30
+
+# Calculate position for each frame
+frames = []
+print(f"Creating {num_frames} frames...")
+
+for i in range(num_frames):
+    # Linear interpolation
+    progress = i / (num_frames - 1)
+    x_pos = int(start_x + (end_x - start_x) * progress)
+
+    frame = create_moving_circle_frame(x_pos, canvas_width, canvas_height)
+    frame.save(f"frames/circle_{i:03d}.png")
+    frames.append(frame)
+    print(f"  Frame {i+1}: circle at x={x_pos}")
+
+# Save as GIF
+frames[0].save(
+    'output/moving_circle.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=50,  # 20 FPS
+    loop=0
+)
+
+print("\nCreated output/moving_circle.gif")
+\end{lstlisting}
+
+\textbf{Motion experiments:}
+\begin{enumerate}
+    \item Make the circle move vertically
+    \item Make it move diagonally
+    \item Change the speed (more or fewer frames)
+    \item Animate a square or triangle instead
+\end{enumerate}
+
+\task{Bouncing Ball Animation}
+
+Create a realistic bouncing ball with gravity.
+
+\textbf{Create \texttt{bouncing\_ball.py}:}
+\begin{lstlisting}
+"""
+Bouncing ball with gravity
+"""
+from PIL import Image, ImageDraw
+import math
+
+def create_bouncing_frame(x, y, canvas_width=400, canvas_height=300):
+    """Create frame with ball at (x, y)."""
+    img = Image.new('RGB', (canvas_width, canvas_height), (200, 230, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Draw ground
+    ground_y = canvas_height - 20
+    draw.rectangle([0, ground_y, canvas_width, canvas_height], fill=(100, 200, 100))
+
+    # Draw shadow (oval on ground)
+    shadow_width = 15
+    draw.ellipse(
+        [x - shadow_width, ground_y - 5, x + shadow_width, ground_y + 5],
+        fill=(0, 0, 0, 100)
+    )
+
+    # Draw ball
+    radius = 15
+    draw.ellipse(
+        [x - radius, y - radius, x + radius, y + radius],
+        fill=(255, 100, 100),
+        outline=(200, 50, 50)
+    )
+
+    # Highlight
+    draw.ellipse(
+        [x - 7, y - 7, x - 2, y - 2],
+        fill=(255, 200, 200)
+    )
+
+    return img
+
+# Physics simulation
+canvas_width = 400
+canvas_height = 300
+ground_y = canvas_height - 20 - 15  # Ground minus ball radius
+
+# Ball starts at top
+x = canvas_width // 2
+y = 30
+velocity_y = 0
+gravity = 0.5
+bounce_damping = 0.8
+num_frames = 100
+
+frames = []
+print(f"Simulating {num_frames} frames...")
+
+for i in range(num_frames):
+    # Create frame
+    frame = create_bouncing_frame(int(x), int(y), canvas_width, canvas_height)
+    frames.append(frame)
+
+    # Update physics
+    velocity_y += gravity
+    y += velocity_y
+
+    # Check for ground collision
+    if y >= ground_y:
+        y = ground_y
+        velocity_y = -velocity_y * bounce_damping
+
+    # Stop if barely moving
+    if abs(velocity_y) < 0.1 and y >= ground_y - 1:
+        velocity_y = 0
+        y = ground_y
+
+    if i % 10 == 0:
+        print(f"  Frame {i+1}: y={y:.1f}, velocity={velocity_y:.2f}")
+
+# Save as GIF
+frames[0].save(
+    'output/bouncing_ball.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=40,  # 25 FPS
+    loop=0
+)
+
+print("\nCreated output/bouncing_ball.gif")
+\end{lstlisting}
+
+\textbf{Physics experiments:}
+\begin{enumerate}
+    \item Change gravity (try 0.3 or 1.0)
+    \item Change bounce damping (0.9 = higher bounce, 0.5 = less bounce)
+    \item Start ball from different heights
+    \item Make ball bounce horizontally across screen
+\end{enumerate}
+
+\task{Color Transitions and Fades}
+
+Animate smooth color changes.
+
+\textbf{Create \texttt{color\_fade.py}:}
+\begin{lstlisting}
+"""
+Color fading animations
+"""
+from PIL import Image, ImageDraw
+
+def interpolate_color(color1, color2, progress):
+    """Interpolate between two RGB colors."""
+    r = int(color1[0] + (color2[0] - color1[0]) * progress)
+    g = int(color1[1] + (color2[1] - color1[1]) * progress)
+    b = int(color1[2] + (color2[2] - color1[2]) * progress)
+    return (r, g, b)
+
+def create_fade_frame(progress, start_color, end_color):
+    """Create frame showing color fade."""
+    width, height = 400, 300
+    color = interpolate_color(start_color, end_color, progress)
+    img = Image.new('RGB', (width, height), color)
+
+    draw = ImageDraw.Draw(img)
+
+    # Show progress
+    text = f"{int(progress * 100)}%"
+    draw.text((170, 140), text, fill=(255, 255, 255))
+
+    return img
+
+# Animation 1: Red to blue fade
+print("Creating color fade animation...")
+frames = []
+num_frames = 30
+start_color = (255, 0, 0)  # Red
+end_color = (0, 0, 255)    # Blue
+
+for i in range(num_frames):
+    progress = i / (num_frames - 1)
+    frame = create_fade_frame(progress, start_color, end_color)
+    frames.append(frame)
+
+frames[0].save(
+    'output/color_fade.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=100,
+    loop=0
+)
+
+print("Created output/color_fade.gif")
+
+# Animation 2: Multiple color transitions
+print("\nCreating rainbow transition...")
+colors = [
+    (255, 0, 0),    # Red
+    (255, 127, 0),  # Orange
+    (255, 255, 0),  # Yellow
+    (0, 255, 0),    # Green
+    (0, 0, 255),    # Blue
+    (75, 0, 130),   # Indigo
+    (148, 0, 211)   # Violet
+]
+
+frames = []
+frames_per_transition = 10
+
+for i in range(len(colors) - 1):
+    for j in range(frames_per_transition):
+        progress = j / frames_per_transition
+        frame = create_fade_frame(progress, colors[i], colors[i + 1])
+        frames.append(frame)
+
+frames[0].save(
+    'output/rainbow_fade.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=80,
+    loop=0
+)
+
+print("Created output/rainbow_fade.gif")
+\end{lstlisting}
+
+\textbf{Color experiments:}
+\begin{enumerate}
+    \item Fade from white to black (grayscale)
+    \item Create a pulsing effect (fade back and forth)
+    \item Fade multiple objects independently
+    \item Combine color fade with movement
+\end{enumerate}
+
+\task{Text Animations}
+
+Animate text appearing and moving.
+
+\textbf{Create \texttt{text\_animation.py}:}
+\begin{lstlisting}
+"""
+Animated text effects
+"""
+from PIL import Image, ImageDraw, ImageFont
+
+def create_sliding_text_frame(progress, text, canvas_width=500, canvas_height=200):
+    """Text sliding in from left."""
+    img = Image.new('RGB', (canvas_width, canvas_height), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Calculate position
+    start_x = -200
+    end_x = 50
+    x = int(start_x + (end_x - start_x) * progress)
+    y = canvas_height // 2 - 20
+
+    # Draw text
+    draw.text((x, y), text, fill=(0, 0, 0))
+
+    return img
+
+def create_typing_text_frame(num_chars, text, canvas_width=500, canvas_height=200):
+    """Show text being typed."""
+    img = Image.new('RGB', (canvas_width, canvas_height), (0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    # Show partial text
+    partial_text = text[:num_chars]
+    if num_chars < len(text):
+        partial_text += "_"  # Cursor
+
+    draw.text((50, 80), partial_text, fill=(0, 255, 0))
+
+    return img
+
+# Animation 1: Sliding text
+print("Creating sliding text animation...")
+text = "Hello, Animation!"
+frames = []
+
+for i in range(30):
+    progress = i / 29
+    frame = create_sliding_text_frame(progress, text)
+    frames.append(frame)
+
+frames[0].save(
+    'output/sliding_text.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=50,
+    loop=0
+)
+
+print("Created output/sliding_text.gif")
+
+# Animation 2: Typing effect
+print("\nCreating typing text animation...")
+text = "Python is awesome!"
+frames = []
+
+for i in range(len(text) + 10):  # Hold at end
+    num_chars = min(i, len(text))
+    frame = create_typing_text_frame(num_chars, text)
+    frames.append(frame)
+
+frames[0].save(
+    'output/typing_text.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=100,
+    loop=0
+)
+
+print("Created output/typing_text.gif")
+
+# Animation 3: Zooming text
+print("\nCreating zooming text animation...")
+frames = []
+canvas_width = 400
+canvas_height = 300
+
+for i in range(30):
+    img = Image.new('RGB', (canvas_width, canvas_height), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Scale text size
+    scale = 0.5 + (i / 29) * 1.5  # From 0.5 to 2.0
+
+    # Draw text at center (size is visual only, not actual font scaling)
+    text_y = int(canvas_height / 2 - 10 * scale)
+    text = f"ZOOM!"
+
+    # Simulate scaling with position
+    draw.text((int(200 - 30 * scale), text_y), text, fill=(255, 0, 0))
+
+    frames.append(img)
+
+frames[0].save(
+    'output/zoom_text.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=50,
+    loop=0
+)
+
+print("Created output/zoom_text.gif")
+\end{lstlisting}
+
+\task{Mini-Project: Image Transition Effects}
+
+Create transitions between multiple images.
+
+\textbf{Create \texttt{image\_transitions.py}:}
+\begin{lstlisting}
+"""
+Transition effects between images
+"""
+from PIL import Image
+
+def crossfade(img1, img2, progress):
+    """Crossfade between two images."""
+    if img1.size != img2.size:
+        img2 = img2.resize(img1.size)
+
+    width, height = img1.size
+    pixels1 = img1.load()
+    pixels2 = img2.load()
+
+    result = Image.new('RGB', (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r1, g1, b1 = pixels1[x, y]
+            r2, g2, b2 = pixels2[x, y]
+
+            r = int(r1 * (1 - progress) + r2 * progress)
+            g = int(g1 * (1 - progress) + g2 * progress)
+            b = int(b1 * (1 - progress) + b2 * progress)
+
+            result_pixels[x, y] = (r, g, b)
+
+    return result
+
+def slide_transition(img1, img2, progress, direction='left'):
+    """Slide transition between images."""
+    if img1.size != img2.size:
+        img2 = img2.resize(img1.size)
+
+    width, height = img1.size
+    result = Image.new('RGB', (width, height))
+
+    if direction == 'left':
+        # img2 slides in from right
+        offset = int(width * (1 - progress))
+        result.paste(img1, (0, 0))
+        result.paste(img2, (offset, 0))
+
+    return result
+
+def wipe_transition(img1, img2, progress):
+    """Wipe transition (reveal from left to right)."""
+    if img1.size != img2.size:
+        img2 = img2.resize(img1.size)
+
+    width, height = img1.size
+    result = img1.copy()
+
+    wipe_x = int(width * progress)
+
+    # Copy left portion of img2
+    for y in range(height):
+        for x in range(wipe_x):
+            result.putpixel((x, y), img2.getpixel((x, y)))
+
+    return result
+
+# Load images
+try:
+    img1 = Image.open('images/photo1.jpg').resize((400, 300))
+    img2 = Image.open('images/photo2.jpg').resize((400, 300))
+    img3 = Image.open('images/photo3.jpg').resize((400, 300))
+except:
+    # Create sample images if none available
+    print("Creating sample images...")
+    img1 = Image.new('RGB', (400, 300), (255, 100, 100))
+    img2 = Image.new('RGB', (400, 300), (100, 255, 100))
+    img3 = Image.new('RGB', (400, 300), (100, 100, 255))
+
+# Create crossfade animation
+print("Creating crossfade transition...")
+frames = []
+transition_frames = 20
+
+# img1 to img2
+for i in range(transition_frames):
+    progress = i / (transition_frames - 1)
+    frame = crossfade(img1, img2, progress)
+    frames.append(frame)
+
+# Hold img2
+for _ in range(10):
+    frames.append(img2.copy())
+
+# img2 to img3
+for i in range(transition_frames):
+    progress = i / (transition_frames - 1)
+    frame = crossfade(img2, img3, progress)
+    frames.append(frame)
+
+frames[0].save(
+    'output/crossfade.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=80,
+    loop=0
+)
+
+print("Created output/crossfade.gif")
+
+# Create slide transition
+print("\nCreating slide transition...")
+frames = []
+
+for i in range(transition_frames):
+    progress = i / (transition_frames - 1)
+    frame = slide_transition(img1, img2, progress, 'left')
+    frames.append(frame)
+
+frames[0].save(
+    'output/slide_transition.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=60,
+    loop=0
+)
+
+print("Created output/slide_transition.gif")
+
+# Create wipe transition
+print("\nCreating wipe transition...")
+frames = []
+
+for i in range(transition_frames):
+    progress = i / (transition_frames - 1)
+    frame = wipe_transition(img1, img2, progress)
+    frames.append(frame)
+
+frames[0].save(
+    'output/wipe_transition.gif',
+    save_all=True,
+    append_images=frames[1:],
+    duration=60,
+    loop=0
+)
+
+print("Created output/wipe_transition.gif")
+print("\nAll transitions complete!")
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Loading Animation}
+Create a spinning loading indicator or progress circle animation.
+
+\subsection*{Challenge 2: Particle System}
+Animate multiple objects (particles) with random motion and fading.
+
+\subsection*{Challenge 3: Clock Animation}
+Create an animated analog clock with moving hands showing time progression.
+
+\subsection*{Challenge 4: Wave Animation}
+Create a sine wave animation that appears to move across the screen.
+
+\subsection*{Challenge 5: Stop Motion}
+Combine multiple photos in sequence to create a stop-motion style animation.
+
+\section{Key Concepts}
+
+\textbf{Animation concepts:}
+\begin{itemize}
+    \item \textbf{Frame:} Single image in animation sequence
+    \item \textbf{Frame rate:} Frames per second (FPS)
+    \item \textbf{Duration:} Milliseconds per frame
+    \item \textbf{Interpolation:} Calculating in-between values
+    \item \textbf{Easing:} Non-linear motion (acceleration/deceleration)
+    \item \textbf{Loop:} Animation repeating
+    \item \textbf{Transition:} Effect between different states
+\end{itemize}
+
+\section{Frame Rate Guidelines}
+
+\begin{itemize}
+    \item \textbf{24 FPS:} Film standard (42ms per frame)
+    \item \textbf{30 FPS:} Video standard (33ms per frame)
+    \item \textbf{60 FPS:} Smooth video (17ms per frame)
+    \item \textbf{10 FPS:} Acceptable for simple web animations (100ms)
+    \item \textbf{5 FPS:} Minimum for perception of motion (200ms)
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{Jerky animation:}
+\begin{itemize}
+    \item Add more frames between start and end
+    \item Reduce duration per frame
+    \item Use smoother interpolation
+\end{itemize}
+
+\textbf{GIF too large:}
+\begin{itemize}
+    \item Reduce image dimensions
+    \item Use fewer frames
+    \item Decrease color palette
+    \item Increase duration (fewer FPS)
+\end{itemize}
+
+\textbf{Motion doesn't look natural:}
+\begin{itemize}
+    \item Add easing (start slow, accelerate, slow down)
+    \item Use physics simulation for realistic motion
+    \item Study reference animations
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your bouncing ball animation with physics
+    \item A color fade or transition animation
+    \item An animated text effect
+    \item An image transition (crossfade, slide, or wipe)
+    \item Explain what frame rate means and how to calculate it
+\end{enumerate}
+
+\section{What's Next}
+
+In Lab 12, you'll have a final project workshop where you combine all skills learned throughout the semester to create a complete media computation application of your choice!
+
+\end{document}

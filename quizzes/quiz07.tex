@@ -1,0 +1,78 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 7}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lecture 10 (Text Manipulation and Files)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[2] What is the difference between \texttt{open(filename, "r")} and \texttt{open(filename, "w")} in Python?
+\vspace{1.5in}
+
+\question[3] Write Python code to read all lines from a file called \texttt{data.txt} and store them in a list.
+\vspace{1.5in}
+
+\question[2] What does the \texttt{strip()} method do when applied to a string? Why is it useful when reading lines from a file?
+\vspace{1.5in}
+
+\question[2] What is the result of the following code?
+\begin{lstlisting}[numbers=none]
+text = "Hello,World,Python"
+parts = text.split(",")
+print(len(parts))
+\end{lstlisting}
+Answer: \underline{\hspace{1in}}
+
+\question[3] Write Python code to write three names to a file called \texttt{names.txt}, each on a separate line.
+\vspace{1.5in}
+
+\question[3] What will the following code print?
+\begin{lstlisting}[numbers=none]
+filename = "report_2024.txt"
+parts = filename.split(".")
+print(parts[0])
+\end{lstlisting}
+Answer: \underline{\hspace{2in}}
+
+\end{questions}
+
+\end{document}

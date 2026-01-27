@@ -1,0 +1,974 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{10}
+\labtitle{Web Data and Structured Data}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Work with CSV data files
+    \item Parse and generate JSON data
+    \item Process structured data from multiple sources
+    \item Create data-driven image processing applications
+    \item Build image galleries from metadata
+    \item Generate reports combining data and images
+    \item Understand data serialization formats
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your data processing programs
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Real-world applications often combine data from multiple sources with media processing. Today you'll learn to work with structured data formats like CSV and JSON, process metadata, and create data-driven applications. You'll build programs that read processing instructions from files, generate image galleries, and create automated workflows!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab10}
+    \item Create subfolders: \texttt{data}, \texttt{images}, \texttt{output}, \texttt{gallery}
+    \item Ensure Pillow is installed: \texttt{pip install Pillow}
+    \item Have 5-10 sample images ready
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Advanced CSV Processing}
+
+Work with CSV data for image processing tasks.
+
+\textbf{Create \texttt{data/image\_tasks.csv}:}
+\begin{verbatim}
+filename,operation,parameter,output_name
+photo1.jpg,grayscale,,photo1_gray.jpg
+photo2.jpg,brightness,50,photo2_bright.jpg
+photo3.jpg,resize,400x300,photo3_small.jpg
+photo1.jpg,sepia,,photo1_sepia.jpg
+photo2.jpg,rotate,90,photo2_rotated.jpg
+\end{verbatim}
+
+\textbf{Create \texttt{csv\_batch\_processor.py}:}
+\begin{lstlisting}
+"""
+CSV-driven batch image processor
+"""
+from PIL import Image
+import csv
+import os
+
+def grayscale(img):
+    """Convert to grayscale."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+            result_pixels[x, y] = (gray, gray, gray)
+
+    return result
+
+def adjust_brightness(img, amount):
+    """Adjust brightness."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    amount = int(amount)
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            result_pixels[x, y] = (
+                max(0, min(255, r + amount)),
+                max(0, min(255, g + amount)),
+                max(0, min(255, b + amount))
+            )
+
+    return result
+
+def sepia(img):
+    """Apply sepia tone."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            new_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+            new_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+            new_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+            result_pixels[x, y] = (
+                min(255, new_r),
+                min(255, new_g),
+                min(255, new_b)
+            )
+
+    return result
+
+def resize_image(img, size_str):
+    """Resize image based on 'WIDTHxHEIGHT' string."""
+    width, height = map(int, size_str.split('x'))
+    return img.resize((width, height))
+
+def rotate_image(img, angle):
+    """Rotate image by angle."""
+    angle = int(angle)
+    if angle == 90:
+        return img.transpose(Image.ROTATE_270)
+    elif angle == 180:
+        return img.transpose(Image.ROTATE_180)
+    elif angle == 270:
+        return img.transpose(Image.ROTATE_90)
+    return img
+
+def process_csv_tasks(csv_file):
+    """Process image tasks from CSV file."""
+    operations = {
+        'grayscale': grayscale,
+        'brightness': adjust_brightness,
+        'sepia': sepia,
+        'resize': resize_image,
+        'rotate': rotate_image
+    }
+
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            filename = row['filename']
+            operation = row['operation']
+            parameter = row['parameter']
+            output_name = row['output_name']
+
+            input_path = os.path.join('images', filename)
+            output_path = os.path.join('output', output_name)
+
+            try:
+                img = Image.open(input_path)
+
+                # Apply operation
+                if operation in operations:
+                    if parameter:
+                        result = operations[operation](img, parameter)
+                    else:
+                        result = operations[operation](img)
+
+                    result.save(output_path)
+                    print(f"[OK] {filename} -> {operation} -> {output_name}")
+                else:
+                    print(f"[X] Unknown operation: {operation}")
+
+            except Exception as e:
+                print(f"[X] Error processing {filename}: {e}")
+
+# Run the processor
+print("Processing tasks from CSV...")
+process_csv_tasks('data/image_tasks.csv')
+print("\nDone!")
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Add more operations to the CSV
+    \item Create a CSV with 20+ processing tasks
+    \item Add a new operation (negative, mirror, etc.)
+    \item Process the same image with multiple filters
+\end{enumerate}
+
+\task{Working with JSON Data}
+
+Use JSON for more complex data structures.
+
+\textbf{Create \texttt{json\_processor.py}:}
+\begin{lstlisting}
+"""
+JSON data processing for images
+"""
+import json
+from PIL import Image
+import os
+
+# Create sample JSON data
+sample_data = {
+    "project_name": "Photo Collection 2024",
+    "author": "John Doe",
+    "images": [
+        {
+            "filename": "photo1.jpg",
+            "title": "Beautiful Sunset",
+            "location": "California",
+            "date": "2024-01-15",
+            "tags": ["nature", "sunset", "beach"],
+            "filters": ["grayscale", "brightness:30"]
+        },
+        {
+            "filename": "photo2.jpg",
+            "title": "Mountain View",
+            "location": "Colorado",
+            "date": "2024-02-20",
+            "tags": ["nature", "mountain", "snow"],
+            "filters": ["sepia"]
+        },
+        {
+            "filename": "photo3.jpg",
+            "title": "City Lights",
+            "location": "New York",
+            "date": "2024-03-10",
+            "tags": ["urban", "night", "city"],
+            "filters": ["brightness:20"]
+        }
+    ],
+    "output_settings": {
+        "format": "jpg",
+        "quality": 90,
+        "add_watermark": True,
+        "watermark_text": "(c) 2024 John Doe"
+    }
+}
+
+# Save sample JSON
+with open('data/photo_project.json', 'w') as f:
+    json.dump(sample_data, f, indent=2)
+
+print("Created data/photo_project.json")
+
+# Read and parse JSON
+with open('data/photo_project.json', 'r') as f:
+    data = json.load(f)
+
+print(f"\nProject: {data['project_name']}")
+print(f"Author: {data['author']}")
+print(f"Number of images: {len(data['images'])}")
+
+# Display image information
+print("\nImages in project:")
+for img_data in data['images']:
+    print(f"\n  {img_data['filename']}")
+    print(f"    Title: {img_data['title']}")
+    print(f"    Location: {img_data['location']}")
+    print(f"    Date: {img_data['date']}")
+    print(f"    Tags: {', '.join(img_data['tags'])}")
+    print(f"    Filters: {', '.join(img_data['filters'])}")
+
+# Search by tag
+search_tag = "nature"
+print(f"\n\nImages tagged with '{search_tag}':")
+for img_data in data['images']:
+    if search_tag in img_data['tags']:
+        print(f"  - {img_data['title']} ({img_data['filename']})")
+
+# Search by location
+search_location = "California"
+print(f"\nImages from {search_location}:")
+for img_data in data['images']:
+    if img_data['location'] == search_location:
+        print(f"  - {img_data['title']}")
+
+# Create report
+report_file = 'output/json_report.txt'
+with open(report_file, 'w') as f:
+    f.write("="*60 + "\n")
+    f.write(f"PROJECT REPORT: {data['project_name']}\n")
+    f.write("="*60 + "\n\n")
+    f.write(f"Author: {data['author']}\n")
+    f.write(f"Total images: {len(data['images'])}\n\n")
+
+    # Count tags
+    all_tags = []
+    for img_data in data['images']:
+        all_tags.extend(img_data['tags'])
+
+    unique_tags = set(all_tags)
+    f.write("Tags used:\n")
+    for tag in sorted(unique_tags):
+        count = all_tags.count(tag)
+        f.write(f"  {tag}: {count} images\n")
+
+    f.write("\n" + "="*60 + "\n")
+
+print(f"\nReport saved to {report_file}")
+\end{lstlisting}
+
+\textbf{JSON experiments:}
+\begin{enumerate}
+    \item Add more images to the JSON file
+    \item Add new metadata fields (camera, ISO, aperture)
+    \item Create JSON for different project types
+    \item Export image metadata to JSON
+\end{enumerate}
+
+\task{Building an Image Gallery}
+
+Create an HTML gallery from image metadata.
+
+\textbf{Create \texttt{gallery\_generator.py}:}
+\begin{lstlisting}
+"""
+Generate HTML image gallery from data
+"""
+import json
+from PIL import Image
+import os
+
+def create_thumbnail(img, size=200):
+    """Create thumbnail maintaining aspect ratio."""
+    img.thumbnail((size, size))
+    return img
+
+def generate_gallery(json_file, output_dir='gallery'):
+    """Generate HTML gallery from JSON metadata."""
+
+    # Load data
+    with open(json_file, 'r') as f:
+        data = json.load(f)
+
+    # Create output directory
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    thumb_dir = os.path.join(output_dir, 'thumbnails')
+    if not os.path.exists(thumb_dir):
+        os.makedirs(thumb_dir)
+
+    # Generate thumbnails
+    print("Generating thumbnails...")
+    for img_data in data['images']:
+        filename = img_data['filename']
+        input_path = os.path.join('images', filename)
+
+        try:
+            img = Image.open(input_path)
+            thumb = img.copy()
+            create_thumbnail(thumb)
+
+            thumb_path = os.path.join(thumb_dir, filename)
+            thumb.save(thumb_path)
+            print(f"  [OK] {filename}")
+        except Exception as e:
+            print(f"  [X] {filename}: {e}")
+
+    # Generate HTML
+    html_file = os.path.join(output_dir, 'index.html')
+
+    with open(html_file, 'w') as f:
+        # HTML header
+        f.write('<!DOCTYPE html>\n')
+        f.write('<html>\n<head>\n')
+        f.write(f'<title>{data["project_name"]}</title>\n')
+        f.write('<style>\n')
+        f.write('body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }\n')
+        f.write('h1 { color: #333; }\n')
+        f.write('.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }\n')
+        f.write('.photo { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n')
+        f.write('.photo img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; }\n')
+        f.write('.photo h3 { margin: 10px 0 5px 0; font-size: 16px; }\n')
+        f.write('.photo p { margin: 5px 0; font-size: 13px; color: #666; }\n')
+        f.write('.tags { margin-top: 10px; }\n')
+        f.write('.tag { display: inline-block; background: #007bff; color: white; padding: 3px 8px; border-radius: 3px; font-size: 11px; margin-right: 5px; }\n')
+        f.write('</style>\n')
+        f.write('</head>\n<body>\n')
+
+        # Title and header
+        f.write(f'<h1>{data["project_name"]}</h1>\n')
+        f.write(f'<p>By {data["author"]} | {len(data["images"])} photos</p>\n')
+        f.write('<hr>\n')
+
+        # Gallery grid
+        f.write('<div class="gallery">\n')
+
+        for img_data in data['images']:
+            filename = img_data['filename']
+            thumb_path = f'thumbnails/{filename}'
+
+            f.write('<div class="photo">\n')
+            f.write(f'<img src="{thumb_path}" alt="{img_data["title"]}">\n')
+            f.write(f'<h3>{img_data["title"]}</h3>\n')
+            f.write(f'<p><strong>Location:</strong> {img_data["location"]}</p>\n')
+            f.write(f'<p><strong>Date:</strong> {img_data["date"]}</p>\n')
+
+            # Tags
+            f.write('<div class="tags">\n')
+            for tag in img_data['tags']:
+                f.write(f'<span class="tag">{tag}</span>\n')
+            f.write('</div>\n')
+
+            f.write('</div>\n')
+
+        f.write('</div>\n')
+
+        # Footer
+        f.write('<hr>\n')
+        f.write(f'<p style="text-align: center; color: #999;">Generated by Gallery Generator</p>\n')
+        f.write('</body>\n</html>\n')
+
+    print(f"\nGallery created: {html_file}")
+    print(f"Open {html_file} in a web browser to view")
+
+# Generate gallery
+generate_gallery('data/photo_project.json')
+\end{lstlisting}
+
+\task{Data-Driven Batch Processing}
+
+Combine CSV/JSON processing with image manipulation.
+
+\textbf{Create \texttt{data\_driven\_processor.py}:}
+\begin{lstlisting}
+"""
+Advanced data-driven image processor
+"""
+import json
+import csv
+from PIL import Image, ImageDraw, ImageFont
+import os
+
+class ImageProcessor:
+    """Data-driven image processing engine."""
+
+    def __init__(self):
+        self.processed_count = 0
+        self.error_count = 0
+        self.log = []
+
+    def grayscale(self, img, params=None):
+        """Convert to grayscale."""
+        width, height = img.size
+        pixels = img.load()
+        result = Image.new("RGB", (width, height))
+        result_pixels = result.load()
+
+        for y in range(height):
+            for x in range(width):
+                r, g, b = pixels[x, y]
+                gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+                result_pixels[x, y] = (gray, gray, gray)
+
+        return result
+
+    def resize(self, img, params):
+        """Resize image."""
+        width, height = params['width'], params['height']
+        return img.resize((width, height))
+
+    def add_text(self, img, params):
+        """Add text overlay."""
+        img_copy = img.copy()
+        draw = ImageDraw.Draw(img_copy)
+
+        text = params.get('text', 'Sample Text')
+        position = params.get('position', 'bottom')
+        color = tuple(params.get('color', [255, 255, 255]))
+
+        # Draw background bar
+        if position == 'bottom':
+            y = img_copy.height - 40
+        else:
+            y = 0
+
+        draw.rectangle([0, y, img_copy.width, y + 40], fill=(0, 0, 0))
+        draw.text((10, y + 10), text, fill=color)
+
+        return img_copy
+
+    def process_json_file(self, json_file):
+        """Process images based on JSON configuration."""
+        with open(json_file, 'r') as f:
+            config = json.load(f)
+
+        for item in config.get('tasks', []):
+            try:
+                input_file = item['input']
+                output_file = item['output']
+                operations = item['operations']
+
+                img = Image.open(input_file)
+
+                for op in operations:
+                    op_name = op['name']
+                    op_params = op.get('params', {})
+
+                    if hasattr(self, op_name):
+                        method = getattr(self, op_name)
+                        img = method(img, op_params)
+
+                img.save(output_file)
+                self.log.append(f"[OK] Processed: {input_file} -> {output_file}")
+                self.processed_count += 1
+
+            except Exception as e:
+                self.log.append(f"[X] Error: {input_file} - {e}")
+                self.error_count += 1
+
+        return self.get_report()
+
+    def get_report(self):
+        """Generate processing report."""
+        report = []
+        report.append("="*60)
+        report.append("PROCESSING REPORT")
+        report.append("="*60)
+        report.append(f"Processed: {self.processed_count}")
+        report.append(f"Errors: {self.error_count}")
+        report.append("\nDetails:")
+        report.extend(self.log)
+        report.append("="*60)
+        return "\n".join(report)
+
+# Create sample JSON configuration
+config = {
+    "project": "Batch Processing Demo",
+    "tasks": [
+        {
+            "input": "images/photo1.jpg",
+            "output": "output/photo1_processed.jpg",
+            "operations": [
+                {"name": "resize", "params": {"width": 800, "height": 600}},
+                {"name": "grayscale"},
+                {"name": "add_text", "params": {"text": "Photo 1", "position": "bottom"}}
+            ]
+        },
+        {
+            "input": "images/photo2.jpg",
+            "output": "output/photo2_processed.jpg",
+            "operations": [
+                {"name": "resize", "params": {"width": 640, "height": 480}},
+                {"name": "add_text", "params": {"text": "Photo 2", "position": "bottom"}}
+            ]
+        }
+    ]
+}
+
+# Save configuration
+with open('data/processing_config.json', 'w') as f:
+    json.dump(config, f, indent=2)
+
+print("Created data/processing_config.json")
+
+# Process images
+processor = ImageProcessor()
+report = processor.process_json_file('data/processing_config.json')
+
+print("\n" + report)
+
+# Save report
+with open('output/processing_report.txt', 'w') as f:
+    f.write(report)
+
+print("\nReport saved to output/processing_report.txt")
+\end{lstlisting}
+
+\task{Image Metadata Extractor}
+
+Extract and save image metadata to structured files.
+
+\textbf{Create \texttt{metadata\_extractor.py}:}
+\begin{lstlisting}
+"""
+Extract image metadata and save to CSV/JSON
+"""
+from PIL import Image
+import os
+import json
+import csv
+from datetime import datetime
+
+def extract_metadata(image_path):
+    """Extract metadata from an image."""
+    img = Image.open(image_path)
+
+    metadata = {
+        'filename': os.path.basename(image_path),
+        'path': image_path,
+        'width': img.width,
+        'height': img.height,
+        'format': img.format,
+        'mode': img.mode,
+        'size_bytes': os.path.getsize(image_path),
+        'megapixels': round((img.width * img.height) / 1_000_000, 2)
+    }
+
+    # Calculate average color
+    pixels = img.load()
+    total_r, total_g, total_b = 0, 0, 0
+    pixel_count = img.width * img.height
+
+    for y in range(img.height):
+        for x in range(img.width):
+            r, g, b = pixels[x, y]
+            total_r += r
+            total_g += g
+            total_b += b
+
+    metadata['avg_red'] = round(total_r / pixel_count, 2)
+    metadata['avg_green'] = round(total_g / pixel_count, 2)
+    metadata['avg_blue'] = round(total_b / pixel_count, 2)
+    metadata['brightness'] = round((metadata['avg_red'] +
+                                   metadata['avg_green'] +
+                                   metadata['avg_blue']) / 3, 2)
+
+    return metadata
+
+def scan_directory(directory):
+    """Scan directory for images and extract metadata."""
+    image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif')
+    image_files = [f for f in os.listdir(directory)
+                   if f.lower().endswith(image_extensions)]
+
+    metadata_list = []
+
+    print(f"Scanning {directory}...")
+    for filename in image_files:
+        path = os.path.join(directory, filename)
+        try:
+            metadata = extract_metadata(path)
+            metadata_list.append(metadata)
+            print(f"  [OK] {filename}")
+        except Exception as e:
+            print(f"  [X] {filename}: {e}")
+
+    return metadata_list
+
+def save_to_csv(metadata_list, output_file):
+    """Save metadata to CSV file."""
+    if not metadata_list:
+        return
+
+    fieldnames = metadata_list[0].keys()
+
+    with open(output_file, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(metadata_list)
+
+    print(f"\nCSV saved to: {output_file}")
+
+def save_to_json(metadata_list, output_file):
+    """Save metadata to JSON file."""
+    output = {
+        'scan_date': datetime.now().isoformat(),
+        'image_count': len(metadata_list),
+        'images': metadata_list
+    }
+
+    with open(output_file, 'w') as f:
+        json.dump(output, f, indent=2)
+
+    print(f"JSON saved to: {output_file}")
+
+# Scan images directory
+metadata = scan_directory('images')
+
+# Save to both formats
+save_to_csv(metadata, 'data/image_metadata.csv')
+save_to_json(metadata, 'data/image_metadata.json')
+
+# Display statistics
+if metadata:
+    print("\n" + "="*60)
+    print("STATISTICS")
+    print("="*60)
+    print(f"Total images: {len(metadata)}")
+    print(f"Average width: {sum(m['width'] for m in metadata) / len(metadata):.1f}")
+    print(f"Average height: {sum(m['height'] for m in metadata) / len(metadata):.1f}")
+    print(f"Average megapixels: {sum(m['megapixels'] for m in metadata) / len(metadata):.2f}")
+    print(f"Average brightness: {sum(m['brightness'] for m in metadata) / len(metadata):.1f}/255")
+
+    # Largest image
+    largest = max(metadata, key=lambda m: m['width'] * m['height'])
+    print(f"\nLargest image: {largest['filename']}")
+    print(f"  {largest['width']}x{largest['height']} ({largest['megapixels']} MP)")
+\end{lstlisting}
+
+\task{Mini-Project: Automated Photo Album}
+
+Create a complete photo album system with metadata and gallery.
+
+\textbf{Create \texttt{photo\_album.py}:}
+\begin{lstlisting}
+"""
+Complete photo album system
+"""
+import json
+from PIL import Image, ImageDraw
+import os
+from datetime import datetime
+
+class PhotoAlbum:
+    """Complete photo album management system."""
+
+    def __init__(self, name):
+        self.name = name
+        self.photos = []
+        self.metadata_file = f'data/{name}_album.json'
+
+    def add_photo(self, filename, title, description, tags=None):
+        """Add a photo to the album."""
+        photo_data = {
+            'id': len(self.photos) + 1,
+            'filename': filename,
+            'title': title,
+            'description': description,
+            'tags': tags or [],
+            'added_date': datetime.now().isoformat()
+        }
+        self.photos.append(photo_data)
+
+    def save_metadata(self):
+        """Save album metadata to JSON."""
+        data = {
+            'album_name': self.name,
+            'created': datetime.now().isoformat(),
+            'photo_count': len(self.photos),
+            'photos': self.photos
+        }
+
+        with open(self.metadata_file, 'w') as f:
+            json.dump(data, f, indent=2)
+
+        print(f"Metadata saved to {self.metadata_file}")
+
+    def load_metadata(self):
+        """Load album metadata from JSON."""
+        try:
+            with open(self.metadata_file, 'r') as f:
+                data = json.load(f)
+                self.photos = data['photos']
+            print(f"Loaded {len(self.photos)} photos")
+        except FileNotFoundError:
+            print("No metadata file found")
+
+    def generate_thumbnails(self, thumb_dir='output/thumbnails'):
+        """Generate thumbnails for all photos."""
+        if not os.path.exists(thumb_dir):
+            os.makedirs(thumb_dir)
+
+        for photo in self.photos:
+            try:
+                img = Image.open(f"images/{photo['filename']}")
+                img.thumbnail((200, 200))
+                thumb_path = os.path.join(thumb_dir, photo['filename'])
+                img.save(thumb_path)
+                print(f"  [OK] {photo['filename']}")
+            except Exception as e:
+                print(f"  [X] {photo['filename']}: {e}")
+
+    def create_contact_sheet(self, output_file='output/contact_sheet.jpg'):
+        """Create a contact sheet with all photos."""
+        thumb_size = 200
+        padding = 10
+        cols = 4
+        rows = (len(self.photos) + cols - 1) // cols
+
+        width = cols * (thumb_size + padding) + padding
+        height = rows * (thumb_size + padding) + padding + 50
+
+        contact = Image.new('RGB', (width, height), (255, 255, 255))
+        draw = ImageDraw.Draw(contact)
+
+        # Title
+        draw.text((padding, padding), f'{self.name} - {len(self.photos)} photos',
+                  fill=(0, 0, 0))
+
+        y_offset = 50
+        for idx, photo in enumerate(self.photos):
+            try:
+                img = Image.open(f"images/{photo['filename']}")
+                img.thumbnail((thumb_size, thumb_size))
+
+                row = idx // cols
+                col = idx % cols
+
+                x = col * (thumb_size + padding) + padding
+                y = row * (thumb_size + padding) + padding + y_offset
+
+                contact.paste(img, (x, y))
+
+            except Exception as e:
+                print(f"Error adding {photo['filename']}: {e}")
+
+        contact.save(output_file)
+        print(f"Contact sheet saved to {output_file}")
+
+    def search_by_tag(self, tag):
+        """Search photos by tag."""
+        results = [p for p in self.photos if tag in p['tags']]
+        return results
+
+    def generate_report(self):
+        """Generate text report."""
+        report = []
+        report.append("="*60)
+        report.append(f"PHOTO ALBUM: {self.name}")
+        report.append("="*60)
+        report.append(f"Total photos: {len(self.photos)}")
+        report.append("")
+
+        # List all tags
+        all_tags = []
+        for photo in self.photos:
+            all_tags.extend(photo['tags'])
+
+        unique_tags = set(all_tags)
+        report.append(f"Tags used ({len(unique_tags)}):")
+        for tag in sorted(unique_tags):
+            count = all_tags.count(tag)
+            report.append(f"  {tag}: {count} photos")
+
+        report.append("")
+        report.append("Photos:")
+        for photo in self.photos:
+            report.append(f"\n  {photo['id']}. {photo['title']}")
+            report.append(f"     File: {photo['filename']}")
+            report.append(f"     Description: {photo['description']}")
+            report.append(f"     Tags: {', '.join(photo['tags'])}")
+
+        report.append("\n" + "="*60)
+        return "\n".join(report)
+
+# Create sample album
+album = PhotoAlbum("My Vacation 2024")
+
+# Add photos
+album.add_photo("photo1.jpg", "Beach Sunset",
+                "Beautiful sunset at the beach",
+                ["beach", "sunset", "vacation"])
+album.add_photo("photo2.jpg", "Mountain Hike",
+                "Hiking in the mountains",
+                ["mountain", "hiking", "nature"])
+album.add_photo("photo3.jpg", "City Night",
+                "City lights at night",
+                ["city", "night", "urban"])
+
+# Save metadata
+album.save_metadata()
+
+# Generate outputs
+print("\nGenerating thumbnails...")
+album.generate_thumbnails()
+
+print("\nCreating contact sheet...")
+album.create_contact_sheet()
+
+# Generate report
+report = album.generate_report()
+print("\n" + report)
+
+# Save report
+with open('output/album_report.txt', 'w') as f:
+    f.write(report)
+
+print("\nAlbum system complete!")
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: XML Processing}
+Add XML support for image metadata alongside JSON and CSV.
+
+\subsection*{Challenge 2: Database Integration}
+Use SQLite to store and query image metadata.
+
+\subsection*{Challenge 3: API Integration}
+Fetch image data from a web API and process it.
+
+\subsection*{Challenge 4: Advanced Gallery}
+Create a gallery with sorting, filtering, and search features.
+
+\subsection*{Challenge 5: Automated Backup}
+Create a system that backs up images and their metadata to a structured archive.
+
+\section{Key Concepts}
+
+\textbf{Data processing concepts:}
+\begin{itemize}
+    \item \textbf{CSV:} Simple tabular data format
+    \item \textbf{JSON:} Hierarchical data structure
+    \item \textbf{Metadata:} Data about data
+    \item \textbf{Serialization:} Converting data to storable format
+    \item \textbf{Data-driven:} Using data to control program behavior
+    \item \textbf{Batch processing:} Automated repetitive tasks
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{JSON parsing errors:}
+\begin{itemize}
+    \item Check for missing commas or brackets
+    \item Ensure proper quoting of strings
+    \item Use online JSON validators
+\end{itemize}
+
+\textbf{CSV encoding issues:}
+\begin{itemize}
+    \item Use UTF-8 encoding
+    \item Handle commas within data fields
+    \item Use csv module for complex files
+\end{itemize}
+
+\textbf{Path problems:}
+\begin{itemize}
+    \item Use \texttt{os.path.join()} for cross-platform paths
+    \item Check file existence before processing
+    \item Create output directories if needed
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item CSV-driven batch processor working on multiple images
+    \item JSON data being read and processed
+    \item Generated HTML image gallery
+    \item Metadata extraction saving to both CSV and JSON
+    \item Explain the difference between CSV and JSON
+\end{enumerate}
+
+\section{What's Next}
+
+In Lab 11, we'll create animations by generating sequences of images and combining them into animated GIFs!
+
+\end{document}

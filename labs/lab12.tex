@@ -1,0 +1,605 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{12}
+\labtitle{Final Project Workshop}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Plan and design a complete media computation project
+    \item Integrate multiple skills from the course
+    \item Combine image, sound, and text processing
+    \item Build a polished, working application
+    \item Document code and create user instructions
+    \item Present and demonstrate your project
+    \item Review and apply best practices
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete work on your project during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Make significant progress on your project
+    \item Show working code to instructor/TA
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Welcome to your final lab! Today is a workshop where you'll work on a project that demonstrates everything you've learned this semester. You'll combine image processing, sound manipulation, text handling, and data processing into one complete application. This is your chance to be creative and build something you're proud of!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/final\_project}
+    \item Create subfolders: \texttt{images}, \texttt{sounds}, \texttt{data}, \texttt{output}
+    \item Ensure all libraries are installed: Pillow, pydub
+    \item Review your previous labs for code to reuse
+    \item Have your media resources ready (images, sounds, etc.)
+\end{enumerate}
+\end{setup}
+
+\section{Project Ideas}
+
+Choose ONE of these project ideas or create your own (with instructor approval):
+
+\subsection*{Project 1: Automated Photo Album Creator}
+\textbf{Description:} Create a system that takes a folder of photos and generates a complete photo album with thumbnails, captions, filters, and an HTML gallery.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Read image metadata from CSV file
+    \item Apply filters based on metadata (sepia, grayscale, etc.)
+    \item Generate thumbnails
+    \item Add text captions to images
+    \item Create HTML gallery with navigation
+    \item Generate summary statistics report
+\end{itemize}
+
+\textbf{Skills used:} Images, text processing, CSV, file I/O, batch processing
+
+\subsection*{Project 2: Music Visualizer}
+\textbf{Description:} Create visual representations of audio files by analyzing sound properties and generating animated visualizations.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Load and analyze sound files
+    \item Extract amplitude data over time
+    \item Generate visualization frames (bars, waveforms)
+    \item Create animated GIF showing sound progression
+    \item Add text labels (song title, artist, duration)
+    \item Support multiple visualization styles
+\end{itemize}
+
+\textbf{Skills used:} Sound processing, animation, images, text
+
+\subsection*{Project 3: Meme Generator}
+\textbf{Description:} Build a complete meme generation system that adds text to images with various styles and templates.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Load meme templates or user images
+    \item Add top and bottom text with custom formatting
+    \item Support multiple text styles (impact font style, colors)
+    \item Apply image filters (grayscale, sepia, brightness)
+    \item Batch generate memes from CSV data
+    \item Save with unique filenames
+\end{itemize}
+
+\textbf{Skills used:} Images, text processing, CSV, batch processing
+
+\subsection*{Project 4: Video Frame Extractor and Processor}
+\textbf{Description:} Extract frames from a sequence of images, apply filters, and recombine into animation with effects.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Load sequence of images
+    \item Apply filters to each frame (consistent or progressive)
+    \item Add transitions between frames
+    \item Generate animated GIF output
+    \item Add text overlays or watermarks
+    \item Create thumbnail preview grid
+\end{itemize}
+
+\textbf{Skills used:} Images, animation, filters, batch processing
+
+\subsection*{Project 5: Sound Effect Studio}
+\textbf{Description:} Create a comprehensive sound effects processor with multiple effects and mixing capabilities.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Load multiple sound files
+    \item Apply effects (echo, reverse, speed change, fade)
+    \item Mix multiple sounds together
+    \item Create sound effect library from CSV config
+    \item Generate audio samples (tones, chords)
+    \item Export processed sounds with metadata
+\end{itemize}
+
+\textbf{Skills used:} Sound processing, CSV, file I/O, data structures
+
+\subsection*{Project 6: Data-Driven Image Processor}
+\textbf{Description:} Build a system that processes images based on instructions from JSON/CSV files with reporting.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Read processing tasks from JSON configuration
+    \item Support multiple operations (filters, transforms, etc.)
+    \item Chain multiple operations per image
+    \item Generate before/after comparison images
+    \item Create detailed HTML report with thumbnails
+    \item Error handling and logging
+\end{itemize}
+
+\textbf{Skills used:} Images, JSON, HTML generation, batch processing
+
+\subsection*{Project 7: Collage and Slideshow Maker}
+\textbf{Description:} Create artistic collages and animated slideshows from collections of photos.
+
+\textbf{Features:}
+\begin{itemize}
+    \item Load multiple images from folder
+    \item Create collage layouts (grid, scattered, artistic)
+    \item Add borders and effects to each photo
+    \item Generate slideshow with transitions
+    \item Add text captions from metadata
+    \item Export as both static collage and animated GIF
+\end{itemize}
+
+\textbf{Skills used:} Images, animation, layout algorithms, text
+
+\subsection*{Project 8: Your Own Idea!}
+\textbf{Description:} Design your own project that combines at least 3 different skills from the course.
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Must use at least 3 of: images, sound, text, CSV/JSON, animation
+    \item Must have clear user instructions
+    \item Must include proper documentation
+    \item Get approval from instructor before starting
+\end{itemize}
+
+\section{Project Requirements}
+
+\subsection*{Minimum Requirements}
+Your project must include:
+\begin{enumerate}
+    \item \textbf{Multiple files:} Organized code structure (main program + helper functions/modules)
+    \item \textbf{User input:} Read from files or get user input
+    \item \textbf{Output:} Generate multiple output files (images, sounds, reports)
+    \item \textbf{Documentation:} Comments and docstrings explaining code
+    \item \textbf{Error handling:} Try/except blocks for file operations
+    \item \textbf{README file:} Instructions on how to run your project
+\end{enumerate}
+
+\subsection*{Code Quality}
+\begin{itemize}
+    \item Functions with clear purposes
+    \item Descriptive variable names
+    \item Comments explaining complex logic
+    \item Consistent formatting
+    \item No hardcoded file paths (use variables/config)
+\end{itemize}
+
+\section{Development Process}
+
+\subsection*{Step 1: Planning (15 minutes)}
+\begin{enumerate}
+    \item Choose your project idea
+    \item List the main features
+    \item Sketch the program flow
+    \item Identify what media resources you need
+    \item Plan your file structure
+\end{enumerate}
+
+\subsection*{Step 2: Setup (10 minutes)}
+\begin{enumerate}
+    \item Create project folder and subfolders
+    \item Gather or create sample media files
+    \item Create main Python file
+    \item Set up any configuration files (CSV, JSON)
+\end{enumerate}
+
+\subsection*{Step 3: Core Functionality (45 minutes)}
+\begin{enumerate}
+    \item Implement basic file loading
+    \item Create core processing functions
+    \item Test with simple inputs
+    \item Debug and fix issues
+    \item Save basic outputs
+\end{enumerate}
+
+\subsection*{Step 4: Additional Features (30 minutes)}
+\begin{enumerate}
+    \item Add more processing options
+    \item Implement batch processing
+    \item Add text output or reports
+    \item Improve user interface
+\end{enumerate}
+
+\subsection*{Step 5: Polish and Documentation (20 minutes)}
+\begin{enumerate}
+    \item Add comments and docstrings
+    \item Create README file
+    \item Test with different inputs
+    \item Fix any remaining bugs
+    \item Prepare demo
+\end{enumerate}
+
+\section{Sample Project Structure}
+
+\textbf{Example folder structure for Photo Album Creator:}
+\begin{verbatim}
+final_project/
+|-- main.py                 # Main program
+|-- image_processor.py      # Image processing functions
+|-- gallery_generator.py    # HTML generation
+|-- README.md              # User instructions
+|-- config.json            # Configuration settings
+|-- images/                # Input images
+|   |-- photo1.jpg
+|   |-- photo2.jpg
+|   `-- ...
+|-- data/                  # Data files
+|   `-- captions.csv
+`-- output/                # Generated files
+    |-- thumbnails/
+    |-- processed/
+    |-- gallery.html
+    `-- report.txt
+\end{verbatim}
+
+\section{Starter Code Templates}
+
+\subsection*{Template 1: Main Program Structure}
+
+\begin{lstlisting}
+"""
+Final Project: [Your Project Name]
+Author: [Your Name]
+Date: Fall 2024
+
+Description:
+    [Brief description of what your project does]
+
+Usage:
+    python main.py
+"""
+
+import os
+from PIL import Image
+
+def load_configuration():
+    """Load project configuration."""
+    config = {
+        'input_folder': 'images',
+        'output_folder': 'output',
+        'process_all': True
+    }
+    return config
+
+def process_media():
+    """Main processing function."""
+    config = load_configuration()
+
+    print("="*60)
+    print("Final Project: [Your Project Name]")
+    print("="*60)
+
+    # Your processing code here
+    print("\nProcessing media files...")
+
+    # Example: Process each file
+    # for filename in os.listdir(config['input_folder']):
+    #     process_file(filename)
+
+    print("\nProcessing complete!")
+    print("Check output folder for results.")
+
+def generate_report():
+    """Generate summary report."""
+    report = []
+    report.append("="*60)
+    report.append("PROCESSING REPORT")
+    report.append("="*60)
+    # Add report details
+    return "\n".join(report)
+
+def main():
+    """Main entry point."""
+    try:
+        process_media()
+        report = generate_report()
+        print("\n" + report)
+
+        # Save report
+        with open('output/report.txt', 'w') as f:
+            f.write(report)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        print("Please check your setup and try again.")
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\subsection*{Template 2: Helper Module}
+
+\begin{lstlisting}
+"""
+Helper functions for media processing
+"""
+from PIL import Image
+
+def apply_filter(img, filter_name):
+    """
+    Apply a named filter to an image.
+
+    Args:
+        img: PIL Image object
+        filter_name: Name of filter ('grayscale', 'sepia', etc.)
+
+    Returns:
+        Filtered PIL Image
+    """
+    if filter_name == 'grayscale':
+        return convert_grayscale(img)
+    elif filter_name == 'sepia':
+        return apply_sepia(img)
+    else:
+        return img
+
+def convert_grayscale(img):
+    """Convert image to grayscale."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new('RGB', (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+            result_pixels[x, y] = (gray, gray, gray)
+
+    return result
+
+def apply_sepia(img):
+    """Apply sepia tone filter."""
+    # Implement sepia conversion
+    pass
+
+# Add more helper functions as needed
+\end{lstlisting}
+
+\subsection*{Template 3: README.md}
+
+\begin{verbatim}
+# Final Project: [Your Project Name]
+
+## Description
+[Brief description of what your project does]
+
+## Author
+[Your Name]
+
+## Requirements
+- Python 3.8+
+- Pillow: `pip install Pillow`
+- pydub: `pip install pydub` (if using sound)
+
+## Setup
+1. Create required folders:
+   - `images/` - Put your input images here
+   - `data/` - Put data files (CSV, JSON) here
+   - `output/` - Generated files will be saved here
+
+2. [Add any additional setup steps]
+
+## Usage
+```
+python main.py
+```
+
+## Features
+- [List main features]
+- [Feature 2]
+- [Feature 3]
+
+## Sample Data
+Sample images and data files are provided in the respective folders.
+
+## Output
+The program generates:
+- [Output type 1]
+- [Output type 2]
+- [etc.]
+
+## Notes
+[Any special notes or known limitations]
+\end{verbatim}
+
+\section{Testing Checklist}
+
+Before finalizing your project, verify:
+
+\begin{itemize}
+    \item[$\square$] Program runs without errors on sample data
+    \item[$\square$] All output files are created correctly
+    \item[$\square$] Code has comments explaining main sections
+    \item[$\square$] Functions have docstrings
+    \item[$\square$] README file is complete and accurate
+    \item[$\square$] Error messages are helpful
+    \item[$\square$] File paths work on different computers
+    \item[$\square$] Program handles missing files gracefully
+    \item[$\square$] Output is organized in proper folders
+    \item[$\square$] You can explain what each part does
+\end{itemize}
+
+\section{Common Pitfalls to Avoid}
+
+\begin{itemize}
+    \item \textbf{Scope too large:} Start simple, add features if time permits
+    \item \textbf{Hardcoded paths:} Use variables and relative paths
+    \item \textbf{No error handling:} Add try/except for file operations
+    \item \textbf{Poor organization:} Use functions, don't write everything in main()
+    \item \textbf{No documentation:} Add comments as you code, not at the end
+    \item \textbf{Not testing:} Test frequently with small inputs
+    \item \textbf{Forgetting README:} Write usage instructions
+\end{itemize}
+
+\section{Presentation Tips}
+
+When demonstrating your project:
+
+\begin{enumerate}
+    \item Explain what your project does (30 seconds)
+    \item Show the input files/data
+    \item Run the program
+    \item Show the generated output
+    \item Explain one interesting technical challenge you solved
+    \item Answer any questions
+\end{enumerate}
+
+\section{Bonus Extensions}
+
+If you finish early, consider adding:
+
+\begin{itemize}
+    \item Command-line arguments for customization
+    \item Configuration file for settings
+    \item Progress indicators during processing
+    \item More sophisticated error messages
+    \item Additional filters or effects
+    \item Performance optimizations
+    \item GUI interface using tkinter
+\end{itemize}
+
+\section{Resources}
+
+\textbf{Previous labs to reference:}
+\begin{itemize}
+    \item Lab 01-02: Basic Python, file I/O
+    \item Lab 03-05: Image processing and filters
+    \item Lab 06-07: Sound processing
+    \item Lab 08: Code organization and modules
+    \item Lab 09: Text and file processing
+    \item Lab 10: CSV and JSON data
+    \item Lab 11: Animation
+\end{itemize}
+
+\textbf{Python documentation:}
+\begin{itemize}
+    \item Pillow: \url{https://pillow.readthedocs.io}
+    \item pydub: \url{https://github.com/jiaaro/pydub}
+    \item Python standard library: \url{https://docs.python.org/3/library/}
+\end{itemize}
+
+\section{Example: Complete Mini-Project}
+
+Here's a complete example of a simple project to inspire you:
+
+\begin{lstlisting}
+"""
+Photo Frame Batch Processor
+Adds decorative frames to all images in a folder
+"""
+from PIL import Image
+import os
+
+def add_frame(img, frame_width=20, color=(0, 0, 0)):
+    """Add colored frame around image."""
+    old_width, old_height = img.size
+    new_width = old_width + 2 * frame_width
+    new_height = old_height + 2 * frame_width
+
+    framed = Image.new('RGB', (new_width, new_height), color)
+    framed.paste(img, (frame_width, frame_width))
+
+    return framed
+
+def process_folder(input_folder, output_folder):
+    """Process all images in folder."""
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    image_files = [f for f in os.listdir(input_folder)
+                   if f.lower().endswith(('.jpg', '.png'))]
+
+    print(f"Processing {len(image_files)} images...")
+
+    for filename in image_files:
+        try:
+            img = Image.open(os.path.join(input_folder, filename))
+            framed = add_frame(img, frame_width=30, color=(139, 69, 19))
+
+            output_path = os.path.join(output_folder, f"framed_{filename}")
+            framed.save(output_path)
+            print(f"  Processed: {filename}")
+        except Exception as e:
+            print(f"  Error with {filename}: {e}")
+
+    print(f"\nComplete! Check {output_folder} for results.")
+
+if __name__ == "__main__":
+    process_folder('images', 'output')
+\end{lstlisting}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your running project (demo it!)
+    \item Your organized code structure
+    \item Sample input and output files
+    \item Your README file
+    \item Explain one challenge you overcame
+\end{enumerate}
+
+\section{Congratulations!}
+
+You've completed all 12 labs of CSCI 128! You now have skills in:
+\begin{itemize}
+    \item Python programming fundamentals
+    \item Image processing and manipulation
+    \item Sound processing and effects
+    \item Text and data file handling
+    \item Animation and visual effects
+    \item Software organization and documentation
+\end{itemize}
+
+These skills form a strong foundation for further study in computer science, data science, digital media, and many other fields. Keep building projects and experimenting!
+
+\end{document}

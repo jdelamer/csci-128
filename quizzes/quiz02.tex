@@ -1,0 +1,80 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 2}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lecture 3 (Pictures and Pixels)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[1] What does RGB stand for, and what is the range of values for each color channel?
+\vspace{1.5in}
+
+\question[3] What RGB values would create the following colors?
+\begin{parts}
+    \part Pure red: \underline{\hspace{2in}}
+    \part White: \underline{\hspace{2in}}
+    \part Black: \underline{\hspace{2in}}
+\end{parts}
+
+\question[2] In digital images, what is a pixel?
+\vspace{1.5in}
+
+\question[3] What is the coordinate of the top-left pixel in an image? Explain the coordinate system used for images.
+\vspace{1.5in}
+
+\question[3] Given the following code, what does it do?
+\begin{lstlisting}
+from PIL import Image
+img = Image.open("photo.jpg")
+r, g, b =  img.getpixel((100, 50))
+print(r, g, b)
+\end{lstlisting}
+\vspace{2in}
+
+\question[3] Write Python code using Pillow to create a new 100×100 white image.
+\vspace{1.5in}
+
+
+
+\end{questions}
+
+\end{document}

@@ -1,0 +1,582 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{03}
+\labtitle{Picture Filters and Image Manipulation}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Apply image filters to create visual effects
+    \item Implement grayscale conversion using multiple methods
+    \item Create negative images by inverting colors
+    \item Adjust image brightness and contrast
+    \item Apply color tinting and sepia effects
+    \item Build threshold and posterize effects
+    \item Understand pixel-level image algorithms
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Show your working filter programs
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Welcome to the world of image filters! Today you'll learn to create effects like those in Instagram, Photoshop, and other photo editing apps. By manipulating RGB values systematically, you can dramatically change how images look. Get ready to become a digital artist!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab03}
+    \item Make sure Pillow is installed: \texttt{pip install Pillow}
+    \item Gather 3-5 test images (photos work best)
+    \item Put images in an \texttt{images} subfolder
+    \item Have a photo with people in it for best results
+\end{enumerate}
+
+\textbf{Recommended images:}
+\begin{itemize}
+    \item A landscape photo
+    \item A portrait photo
+    \item A colorful image
+    \item Download from \url{https://unsplash.com} if needed (free photos)
+\end{itemize}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Grayscale Conversion - Simple Average}
+
+Let's convert a color image to grayscale (black and white).
+
+\textbf{Create \texttt{grayscale\_simple.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Create new grayscale image
+gray = Image.new("RGB", (width, height))
+gray_pixels = gray.load()
+
+# Convert each pixel to grayscale
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Simple average method
+        gray_value = (r + g + b) // 3
+
+        # Set all three channels to the same value
+        gray_pixels[x, y] = (gray_value, gray_value, gray_value)
+
+gray.save("grayscale_simple.jpg")
+print("Created grayscale_simple.jpg")
+gray.show()
+\end{lstlisting}
+
+\textbf{Test your program:}
+\begin{enumerate}
+    \item Run it on different images
+    \item Compare the result to the original
+    \item Notice how colors become shades of gray
+\end{enumerate}
+
+\begin{note}
+When R, G, and B are all the same value, you get a shade of gray. (0,0,0) is black, (255,255,255) is white, and (128,128,128) is medium gray.
+\end{note}
+
+\task{Grayscale Conversion - Luminance Method}
+
+The simple average doesn't account for how human eyes perceive color. Let's use a better method!
+
+\textbf{Create \texttt{grayscale\_luminance.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Create new grayscale image
+gray = Image.new("RGB", (width, height))
+gray_pixels = gray.load()
+
+# Convert using luminance method
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Luminance method (weighted average)
+        # Human eyes are most sensitive to green
+        gray_value = int(0.299 * r + 0.587 * g + 0.114 * b)
+
+        gray_pixels[x, y] = (gray_value, gray_value, gray_value)
+
+gray.save("grayscale_luminance.jpg")
+print("Created grayscale_luminance.jpg")
+gray.show()
+\end{lstlisting}
+
+\textbf{Compare the two methods:}
+\begin{enumerate}
+    \item Run both programs on the same image
+    \item Open both outputs side-by-side
+    \item Which looks more natural?
+    \item Why do you think the luminance method uses those specific weights?
+\end{enumerate}
+
+\begin{hint}
+The luminance formula (0.299R + 0.587G + 0.114B) reflects how sensitive human eyes are to different colors. We're most sensitive to green, then red, then blue.
+\end{hint}
+
+\task{Negative Image Filter}
+
+Create a negative (like old film negatives) by inverting all colors.
+
+\textbf{Create \texttt{negative.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Create negative image
+negative = Image.new("RGB", (width, height))
+neg_pixels = negative.load()
+
+# Invert each color channel
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Invert by subtracting from 255
+        new_r = 255 - r
+        new_g = 255 - g
+        new_b = 255 - b
+
+        neg_pixels[x, y] = (new_r, new_g, new_b)
+
+negative.save("negative.jpg")
+print("Created negative.jpg")
+negative.show()
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item What happens when you apply the negative filter twice?
+    \item Try it on a black and white photo vs. a color photo
+    \item What RGB value stays the same when inverted? (Hint: it's gray)
+\end{enumerate}
+
+\task{Brightness Adjustment}
+
+Make images brighter or darker.
+
+\textbf{Create \texttt{brightness.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+def adjust_brightness(img, amount):
+    """
+    Adjust image brightness.
+    amount > 0 makes it brighter
+    amount < 0 makes it darker
+    """
+    width, height = img.size
+    pixels = img.load()
+
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+
+            # Add amount to each channel
+            new_r = max(0, min(255, r + amount))
+            new_g = max(0, min(255, g + amount))
+            new_b = max(0, min(255, b + amount))
+
+            result_pixels[x, y] = (new_r, new_g, new_b)
+
+    return result
+
+# Load and process image
+img = Image.open("images/sample.jpg")
+
+# Create brighter version
+brighter = adjust_brightness(img, 50)
+brighter.save("brighter.jpg")
+print("Created brighter.jpg")
+
+# Create darker version
+darker = adjust_brightness(img, -50)
+darker.save("darker.jpg")
+print("Created darker.jpg")
+
+# Show results
+brighter.show()
+darker.show()
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Try different brightness amounts: 20, 50, 100, -30
+    \item What happens with very large values like 200?
+    \item Why do we use \texttt{max(0, min(255, value))}?
+\end{enumerate}
+
+\task{Sepia Tone Filter}
+
+Create that vintage, old-photo look!
+
+\textbf{Create \texttt{sepia.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Create sepia image
+sepia = Image.new("RGB", (width, height))
+sepia_pixels = sepia.load()
+
+# Apply sepia tone
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Sepia tone formula
+        new_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+        new_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+        new_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+
+        # Clamp values to 0-255
+        new_r = min(255, new_r)
+        new_g = min(255, new_g)
+        new_b = min(255, new_b)
+
+        sepia_pixels[x, y] = (new_r, new_g, new_b)
+
+sepia.save("sepia.jpg")
+print("Created sepia.jpg")
+sepia.show()
+\end{lstlisting}
+
+\textbf{Variations to try:}
+\begin{enumerate}
+    \item Apply sepia to different photos
+    \item Combine sepia with brightness adjustment
+    \item Create a "light sepia" by blending 50\% original with 50\% sepia
+\end{enumerate}
+
+\task{Color Channel Manipulation}
+
+Explore what happens when you manipulate individual color channels.
+
+\textbf{Create \texttt{channel\_effects.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Effect 1: Remove red channel
+no_red = Image.new("RGB", (width, height))
+no_red_pixels = no_red.load()
+
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+        no_red_pixels[x, y] = (0, g, b)
+
+no_red.save("no_red.jpg")
+print("Created no_red.jpg")
+
+# Effect 2: Swap red and blue channels
+swap_rb = Image.new("RGB", (width, height))
+swap_pixels = swap_rb.load()
+
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+        swap_pixels[x, y] = (b, g, r)  # Swap R and B
+
+swap_rb.save("swap_rb.jpg")
+print("Created swap_rb.jpg")
+
+# Effect 3: Enhance one channel
+enhance_red = Image.new("RGB", (width, height))
+enhance_pixels = enhance_red.load()
+
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+        new_r = min(255, int(r * 1.5))  # 50% more red
+        enhance_pixels[x, y] = (new_r, g, b)
+
+enhance_red.save("enhance_red.jpg")
+print("Created enhance_red.jpg")
+
+# Show all results
+no_red.show()
+swap_rb.show()
+enhance_red.show()
+\end{lstlisting}
+
+\textbf{Create your own channel effects:}
+\begin{enumerate}
+    \item Remove green channel
+    \item Swap red and green
+    \item Double the blue channel
+    \item Create a "two-tone" effect (keep only 2 channels)
+\end{enumerate}
+
+\task{Threshold and Posterize Effects}
+
+\textbf{Create \texttt{threshold.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Effect 1: Binary threshold (black and white only)
+threshold_val = 128
+binary = Image.new("RGB", (width, height))
+binary_pixels = binary.load()
+
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Convert to grayscale first
+        gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+
+        # Threshold: if above threshold, white; else black
+        if gray > threshold_val:
+            binary_pixels[x, y] = (255, 255, 255)
+        else:
+            binary_pixels[x, y] = (0, 0, 0)
+
+binary.save("binary.jpg")
+print("Created binary.jpg")
+binary.show()
+
+# Effect 2: Posterize (reduce colors)
+levels = 4
+posterize = Image.new("RGB", (width, height))
+post_pixels = posterize.load()
+
+for y in range(height):
+    for x in range(width):
+        r, g, b = pixels[x, y]
+
+        # Reduce each channel to fewer levels
+        step = 256 // levels
+        new_r = (r // step) * step
+        new_g = (g // step) * step
+        new_b = (b // step) * step
+
+        post_pixels[x, y] = (new_r, new_g, new_b)
+
+posterize.save("posterize.jpg")
+print("Created posterize.jpg")
+posterize.show()
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Try different threshold values: 64, 128, 192
+    \item Change posterize levels: 2, 4, 8, 16
+    \item Create a three-tone image (low, mid, high values)
+\end{enumerate}
+
+\task{Mini-Project: Instagram-Style Filter}
+
+Create your own unique filter combining multiple effects!
+
+\textbf{Create \texttt{my\_filter.py}:}
+
+Your custom filter should:
+\begin{enumerate}
+    \item Have a creative name
+    \item Combine at least 2-3 effects
+    \item Be applied by calling a single function
+    \item Save the result
+\end{enumerate}
+
+\textbf{Example structure:}
+\begin{lstlisting}
+from PIL import Image
+
+def my_vintage_filter(img):
+    """
+    Custom vintage filter: sepia + vignette + slight fade
+    """
+    width, height = img.size
+    pixels = img.load()
+
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    center_x = width // 2
+    center_y = height // 2
+    max_dist = ((center_x ** 2) + (center_y ** 2)) ** 0.5
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+
+            # Apply sepia
+            new_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+            new_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+            new_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+
+            # Add vignette (darken edges)
+            dist = ((x - center_x)**2 + (y - center_y)**2)**0.5
+            factor = 1 - (dist / max_dist) * 0.5
+
+            new_r = int(min(255, new_r * factor))
+            new_g = int(min(255, new_g * factor))
+            new_b = int(min(255, new_b * factor))
+
+            # Slight fade (increase brightness slightly)
+            new_r = min(255, new_r + 20)
+            new_g = min(255, new_g + 20)
+            new_b = min(255, new_b + 20)
+
+            result_pixels[x, y] = (new_r, new_g, new_b)
+
+    return result
+
+# Apply your filter
+img = Image.open("images/sample.jpg")
+filtered = my_vintage_filter(img)
+filtered.save("my_filter.jpg")
+print("Created my_filter.jpg")
+filtered.show()
+\end{lstlisting}
+
+\textbf{Filter ideas:}
+\begin{itemize}
+    \item "Summer Vibes": Increase warmth (red/yellow), boost brightness
+    \item "Cool Blue": Blue tint + reduce reds + slight fade
+    \item "Dramatic": High contrast (stretch values), slight desaturation
+    \item "Soft Focus": Slight blur simulation using averaging
+    \item "Retro": Posterize + sepia + vignette
+\end{itemize}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Edge Detection}
+Create a simple edge detection filter by comparing adjacent pixels. If neighboring pixels differ significantly, draw a black line.
+
+\subsection*{Challenge 2: Color Swap}
+Make all blues become red, all reds become green, and all greens become blue.
+
+\subsection*{Challenge 3: Pixelation Effect}
+Create a pixelated version by averaging regions of pixels (like in censored images).
+
+\subsection*{Challenge 4: Contrast Adjustment}
+Create a function that increases or decreases image contrast. Hint: stretch or compress the range of values.
+
+\subsection*{Challenge 5: Filter Gallery}
+Create a program that applies ALL your filters to one image and saves them all with descriptive names.
+
+\section{Understanding the Code}
+
+\textbf{Key concepts:}
+
+\begin{itemize}
+    \item \textbf{Clamping:} Use \texttt{max(0, min(255, value))} to keep RGB values in range
+    \item \textbf{Weighted average:} Different weights for different channels (luminance)
+    \item \textbf{Matrix operations:} Sepia uses matrix multiplication (advanced)
+    \item \textbf{Distance formula:} $\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$ for vignettes
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{Images look wrong or corrupted:}
+\begin{itemize}
+    \item Check RGB values are 0-255
+    \item Make sure you're not mixing up x and y coordinates
+    \item Verify you're using integer values for RGB
+\end{itemize}
+
+\textbf{Program is very slow:}
+\begin{itemize}
+    \item Large images take time (millions of pixels!)
+    \item Test on smaller images first (resize before processing)
+    \item Be patient—nested loops are slow but necessary
+\end{itemize}
+
+\textbf{Colors don't look right:}
+\begin{itemize}
+    \item Double-check your formulas
+    \item Make sure you're not losing precision with integer division
+    \item Use \texttt{int()} to convert floats to integers
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Both grayscale methods (compare them side-by-side)
+    \item Your sepia tone filter
+    \item Your threshold/binary effect
+    \item Your custom Instagram-style filter
+    \item Explain what clamping is and why it's necessary
+\end{enumerate}
+
+\section{What's Next?}
+
+In Lab 04, we'll learn geometric transformations: rotating, flipping, cropping, and scaling images. We'll also learn to combine multiple images into collages!
+
+\end{document}

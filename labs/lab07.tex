@@ -1,0 +1,757 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{07}
+\labtitle{Advanced Sound Techniques}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Create echo and delay effects
+    \item Mix multiple sounds together
+    \item Change sound speed and pitch
+    \item Splice and combine audio files
+    \item Generate complex tones and chords
+    \item Build custom sound effects processors
+    \item Understand audio sample manipulation
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your sound programs
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Building on Lab 06, today you'll create sophisticated audio effects! You'll learn to mix multiple sounds, create echoes, manipulate playback speed, and build a complete audio effects toolkit. These techniques are used in music production, podcasting, and sound design.
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab07}
+    \item Ensure libraries are installed:
+    \begin{verbatim}
+    pip install pydub
+    pip install numpy
+    \end{verbatim}
+    \item Verify ffmpeg is installed
+    \item Gather multiple sound files:
+    \begin{itemize}
+        \item 2-3 music clips
+        \item A voice recording
+        \item Sound effects (clap, drum, etc.)
+    \end{itemize}
+    \item Put audio files in a \texttt{sounds} subfolder
+    \item Bring headphones
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Creating Echo Effects}
+
+Add echo (delay with decay) to sounds.
+
+\textbf{Create \texttt{echo.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+import numpy as np
+
+def add_echo(sound, delay_ms=500, decay=0.6):
+    """
+    Add echo effect to a sound.
+    delay_ms: time between echoes in milliseconds
+    decay: volume reduction for echo (0.0-1.0)
+    """
+    # Convert to numpy array
+    samples = np.array(sound.get_array_of_samples())
+
+    # Calculate delay in samples
+    delay_samples = int(delay_ms * sound.frame_rate / 1000)
+
+    # Create output array (need extra space for echo)
+    output_length = len(samples) + delay_samples * 3
+    output = np.zeros(output_length, dtype=samples.dtype)
+
+    # Add original sound
+    output[:len(samples)] = samples
+
+    # Add echoes (3 repetitions with decay)
+    for i in range(1, 4):
+        start = delay_samples * i
+        end = start + len(samples)
+        volume = decay ** i
+        output[start:end] += (samples * volume).astype(samples.dtype)
+
+    # Normalize to prevent clipping
+    max_val = np.abs(output).max()
+    if max_val > 32767:
+        output = (output * 32767 / max_val).astype(samples.dtype)
+
+    # Convert back to AudioSegment
+    result = sound._spawn(output.tobytes())
+    return result
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+print("Original sound:")
+play(sound)
+
+# Apply echo
+echoed = add_echo(sound, delay_ms=500, decay=0.6)
+print("\nWith echo (500ms delay):")
+play(echoed)
+echoed.export("echoed.wav", format="wav")
+
+# Short echo (slap-back)
+slapback = add_echo(sound, delay_ms=100, decay=0.5)
+print("\nWith slapback echo (100ms):")
+play(slapback)
+slapback.export("slapback.wav", format="wav")
+
+# Long echo (cathedral)
+cathedral = add_echo(sound, delay_ms=800, decay=0.7)
+print("\nWith cathedral echo (800ms):")
+play(cathedral)
+cathedral.export("cathedral.wav", format="wav")
+
+print("\nCreated: echoed.wav, slapback.wav, cathedral.wav")
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Try different delay times: 200ms, 400ms, 1000ms
+    \item Adjust decay: 0.3 (quick fade), 0.8 (long echo)
+    \item Add more echo repetitions (5-6 echoes)
+    \item Apply echo to voice recording
+\end{enumerate}
+
+\task{Mixing Multiple Sounds}
+
+Combine multiple audio files into one.
+
+\textbf{Create \texttt{mix\_sounds.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load multiple sounds
+music = AudioSegment.from_file("sounds/music.wav")
+voice = AudioSegment.from_file("sounds/voice.wav")
+effect = AudioSegment.from_file("sounds/effect.wav")
+
+print("Playing individual sounds:")
+print("1. Music:")
+play(music[:5000])  # First 5 seconds
+
+print("2. Voice:")
+play(voice[:5000])
+
+print("3. Effect:")
+play(effect[:3000])
+
+# Mix 1: Overlay (play simultaneously)
+# Music as background, voice on top
+mixed = music.overlay(voice)
+print("\nMixed (music + voice overlay):")
+play(mixed[:10000])
+mixed.export("mixed_overlay.wav", format="wav")
+
+# Mix 2: Overlay with position
+# Start voice 2 seconds into music
+mixed_delayed = music.overlay(voice, position=2000)
+print("\nMixed (voice starts at 2 seconds):")
+play(mixed_delayed[:10000])
+mixed_delayed.export("mixed_delayed.wav", format="wav")
+
+# Mix 3: Overlay with volume adjustment
+# Lower music volume, keep voice prominent
+quiet_music = music - 10  # Reduce by 10 dB
+mixed_balanced = quiet_music.overlay(voice)
+print("\nMixed (balanced volumes):")
+play(mixed_balanced[:10000])
+mixed_balanced.export("mixed_balanced.wav", format="wav")
+
+# Mix 4: Add sound effect at specific time
+soundtrack = music.overlay(effect, position=3000)
+soundtrack = soundtrack.overlay(effect, position=6000)
+print("\nSoundtrack (music + effects at 3s and 6s):")
+play(soundtrack[:10000])
+soundtrack.export("soundtrack.wav", format="wav")
+
+# Mix 5: Sequential (concatenate)
+sequence = voice + music + effect
+print("\nSequence (voice -> music -> effect):")
+play(sequence[:10000])
+sequence.export("sequence.wav", format="wav")
+
+print("\nCreated multiple mixed audio files")
+\end{lstlisting}
+
+\textbf{Mixing experiments:}
+\begin{enumerate}
+    \item Mix 3 or more sounds together
+    \item Create a music track with sound effects at intervals
+    \item Balance volumes so all sounds are audible
+    \item Create a radio-style intro (music, then voice, then fade)
+\end{enumerate}
+
+\task{Speed and Pitch Manipulation}
+
+Change how fast or high a sound plays.
+
+\textbf{Create \texttt{speed\_pitch.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+def change_speed(sound, speed=1.0):
+    """
+    Change playback speed.
+    speed > 1.0: faster, speed < 1.0: slower
+    Note: This also changes pitch!
+    """
+    sound_with_altered_frame_rate = sound._spawn(
+        sound.raw_data,
+        overrides={"frame_rate": int(sound.frame_rate * speed)}
+    )
+    return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+print("Original speed:")
+play(sound[:5000])
+
+# Speed up (chipmunk effect)
+faster = change_speed(sound, 1.5)
+print("\n1.5x speed (higher pitch):")
+play(faster[:5000])
+faster.export("faster.wav", format="wav")
+
+# Even faster
+very_fast = change_speed(sound, 2.0)
+print("\n2x speed (very high pitch):")
+play(very_fast[:5000])
+very_fast.export("very_fast.wav", format="wav")
+
+# Slow down (deep voice)
+slower = change_speed(sound, 0.75)
+print("\n0.75x speed (lower pitch):")
+play(slower[:5000])
+slower.export("slower.wav", format="wav")
+
+# Very slow
+very_slow = change_speed(sound, 0.5)
+print("\n0.5x speed (very low pitch):")
+play(very_slow[:5000])
+very_slow.export("very_slow.wav", format="wav")
+
+# Create a glissando effect (gradual speed change)
+gliss_parts = []
+for speed in [1.0, 1.1, 1.2, 1.3, 1.4, 1.5]:
+    part = change_speed(sound[:1000], speed)
+    gliss_parts.append(part)
+
+glissando = sum(gliss_parts)
+print("\nGlissando (gradually faster):")
+play(glissando)
+glissando.export("glissando.wav", format="wav")
+
+print("\nCreated: faster.wav, slower.wav, glissando.wav, etc.")
+\end{lstlisting}
+
+\textbf{Speed experiments:}
+\begin{enumerate}
+    \item Create "chipmunk voice" (1.5x - 2x speed)
+    \item Create "monster voice" (0.5x - 0.75x speed)
+    \item Speed up music without making it too high-pitched
+    \item Create a "rewind" effect (reverse + speed up)
+\end{enumerate}
+
+\task{Advanced Slicing and Splicing}
+
+Cut and rearrange audio creatively.
+
+\textbf{Create \texttt{splice.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+duration = len(sound)
+
+print(f"Original duration: {duration}ms")
+
+# Technique 1: Stutter effect
+stutter_length = 100  # ms
+stutter = sound[:stutter_length]
+stuttered = sum([stutter] * 5)  # Repeat 5 times
+print("\nStutter effect:")
+play(stuttered)
+stuttered.export("stutter.wav", format="wav")
+
+# Technique 2: Chop and rearrange
+# Divide into 4 sections
+section_length = duration // 4
+sections = [
+    sound[0:section_length],
+    sound[section_length:section_length*2],
+    sound[section_length*2:section_length*3],
+    sound[section_length*3:section_length*4]
+]
+
+# Rearrange: 4, 2, 3, 1
+rearranged = sections[3] + sections[1] + sections[2] + sections[0]
+print("\nRearranged sections:")
+play(rearranged)
+rearranged.export("rearranged.wav", format="wav")
+
+# Technique 3: Random shuffle
+import random
+num_slices = 8
+slice_length = duration // num_slices
+slices = [sound[i*slice_length:(i+1)*slice_length]
+          for i in range(num_slices)]
+random.shuffle(slices)
+shuffled = sum(slices)
+print("\nShuffled slices:")
+play(shuffled)
+shuffled.export("shuffled.wav", format="wav")
+
+# Technique 4: Reverse sections alternating
+forward_back = AudioSegment.empty()
+for i in range(0, duration, 1000):
+    segment = sound[i:i+1000]
+    if (i // 1000) % 2 == 0:
+        forward_back += segment
+    else:
+        forward_back += segment.reverse()
+print("\nAlternating forward/backward:")
+play(forward_back)
+forward_back.export("forward_back.wav", format="wav")
+
+# Technique 5: Skip every other beat
+skip_beat = AudioSegment.empty()
+for i in range(0, duration, 500):
+    if (i // 500) % 2 == 0:
+        skip_beat += sound[i:i+500]
+print("\nSkip every other beat:")
+play(skip_beat)
+skip_beat.export("skip_beat.wav", format="wav")
+
+print("\nCreated multiple spliced audio files")
+\end{lstlisting}
+
+\textbf{Splicing experiments:}
+\begin{enumerate}
+    \item Create a "scratch" DJ effect
+    \item Reverse every word in a sentence
+    \item Create rhythmic patterns by repeating small sections
+    \item Build a new melody from rearranged music sections
+\end{enumerate}
+
+\task{Synthesizing Complex Sounds}
+
+Create sophisticated tones and sound effects.
+
+\textbf{Create \texttt{synthesize.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.generators import Sine, Square, Sawtooth, WhiteNoise
+from pydub.playback import play
+
+# Create musical scale
+def create_scale(base_freq=262, waveform=Sine):
+    """Create a major scale starting at base_freq"""
+    # Major scale intervals: whole, whole, half, whole, whole, whole, half
+    intervals = [0, 2, 4, 5, 7, 9, 11, 12]
+    scale = AudioSegment.empty()
+
+    for interval in intervals:
+        freq = base_freq * (2 ** (interval / 12))
+        note = waveform(freq).to_audio_segment(duration=300)
+        # Add fade to make it smoother
+        note = note.fade_in(10).fade_out(10)
+        scale += note
+
+    return scale
+
+# Create C major scale
+c_scale = create_scale(262, Sine)
+print("C major scale:")
+play(c_scale)
+c_scale.export("c_scale.wav", format="wav")
+
+# Create alarm sound
+def create_alarm():
+    """Create alternating high/low tone alarm"""
+    high = Sine(800).to_audio_segment(duration=200)
+    low = Sine(400).to_audio_segment(duration=200)
+    alarm = (high + low) * 5
+    return alarm
+
+alarm = create_alarm()
+print("\nAlarm sound:")
+play(alarm)
+alarm.export("alarm.wav", format="wav")
+
+# Create siren
+def create_siren():
+    """Create police siren sound"""
+    siren = AudioSegment.empty()
+    # Sweep from 600 Hz to 1200 Hz
+    for freq in range(600, 1200, 20):
+        tone = Sine(freq).to_audio_segment(duration=50)
+        siren += tone
+    # Sweep back down
+    for freq in range(1200, 600, -20):
+        tone = Sine(freq).to_audio_segment(duration=50)
+        siren += tone
+    return siren * 3
+
+siren = create_siren()
+print("\nSiren sound:")
+play(siren)
+siren.export("siren.wav", format="wav")
+
+# Create drum-like sounds
+kick = Sine(60).to_audio_segment(duration=200).fade_out(150)
+snare = WhiteNoise().to_audio_segment(duration=100).fade_out(80) - 10
+hihat = WhiteNoise().to_audio_segment(duration=50).fade_out(40) - 15
+
+# Create simple beat
+beat = kick
+beat = beat.overlay(snare, position=250)
+beat = beat.overlay(hihat, position=125)
+beat = beat.overlay(hihat, position=375)
+beat = beat.overlay(kick, position=500)
+beat = beat.overlay(snare, position=750)
+beat = beat.overlay(hihat, position=625)
+beat = beat.overlay(hihat, position=875)
+
+beat = beat * 4  # Repeat 4 times
+print("\nSimple drum beat:")
+play(beat)
+beat.export("beat.wav", format="wav")
+
+# Create chord progression
+def create_chord(frequencies, duration=1000):
+    """Create a chord from multiple frequencies"""
+    chord = Sine(frequencies[0]).to_audio_segment(duration=duration)
+    for freq in frequencies[1:]:
+        tone = Sine(freq).to_audio_segment(duration=duration)
+        chord = chord.overlay(tone)
+    return chord.fade_in(50).fade_out(50)
+
+# C major - F major - G major - C major progression
+c_major = create_chord([262, 330, 392])
+f_major = create_chord([349, 440, 523])
+g_major = create_chord([392, 494, 587])
+
+progression = c_major + f_major + g_major + c_major
+print("\nChord progression:")
+play(progression)
+progression.export("progression.wav", format="wav")
+
+print("\nCreated: c_scale.wav, alarm.wav, siren.wav, beat.wav, progression.wav")
+\end{lstlisting}
+
+\textbf{Synthesis experiments:}
+\begin{enumerate}
+    \item Create a doorbell sound (two tones)
+    \item Make a phone ring tone
+    \item Synthesize a simple melody (Happy Birthday, Jingle Bells)
+    \item Create a more complex drum pattern
+    \item Make a "laser" sound effect (sweep down rapidly)
+\end{enumerate}
+
+\task{Mini-Project: Sound Effects Studio}
+
+Build a complete sound effects processor with multiple effects.
+
+\textbf{Create \texttt{sound\_studio.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+import numpy as np
+
+class SoundStudio:
+    """A complete sound effects processing studio"""
+
+    def __init__(self, sound):
+        self.original = sound
+        self.current = sound
+        self.history = [sound]
+
+    def add_echo(self, delay_ms=500, decay=0.6):
+        """Add echo effect"""
+        samples = np.array(self.current.get_array_of_samples())
+        delay_samples = int(delay_ms * self.current.frame_rate / 1000)
+        output_length = len(samples) + delay_samples * 3
+        output = np.zeros(output_length, dtype=samples.dtype)
+        output[:len(samples)] = samples
+
+        for i in range(1, 4):
+            start = delay_samples * i
+            end = start + len(samples)
+            volume = decay ** i
+            output[start:end] += (samples * volume).astype(samples.dtype)
+
+        self.current = self.current._spawn(output.tobytes())
+        self.history.append(self.current)
+        return self
+
+    def change_speed(self, speed=1.0):
+        """Change playback speed"""
+        altered = self.current._spawn(
+            self.current.raw_data,
+            overrides={"frame_rate": int(self.current.frame_rate * speed)}
+        )
+        self.current = altered.set_frame_rate(self.current.frame_rate)
+        self.history.append(self.current)
+        return self
+
+    def adjust_volume(self, db):
+        """Adjust volume in decibels"""
+        self.current = self.current + db
+        self.history.append(self.current)
+        return self
+
+    def reverse(self):
+        """Reverse the sound"""
+        self.current = self.current.reverse()
+        self.history.append(self.current)
+        return self
+
+    def fade(self, fade_in_ms=1000, fade_out_ms=1000):
+        """Add fade in and out"""
+        self.current = self.current.fade_in(fade_in_ms).fade_out(fade_out_ms)
+        self.history.append(self.current)
+        return self
+
+    def loop(self, times=2):
+        """Loop the sound"""
+        self.current = self.current * times
+        self.history.append(self.current)
+        return self
+
+    def trim(self, start_ms=0, end_ms=None):
+        """Trim to specific duration"""
+        if end_ms is None:
+            self.current = self.current[start_ms:]
+        else:
+            self.current = self.current[start_ms:end_ms]
+        self.history.append(self.current)
+        return self
+
+    def reset(self):
+        """Reset to original sound"""
+        self.current = self.original
+        self.history = [self.original]
+        return self
+
+    def undo(self):
+        """Undo last effect"""
+        if len(self.history) > 1:
+            self.history.pop()
+            self.current = self.history[-1]
+        return self
+
+    def play(self):
+        """Play current sound"""
+        play(self.current)
+        return self
+
+    def save(self, filename):
+        """Save current sound"""
+        self.current.export(filename, format="wav")
+        print(f"Saved: {filename}")
+        return self
+
+# Example usage
+sound = AudioSegment.from_file("sounds/sample.wav")
+studio = SoundStudio(sound)
+
+# Chain multiple effects
+print("Creating effect chain...")
+result = (studio
+    .trim(0, 5000)
+    .adjust_volume(-3)
+    .add_echo(delay_ms=400, decay=0.5)
+    .fade(fade_in_ms=500, fade_out_ms=500)
+    .save("studio_output.wav")
+    .play())
+
+# Create another effect
+studio.reset()
+result2 = (studio
+    .change_speed(1.3)
+    .loop(2)
+    .adjust_volume(3)
+    .save("studio_output2.wav")
+    .play())
+
+# Interactive mode
+def interactive_studio():
+    sound = AudioSegment.from_file("sounds/sample.wav")
+    studio = SoundStudio(sound)
+
+    while True:
+        print("\n=== Sound Effects Studio ===")
+        print("1. Add echo")
+        print("2. Change speed")
+        print("3. Adjust volume")
+        print("4. Reverse")
+        print("5. Add fades")
+        print("6. Loop")
+        print("7. Trim")
+        print("8. Play current")
+        print("9. Undo last effect")
+        print("10. Save and exit")
+        print("0. Exit without saving")
+
+        choice = input("\nSelect option: ")
+
+        if choice == "1":
+            delay = int(input("Echo delay (ms): "))
+            decay = float(input("Decay (0.0-1.0): "))
+            studio.add_echo(delay, decay)
+            print("Echo added!")
+        elif choice == "2":
+            speed = float(input("Speed (1.0 = normal): "))
+            studio.change_speed(speed)
+            print("Speed changed!")
+        elif choice == "3":
+            db = float(input("Volume adjustment (dB): "))
+            studio.adjust_volume(db)
+            print("Volume adjusted!")
+        elif choice == "4":
+            studio.reverse()
+            print("Reversed!")
+        elif choice == "5":
+            fade_in = int(input("Fade in (ms): "))
+            fade_out = int(input("Fade out (ms): "))
+            studio.fade(fade_in, fade_out)
+            print("Fades added!")
+        elif choice == "6":
+            times = int(input("Loop how many times: "))
+            studio.loop(times)
+            print("Looped!")
+        elif choice == "7":
+            start = int(input("Start (ms): "))
+            end = int(input("End (ms, 0 for end): "))
+            studio.trim(start, end if end > 0 else None)
+            print("Trimmed!")
+        elif choice == "8":
+            print("Playing...")
+            studio.play()
+        elif choice == "9":
+            studio.undo()
+            print("Undone!")
+        elif choice == "10":
+            filename = input("Save as: ")
+            studio.save(filename)
+            break
+        elif choice == "0":
+            break
+        else:
+            print("Invalid choice!")
+
+# Uncomment to run interactive mode
+# interactive_studio()
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Karaoke Track}
+Remove vocals from a music track by inverting one stereo channel and mixing with the other.
+
+\subsection*{Challenge 2: Beat Slicer}
+Automatically detect beats in music and create variations by rearranging beat segments.
+
+\subsection*{Challenge 3: Vocoder Effect}
+Create a robotic voice effect by modulating voice with a carrier tone.
+
+\subsection*{Challenge 4: Time Stretch}
+Change duration without changing pitch (requires more advanced processing).
+
+\subsection*{Challenge 5: Multi-track Mixer}
+Create a 4-track mixer that balances multiple sounds with individual volume controls.
+
+\section{Common Issues}
+
+\textbf{Clipping/distortion:}
+\begin{itemize}
+    \item Reduce volume before mixing: \texttt{sound - 6}
+    \item Normalize after processing
+    \item Check for values exceeding 32767
+\end{itemize}
+
+\textbf{Echo sounds wrong:}
+\begin{itemize}
+    \item Adjust delay time
+    \item Reduce decay factor
+    \item Check sample rate matches
+\end{itemize}
+
+\textbf{Speed change affects pitch:}
+\begin{itemize}
+    \item This is expected with simple speed change
+    \item Professional pitch shifting requires FFT processing
+    \item Use moderate speed changes (0.75x - 1.5x)
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your echo effect with adjustable parameters
+    \item A mixed audio file combining at least 3 sounds
+    \item Speed/pitch manipulation examples
+    \item Your sound studio with chained effects
+    \item Explain how echo is created (delay + decay)
+\end{enumerate}
+
+\section{What's Next?}
+
+In Lab 08, we'll learn to organize code into modules, write reusable functions, and build larger programs. We'll apply software engineering practices to our media processing projects!
+
+\end{document}

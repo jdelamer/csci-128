@@ -1,0 +1,79 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 3}
+\examdate{Fall 2024}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lectures 5-6 (Transformations and Collages)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[2] What coordinate transformation is needed to mirror an image horizontally? If an image has width $W$ and a pixel is at position $x$, what is its new position after mirroring?
+\vspace{1.5in}
+
+\question[3] When rotating an image 90 degrees clockwise, what happens to the image dimensions?
+\begin{parts}
+    \part If the original image is 800×600, what are the dimensions after rotation?
+    \part Why do the dimensions change?
+\end{parts}
+\vspace{1.5in}
+
+\question[2] What is the difference between cropping and scaling an image?
+\vspace{1.5in}
+
+\question[3] In the context of image processing, what does it mean to "paste" one image onto another? What information do you need to perform this operation?
+\vspace{1.5in}
+
+\question[3] Given two images of the same size, explain how image blending works. What does the alpha parameter control?
+\vspace{1.5in}
+
+\question[2] Write Python code using Pillow to paste one image onto another at position (50, 50).
+\begin{lstlisting}[numbers=none]
+
+
+\end{lstlisting}
+\vspace{0.5in}
+
+\question[2] What is chromakey (green screen) compositing?
+\vspace{1.5in}
+
+\end{questions}
+
+\end{document}

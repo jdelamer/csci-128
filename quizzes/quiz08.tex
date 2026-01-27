@@ -1,0 +1,75 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 8}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lecture 11 (Web Data and Structured Data)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[2] What does CSV stand for? Why is CSV a popular format for storing structured data?
+\vspace{1.5in}
+
+\question[3] Given the following CSV data:
+\begin{lstlisting}[numbers=none]
+name,age,city
+Alice,25,Boston
+Bob,30,Seattle
+\end{lstlisting}
+If you read this file and split the first data line by commas, what would be at index 2?
+\vspace{1in}
+
+\question[3] Write Python code to read a CSV file called \texttt{images.csv} and print the first column of each row (skip the header).
+\vspace{1.5in}
+
+\question[2] What is the \texttt{csv} module in Python used for? Name one advantage of using it instead of manually splitting strings.
+\vspace{1.5in}
+
+\question[3] If you have a list of dictionaries containing image metadata (filename, width, height), write code to create a text report listing each filename and its dimensions.
+
+\vspace{1.5in}
+
+\question[2] What is the purpose of combining structured data (like CSV) with media processing? Give one practical example.
+\vspace{1.5in}
+
+\end{questions}
+
+\end{document}

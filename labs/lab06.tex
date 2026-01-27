@@ -1,0 +1,580 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{06}
+\labtitle{Sound Processing Basics}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Understand digital sound representation
+    \item Learn about samples, sample rate, and amplitude
+    \item Install and use audio processing libraries (pydub)
+    \item Load, play, and save sound files
+    \item Access and modify individual sound samples
+    \item Create basic sound effects (volume, reverse, fade)
+    \item Generate simple tones programmatically
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your sound programs (bring headphones!)
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Today we switch from visual media (images) to audio media (sounds)! Just like images are made of pixels, sounds are made of samples. You'll learn how digital audio works and create programs to manipulate sound files. By the end of this lab, you'll be able to modify sounds and create your own audio effects!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab06}
+    \item Install required libraries:
+    \begin{verbatim}
+    pip install pydub
+    pip install numpy
+    \end{verbatim}
+    \item \textbf{Important:} You also need ffmpeg installed on your system:
+    \begin{itemize}
+        \item \textbf{Windows:} Download from \url{https://ffmpeg.org/download.html}
+        \item \textbf{Mac:} \texttt{brew install ffmpeg}
+        \item \textbf{Linux:} \texttt{sudo apt-get install ffmpeg}
+    \end{itemize}
+    \item Gather test audio files (WAV or MP3):
+    \begin{itemize}
+        \item A music clip (30 seconds or less)
+        \item A voice recording
+        \item A sound effect
+        \item Download free sounds from \url{https://freesound.org} if needed
+    \end{itemize}
+    \item Put audio files in a \texttt{sounds} subfolder
+    \item \textbf{Bring headphones!}
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Understanding Sound as Data}
+
+Let's explore what sound looks like as data.
+
+\textbf{Create \texttt{sound\_info.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+import numpy as np
+
+# Load a sound file
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+# Get sound properties
+print("=== Sound Information ===")
+print(f"Duration: {len(sound)} milliseconds")
+print(f"Duration: {len(sound) / 1000} seconds")
+print(f"Sample rate: {sound.frame_rate} Hz")
+print(f"Channels: {sound.channels} (1=mono, 2=stereo)")
+print(f"Sample width: {sound.sample_width} bytes")
+print(f"Frame count: {sound.frame_count()}")
+
+# Calculate total samples
+total_samples = sound.frame_count() * sound.channels
+print(f"Total samples: {total_samples}")
+
+# Play the sound
+print("\nPlaying sound...")
+play(sound)
+
+# Get raw sample data
+samples = np.array(sound.get_array_of_samples())
+print(f"\nFirst 10 sample values: {samples[:10]}")
+print(f"Min amplitude: {samples.min()}")
+print(f"Max amplitude: {samples.max()}")
+print(f"Average amplitude: {samples.mean():.2f}")
+\end{lstlisting}
+
+\textbf{Understand the output:}
+\begin{itemize}
+    \item \textbf{Sample rate:} Samples per second (typically 44100 Hz)
+    \item \textbf{Channels:} Mono (1) or Stereo (2)
+    \item \textbf{Amplitude:} The "height" of the sound wave (volume)
+    \item \textbf{Frame:} One set of samples (1 for mono, 2 for stereo)
+\end{itemize}
+
+\begin{note}
+Just like images are 2D grids of pixels, sounds are 1D sequences of samples over time!
+\end{note}
+
+\task{Adjusting Volume}
+
+Make sounds louder or quieter.
+
+\textbf{Create \texttt{volume.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+print("Original sound:")
+play(sound)
+
+# Increase volume by 6 dB (decibels)
+louder = sound + 6
+print("\nLouder (+6 dB):")
+play(louder)
+louder.export("louder.wav", format="wav")
+
+# Decrease volume by 6 dB
+quieter = sound - 6
+print("\nQuieter (-6 dB):")
+play(quieter)
+quieter.export("quieter.wav", format="wav")
+
+# Half volume (approximately -6 dB)
+half_volume = sound - 6
+print("\nHalf volume:")
+play(half_volume)
+
+# Double volume (approximately +6 dB)
+double_volume = sound + 6
+print("\nDouble volume:")
+play(double_volume)
+
+print("\nCreated: louder.wav, quieter.wav")
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Try different dB values: +12, -12, +3, -3
+    \item What happens with very large positive values?
+    \item Can you make a sound silent? (Try -100 dB)
+    \item Create a function that takes a volume adjustment parameter
+\end{enumerate}
+
+\begin{hint}
+In audio, decibels (dB) are logarithmic. +6 dB is roughly double the volume, -6 dB is roughly half.
+\end{hint}
+
+\task{Reversing Sound}
+
+Play sound backwards!
+
+\textbf{Create \texttt{reverse\_sound.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+print("Original sound:")
+play(sound)
+
+# Reverse the sound
+reversed_sound = sound.reverse()
+
+print("\nReversed sound:")
+play(reversed_sound)
+
+# Save reversed version
+reversed_sound.export("reversed.wav", format="wav")
+print("Created reversed.wav")
+
+# Try reversing twice (should sound like original)
+double_reversed = reversed_sound.reverse()
+print("\nDouble reversed (should match original):")
+play(double_reversed)
+\end{lstlisting}
+
+\textbf{Cool experiments:}
+\begin{enumerate}
+    \item Reverse a voice recording - can you understand it?
+    \item Reverse music - notice the weird sound!
+    \item Record yourself saying your name backwards, then reverse it
+    \item Combine forward and reverse (play original, then reversed)
+\end{enumerate}
+
+\task{Fade In and Fade Out}
+
+Create smooth volume transitions.
+
+\textbf{Create \texttt{fades.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+# Apply fade in (2 seconds)
+fade_in_duration = 2000  # milliseconds
+faded_in = sound.fade_in(fade_in_duration)
+print("Playing with fade in:")
+play(faded_in)
+faded_in.export("fade_in.wav", format="wav")
+
+# Apply fade out (2 seconds)
+fade_out_duration = 2000
+faded_out = sound.fade_out(fade_out_duration)
+print("\nPlaying with fade out:")
+play(faded_out)
+faded_out.export("fade_out.wav", format="wav")
+
+# Apply both fade in and fade out
+both_fades = sound.fade_in(fade_in_duration).fade_out(fade_out_duration)
+print("\nPlaying with both fades:")
+play(both_fades)
+both_fades.export("both_fades.wav", format="wav")
+
+# Short fades (0.5 seconds) for smooth cuts
+smooth_cut = sound.fade_in(500).fade_out(500)
+print("\nPlaying with smooth cut:")
+play(smooth_cut)
+smooth_cut.export("smooth_cut.wav", format="wav")
+
+print("\nCreated: fade_in.wav, fade_out.wav, both_fades.wav, smooth_cut.wav")
+\end{lstlisting}
+
+\textbf{Try different fade durations:}
+\begin{enumerate}
+    \item Very short: 100ms, 250ms
+    \item Medium: 1000ms, 1500ms
+    \item Long: 3000ms, 5000ms
+    \item What sounds most natural?
+\end{enumerate}
+
+\task{Slicing and Combining Sounds}
+
+Cut and paste audio like you cut and paste images!
+
+\textbf{Create \texttt{slice\_sounds.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Load sound
+sound = AudioSegment.from_file("sounds/sample.wav")
+
+# Get duration
+duration_ms = len(sound)
+print(f"Original duration: {duration_ms}ms ({duration_ms/1000}s)")
+
+# Extract first 3 seconds
+first_part = sound[:3000]  # 0 to 3000 milliseconds
+print("\nPlaying first 3 seconds:")
+play(first_part)
+first_part.export("first_3_seconds.wav", format="wav")
+
+# Extract last 3 seconds
+last_part = sound[-3000:]  # Last 3000 milliseconds
+print("\nPlaying last 3 seconds:")
+play(last_part)
+last_part.export("last_3_seconds.wav", format="wav")
+
+# Extract middle section
+middle_start = duration_ms // 3
+middle_end = (duration_ms * 2) // 3
+middle_part = sound[middle_start:middle_end]
+print("\nPlaying middle section:")
+play(middle_part)
+middle_part.export("middle_section.wav", format="wav")
+
+# Combine: first + last (skip middle)
+combined = first_part + last_part
+print("\nPlaying combined (first + last):")
+play(combined)
+combined.export("combined.wav", format="wav")
+
+# Repeat a section
+repeated = first_part * 3  # Repeat 3 times
+print("\nPlaying repeated section:")
+play(repeated)
+repeated.export("repeated.wav", format="wav")
+
+print("\nCreated multiple sliced audio files")
+\end{lstlisting}
+
+\textbf{Slicing experiments:}
+\begin{enumerate}
+    \item Extract just the first word from a speech recording
+    \item Take the first and last second, combine them
+    \item Create a loop by repeating a short section
+    \item Rearrange sections: last + middle + first
+\end{enumerate}
+
+\begin{note}
+Slicing syntax: \texttt{sound[start:end]} where times are in milliseconds.
+\texttt{sound[:1000]} = first second, \texttt{sound[-1000:]} = last second
+\end{note}
+
+\task{Generating Tones}
+
+Create sounds from scratch using mathematical functions!
+
+\textbf{Create \texttt{generate\_tones.py}:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.generators import Sine, Square, Sawtooth
+from pydub.playback import play
+
+# Generate a sine wave (pure tone)
+# Parameters: frequency (Hz), duration (ms)
+sine_wave = Sine(440).to_audio_segment(duration=1000)
+print("Playing 440 Hz sine wave (A note):")
+play(sine_wave)
+sine_wave.export("sine_440.wav", format="wav")
+
+# Different frequencies
+frequencies = [262, 330, 392, 523]  # C, E, G, C (major chord notes)
+print("\nPlaying major chord notes:")
+for freq in frequencies:
+    tone = Sine(freq).to_audio_segment(duration=500)
+    play(tone)
+
+# Generate chord (play multiple tones together)
+chord = Sine(262).to_audio_segment(duration=1000)  # C
+chord = chord.overlay(Sine(330).to_audio_segment(duration=1000))  # E
+chord = chord.overlay(Sine(392).to_audio_segment(duration=1000))  # G
+print("\nPlaying C major chord:")
+play(chord)
+chord.export("c_major_chord.wav", format="wav")
+
+# Different waveforms
+print("\nComparing waveforms at 440 Hz:")
+
+sine = Sine(440).to_audio_segment(duration=1000)
+print("Sine wave (smooth, pure):")
+play(sine)
+
+square = Square(440).to_audio_segment(duration=1000)
+print("Square wave (harsh, electronic):")
+play(square)
+
+sawtooth = Sawtooth(440).to_audio_segment(duration=1000)
+print("Sawtooth wave (buzzy, rich):")
+play(sawtooth)
+
+# Create a simple melody
+melody = Sine(262).to_audio_segment(duration=300)  # C
+melody += Sine(294).to_audio_segment(duration=300)  # D
+melody += Sine(330).to_audio_segment(duration=300)  # E
+melody += Sine(349).to_audio_segment(duration=300)  # F
+melody += Sine(392).to_audio_segment(duration=600)  # G (longer)
+print("\nPlaying simple melody:")
+play(melody)
+melody.export("simple_melody.wav", format="wav")
+
+print("\nCreated: sine_440.wav, c_major_chord.wav, simple_melody.wav")
+\end{lstlisting}
+
+\textbf{Tone experiments:}
+\begin{enumerate}
+    \item Create musical notes: C=262, D=294, E=330, F=349, G=392, A=440, B=494
+    \item Generate a full scale (do-re-mi-fa-sol-la-ti-do)
+    \item Create an alarm sound (alternating high and low tones)
+    \item Make a phone dial tone (combine two frequencies)
+    \item Compose a short tune (like "Twinkle Twinkle Little Star")
+\end{enumerate}
+
+\task{Mini-Project: Sound Effects Processor}
+
+Create a program that applies multiple effects to a sound file!
+
+\textbf{Create \texttt{sound\_processor.py}:}
+
+Your program should:
+\begin{enumerate}
+    \item Load a sound file
+    \item Provide a menu of effects:
+    \begin{itemize}
+        \item Increase/decrease volume
+        \item Reverse
+        \item Add fade in/out
+        \item Speed up/slow down
+        \item Extract a section
+        \item Repeat/loop
+    \end{itemize}
+    \item Apply selected effects
+    \item Save the processed sound
+\end{enumerate}
+
+\textbf{Example structure:}
+\begin{lstlisting}
+from pydub import AudioSegment
+from pydub.playback import play
+
+def apply_volume(sound, db_change):
+    """Apply volume adjustment"""
+    return sound + db_change
+
+def apply_reverse(sound):
+    """Reverse the sound"""
+    return sound.reverse()
+
+def apply_speed(sound, speed):
+    """Change playback speed (1.0 = normal, 2.0 = double, 0.5 = half)"""
+    # Change frame rate
+    new_frame_rate = int(sound.frame_rate * speed)
+    return sound._spawn(sound.raw_data, overrides={
+        "frame_rate": new_frame_rate
+    }).set_frame_rate(sound.frame_rate)
+
+def main():
+    # Load sound
+    sound = AudioSegment.from_file("sounds/sample.wav")
+
+    print("=== Sound Effects Processor ===")
+    print("1. Louder (+6 dB)")
+    print("2. Quieter (-6 dB)")
+    print("3. Reverse")
+    print("4. Fade in/out")
+    print("5. Speed up (1.5x)")
+    print("6. Slow down (0.75x)")
+    print("7. First 5 seconds only")
+    print("8. Loop 3 times")
+
+    choice = input("\nSelect effect (1-8): ")
+
+    if choice == "1":
+        result = apply_volume(sound, 6)
+        output = "louder_output.wav"
+    elif choice == "2":
+        result = apply_volume(sound, -6)
+        output = "quieter_output.wav"
+    elif choice == "3":
+        result = apply_reverse(sound)
+        output = "reversed_output.wav"
+    elif choice == "4":
+        result = sound.fade_in(1000).fade_out(1000)
+        output = "faded_output.wav"
+    elif choice == "5":
+        result = apply_speed(sound, 1.5)
+        output = "faster_output.wav"
+    elif choice == "6":
+        result = apply_speed(sound, 0.75)
+        output = "slower_output.wav"
+    elif choice == "7":
+        result = sound[:5000]
+        output = "trimmed_output.wav"
+    elif choice == "8":
+        result = sound * 3
+        output = "looped_output.wav"
+    else:
+        print("Invalid choice!")
+        return
+
+    print(f"\nProcessing...")
+    result.export(output, format="wav")
+    print(f"Created: {output}")
+
+    print("\nPlaying result:")
+    play(result)
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Sound Visualization}
+Use matplotlib to visualize the waveform of a sound (plot amplitude over time).
+
+\subsection*{Challenge 2: Beat Detection}
+Analyze a music file to find the beat/tempo by detecting amplitude peaks.
+
+\subsection*{Challenge 3: Voice Changer}
+Alter pitch without changing speed (chipmunk effect or deep voice).
+
+\subsection*{Challenge 4: Noise Generator}
+Create white noise by generating random sample values.
+
+\subsection*{Challenge 5: Audio Converter}
+Convert between formats (WAV, MP3, OGG) and sample rates.
+
+\section{Key Concepts}
+
+\textbf{Important audio concepts:}
+\begin{itemize}
+    \item \textbf{Sample:} One measurement of audio amplitude
+    \item \textbf{Sample rate:} Samples per second (Hz), typically 44100
+    \item \textbf{Amplitude:} Volume/loudness of sound
+    \item \textbf{Frequency:} Pitch of sound (Hz), 440 Hz = A note
+    \item \textbf{Duration:} Length in milliseconds or seconds
+    \item \textbf{Channels:} Mono (1) or Stereo (2)
+    \item \textbf{Decibels (dB):} Logarithmic volume measurement
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{ffmpeg not found:}
+\begin{itemize}
+    \item Install ffmpeg on your system (see Setup section)
+    \item Restart terminal/IDE after installation
+    \item Check: \texttt{ffmpeg -version}
+\end{itemize}
+
+\textbf{Audio won't play:}
+\begin{itemize}
+    \item Check your speakers/headphones
+    \item Try: \texttt{sound.export("test.wav", format="wav")} and play manually
+    \item Use VLC or another player to test the file
+\end{itemize}
+
+\textbf{File format errors:}
+\begin{itemize}
+    \item Use WAV for simplicity (no compression)
+    \item MP3 requires additional codecs
+    \item Check file path is correct
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your volume adjustment program with louder/quieter versions
+    \item Your reversed sound file (play it!)
+    \item Your tone generator creating at least 3 different notes
+    \item Your sound effects processor with multiple effects
+    \item Explain what a sample is and what sample rate means
+\end{enumerate}
+
+\section{What's Next?}
+
+In Lab 07, we'll create advanced sound effects like echo, sound mixing, and synthesis. We'll also explore how to combine multiple audio files creatively!
+
+\end{document}

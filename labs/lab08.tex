@@ -1,0 +1,1094 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{08}
+\labtitle{Building Bigger Programs}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Organize code into functions and modules
+    \item Create reusable media processing libraries
+    \item Write and run test functions
+    \item Debug programs systematically
+    \item Document code effectively
+    \item Build command-line interfaces
+    \item Apply software engineering best practices
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your organized programs
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Today you'll learn to build larger, well-organized programs! Instead of writing everything in one file, you'll create reusable functions, organize code into modules, write tests, and build professional-quality software. These skills are essential for real-world programming projects.
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab08}
+    \item Create subfolders: \texttt{images}, \texttt{sounds}, \texttt{tests}
+    \item Ensure Pillow and pydub are installed
+    \item Have sample images and sounds ready
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Writing Reusable Functions}
+
+Convert inline code into reusable functions.
+
+\textbf{Create \texttt{image\_functions.py}:}
+\begin{lstlisting}
+"""
+Image processing functions library
+"""
+from PIL import Image
+
+def load_image(filename):
+    """
+    Load an image from file.
+
+    Args:
+        filename: Path to image file
+    Returns:
+        PIL Image object
+    """
+    return Image.open(filename)
+
+def save_image(img, filename):
+    """
+    Save an image to file.
+
+    Args:
+        img: PIL Image object
+        filename: Output path
+    """
+    img.save(filename)
+    print(f"Saved: {filename}")
+
+def get_image_info(img):
+    """
+    Get information about an image.
+
+    Args:
+        img: PIL Image object
+    Returns:
+        Dictionary with image properties
+    """
+    return {
+        'width': img.width,
+        'height': img.height,
+        'size': img.size,
+        'mode': img.mode,
+        'format': img.format
+    }
+
+def grayscale(img):
+    """
+    Convert image to grayscale using luminance method.
+
+    Args:
+        img: PIL Image object
+    Returns:
+        Grayscale PIL Image
+    """
+    width, height = img.size
+    pixels = img.load()
+
+    gray = Image.new("RGB", (width, height))
+    gray_pixels = gray.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            gray_value = int(0.299 * r + 0.587 * g + 0.114 * b)
+            gray_pixels[x, y] = (gray_value, gray_value, gray_value)
+
+    return gray
+
+def negative(img):
+    """
+    Create negative of image.
+
+    Args:
+        img: PIL Image object
+    Returns:
+        Negative PIL Image
+    """
+    width, height = img.size
+    pixels = img.load()
+
+    neg = Image.new("RGB", (width, height))
+    neg_pixels = neg.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            neg_pixels[x, y] = (255 - r, 255 - g, 255 - b)
+
+    return neg
+
+def adjust_brightness(img, amount):
+    """
+    Adjust image brightness.
+
+    Args:
+        img: PIL Image object
+        amount: Brightness adjustment (-255 to 255)
+    Returns:
+        Adjusted PIL Image
+    """
+    width, height = img.size
+    pixels = img.load()
+
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            new_r = max(0, min(255, r + amount))
+            new_g = max(0, min(255, g + amount))
+            new_b = max(0, min(255, b + amount))
+            result_pixels[x, y] = (new_r, new_g, new_b)
+
+    return result
+
+def resize_image(img, width, height):
+    """
+    Resize image to specified dimensions.
+
+    Args:
+        img: PIL Image object
+        width: New width
+        height: New height
+    Returns:
+        Resized PIL Image
+    """
+    return img.resize((width, height))
+
+def crop_center(img, crop_width, crop_height):
+    """
+    Crop center portion of image.
+
+    Args:
+        img: PIL Image object
+        crop_width: Width of crop
+        crop_height: Height of crop
+    Returns:
+        Cropped PIL Image
+    """
+    width, height = img.size
+    left = (width - crop_width) // 2
+    top = (height - crop_height) // 2
+    right = left + crop_width
+    bottom = top + crop_height
+
+    return img.crop((left, top, right, bottom))
+
+# Test the functions
+if __name__ == "__main__":
+    # This code only runs when script is executed directly
+    img = load_image("images/sample.jpg")
+    print("Image info:", get_image_info(img))
+
+    # Apply filters
+    gray = grayscale(img)
+    save_image(gray, "test_gray.jpg")
+
+    neg = negative(img)
+    save_image(neg, "test_negative.jpg")
+
+    bright = adjust_brightness(img, 50)
+    save_image(bright, "test_bright.jpg")
+
+    print("Functions tested successfully!")
+\end{lstlisting}
+
+\textbf{Test your functions:}
+\begin{enumerate}
+    \item Run the script: \texttt{python image\_functions.py}
+    \item Verify output images are created
+    \item Check that functions work correctly
+\end{enumerate}
+
+\task{Creating a Module}
+
+Organize functions into an importable module.
+
+\textbf{Create \texttt{media\_tools.py}:}
+\begin{lstlisting}
+"""
+Media Tools Library
+A collection of image and sound processing functions.
+"""
+
+from PIL import Image
+
+# ============================================
+# IMAGE PROCESSING FUNCTIONS
+# ============================================
+
+def apply_grayscale(img):
+    """Convert image to grayscale."""
+    width, height = img.size
+    pixels = img.load()
+    gray = Image.new("RGB", (width, height))
+    gray_pixels = gray.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            gray_val = int(0.299 * r + 0.587 * g + 0.114 * b)
+            gray_pixels[x, y] = (gray_val, gray_val, gray_val)
+
+    return gray
+
+def apply_sepia(img):
+    """Apply sepia tone effect."""
+    width, height = img.size
+    pixels = img.load()
+    sepia = Image.new("RGB", (width, height))
+    sepia_pixels = sepia.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            new_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+            new_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+            new_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+            sepia_pixels[x, y] = (min(255, new_r), min(255, new_g), min(255, new_b))
+
+    return sepia
+
+def mirror_horizontal(img):
+    """Mirror image horizontally."""
+    width, height = img.size
+    pixels = img.load()
+    mirrored = Image.new("RGB", (width, height))
+    mirrored_pixels = mirrored.load()
+
+    for y in range(height):
+        for x in range(width):
+            mirrored_pixels[width - 1 - x, y] = pixels[x, y]
+
+    return mirrored
+
+def add_border(img, border_width, color):
+    """Add colored border around image."""
+    width, height = img.size
+    new_width = width + 2 * border_width
+    new_height = height + 2 * border_width
+
+    bordered = Image.new("RGB", (new_width, new_height), color)
+    bordered.paste(img, (border_width, border_width))
+
+    return bordered
+
+# ============================================
+# UTILITY FUNCTIONS
+# ============================================
+
+def batch_process(input_files, output_folder, process_func):
+    """
+    Process multiple images with the same function.
+
+    Args:
+        input_files: List of input file paths
+        output_folder: Output directory
+        process_func: Function to apply to each image
+    """
+    import os
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    for input_file in input_files:
+        try:
+            img = Image.open(input_file)
+            processed = process_func(img)
+
+            basename = os.path.basename(input_file)
+            name, ext = os.path.splitext(basename)
+            output_file = os.path.join(output_folder, f"{name}_processed{ext}")
+
+            processed.save(output_file)
+            print(f"Processed: {input_file} -> {output_file}")
+        except Exception as e:
+            print(f"Error processing {input_file}: {e}")
+
+def print_image_stats(img):
+    """Print statistics about an image."""
+    width, height = img.size
+    pixels = img.load()
+
+    total_r, total_g, total_b = 0, 0, 0
+    pixel_count = width * height
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            total_r += r
+            total_g += g
+            total_b += b
+
+    print(f"Image size: {width}x{height}")
+    print(f"Total pixels: {pixel_count}")
+    print(f"Average R: {total_r / pixel_count:.2f}")
+    print(f"Average G: {total_g / pixel_count:.2f}")
+    print(f"Average B: {total_b / pixel_count:.2f}")
+
+# ============================================
+# MODULE TEST
+# ============================================
+
+def test_module():
+    """Test all functions in the module."""
+    print("Testing media_tools module...")
+
+    try:
+        img = Image.open("images/sample.jpg")
+        img = img.resize((400, 300))
+
+        print("\nTest 1: Grayscale")
+        gray = apply_grayscale(img)
+        gray.save("test_module_gray.jpg")
+
+        print("Test 2: Sepia")
+        sepia = apply_sepia(img)
+        sepia.save("test_module_sepia.jpg")
+
+        print("Test 3: Mirror")
+        mirrored = mirror_horizontal(img)
+        mirrored.save("test_module_mirror.jpg")
+
+        print("Test 4: Border")
+        bordered = add_border(img, 20, (255, 0, 0))
+        bordered.save("test_module_border.jpg")
+
+        print("\nTest 5: Image stats")
+        print_image_stats(img)
+
+        print("\nAll tests passed!")
+    except Exception as e:
+        print(f"Test failed: {e}")
+
+if __name__ == "__main__":
+    test_module()
+\end{lstlisting}
+
+\textbf{Now use your module in another program.}
+
+\textbf{Create \texttt{use\_module.py}:}
+\begin{lstlisting}
+"""
+Example of using the media_tools module
+"""
+import media_tools
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+
+# Use functions from media_tools
+print("Applying filters from media_tools module...")
+
+gray = media_tools.apply_grayscale(img)
+gray.save("output_gray.jpg")
+
+sepia = media_tools.apply_sepia(img)
+sepia.save("output_sepia.jpg")
+
+mirrored = media_tools.mirror_horizontal(img)
+mirrored.save("output_mirror.jpg")
+
+bordered = media_tools.add_border(img, 30, (0, 0, 255))
+bordered.save("output_border.jpg")
+
+print("Done! Files created.")
+print("\nImage statistics:")
+media_tools.print_image_stats(img)
+\end{lstlisting}
+
+\task{Writing Test Functions}
+
+Create systematic tests for your code.
+
+\textbf{Create \texttt{test\_functions.py}:}
+\begin{lstlisting}
+"""
+Test functions for media processing
+"""
+from PIL import Image
+import media_tools
+
+def test_grayscale():
+    """Test grayscale conversion."""
+    print("Testing grayscale...")
+
+    # Create test image
+    test_img = Image.new("RGB", (10, 10), (100, 150, 200))
+
+    # Apply grayscale
+    gray = media_tools.apply_grayscale(test_img)
+
+    # Check that all pixels are gray (R=G=B)
+    pixels = gray.load()
+    for y in range(10):
+        for x in range(10):
+            r, g, b = pixels[x, y]
+            assert r == g == b, "Grayscale pixels should have R=G=B"
+
+    print("  [OK] Grayscale test passed")
+
+def test_mirror():
+    """Test horizontal mirror."""
+    print("Testing mirror...")
+
+    # Create test image with distinctive pattern
+    test_img = Image.new("RGB", (4, 2))
+    pixels = test_img.load()
+    pixels[0, 0] = (255, 0, 0)  # Red at left
+    pixels[3, 0] = (0, 0, 255)  # Blue at right
+
+    # Mirror it
+    mirrored = media_tools.mirror_horizontal(test_img)
+    mir_pixels = mirrored.load()
+
+    # Check that colors are swapped
+    assert mir_pixels[0, 0] == (0, 0, 255), "Left should be blue after mirror"
+    assert mir_pixels[3, 0] == (255, 0, 0), "Right should be red after mirror"
+
+    print("  [OK] Mirror test passed")
+
+def test_border():
+    """Test border addition."""
+    print("Testing border...")
+
+    # Create test image
+    test_img = Image.new("RGB", (100, 100), (255, 255, 255))
+
+    # Add border
+    border_width = 10
+    bordered = media_tools.add_border(test_img, border_width, (0, 0, 0))
+
+    # Check new dimensions
+    expected_width = 100 + 2 * border_width
+    expected_height = 100 + 2 * border_width
+    assert bordered.size == (expected_width, expected_height), "Border size incorrect"
+
+    print("  [OK] Border test passed")
+
+def run_all_tests():
+    """Run all test functions."""
+    print("=" * 40)
+    print("Running all tests...")
+    print("=" * 40)
+
+    try:
+        test_grayscale()
+        test_mirror()
+        test_border()
+
+        print("=" * 40)
+        print("All tests passed! [OK]")
+        print("=" * 40)
+    except AssertionError as e:
+        print(f"\n[X] Test failed: {e}")
+    except Exception as e:
+        print(f"\n[X] Unexpected error: {e}")
+
+if __name__ == "__main__":
+    run_all_tests()
+\end{lstlisting}
+
+\task{Debugging Techniques}
+
+Learn systematic debugging approaches.
+
+\textbf{Create \texttt{debug\_example.py}:}
+\begin{lstlisting}
+"""
+Debugging techniques demonstration
+"""
+from PIL import Image
+
+def buggy_brightness(img, amount):
+    """This function has bugs! Find and fix them."""
+    width, height = img.size
+    pixels = img.load()
+
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+
+            # Bug 1: Not clamping values
+            new_r = r + amount
+            new_g = g + amount
+            new_b = b + amount
+
+            result_pixels[x, y] = (new_r, new_g, new_b)
+
+    return result
+
+def debug_brightness(img, amount):
+    """Fixed version with debugging output."""
+    width, height = img.size
+    pixels = img.load()
+
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    print(f"DEBUG: Processing {width}x{height} image")
+    print(f"DEBUG: Brightness adjustment: {amount}")
+
+    out_of_range_count = 0
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+
+            # Add debugging for first pixel
+            if x == 0 and y == 0:
+                print(f"DEBUG: First pixel before: ({r}, {g}, {b})")
+
+            # Fix: Clamp values to 0-255
+            new_r = max(0, min(255, r + amount))
+            new_g = max(0, min(255, g + amount))
+            new_b = max(0, min(255, b + amount))
+
+            # Count clamped values
+            if (r + amount) != new_r or (g + amount) != new_g or (b + amount) != new_b:
+                out_of_range_count += 1
+
+            if x == 0 and y == 0:
+                print(f"DEBUG: First pixel after: ({new_r}, {new_g}, {new_b})")
+
+            result_pixels[x, y] = (new_r, new_g, new_b)
+
+    print(f"DEBUG: Clamped {out_of_range_count} out-of-range values")
+    return result
+
+def demonstrate_debugging():
+    """Show debugging techniques."""
+    print("=== Debugging Demonstration ===\n")
+
+    # Create test image
+    img = Image.new("RGB", (100, 100), (200, 200, 200))
+
+    print("1. Testing buggy function with large brightness:")
+    try:
+        buggy = buggy_brightness(img, 100)
+        print("   Buggy function completed (but may have issues)")
+    except Exception as e:
+        print(f"   Error: {e}")
+
+    print("\n2. Testing fixed function with debugging:")
+    fixed = debug_brightness(img, 100)
+    fixed.save("debug_fixed.jpg")
+    print("   Fixed function completed successfully")
+
+    print("\n3. Testing with negative brightness:")
+    dark = debug_brightness(img, -50)
+    dark.save("debug_dark.jpg")
+
+# Debugging tips
+DEBUGGING_TIPS = """
+DEBUGGING STRATEGIES:
+
+1. Print Statements
+   - Add print() to show variable values
+   - Print at key points in your code
+   - Use descriptive messages: print("DEBUG: x =", x)
+
+2. Test with Simple Input
+   - Use small images (10x10)
+   - Use solid colors to see effects clearly
+   - Test extreme values
+
+3. Check Assumptions
+   - Are RGB values in range 0-255?
+   - Are coordinates within image bounds?
+   - Are variables the expected type?
+
+4. Isolate the Problem
+   - Comment out sections of code
+   - Test functions independently
+   - Use small test cases
+
+5. Use Assertions
+   - assert x >= 0, "x must be positive"
+   - Catches errors early
+   - Documents assumptions
+
+6. Read Error Messages Carefully
+   - Line number tells where error occurred
+   - Error type tells what went wrong
+   - Traceback shows function call sequence
+"""
+
+if __name__ == "__main__":
+    demonstrate_debugging()
+    print(DEBUGGING_TIPS)
+\end{lstlisting}
+
+\task{Documentation and Comments}
+
+Write clear documentation for your code.
+
+\textbf{Create \texttt{documented\_filters.py}:}
+\begin{lstlisting}
+"""
+Image Filters Module
+
+This module provides various image filtering functions
+for photo manipulation and effects.
+
+Author: Your Name
+Date: Fall 2024
+Course: CSCI 128
+
+Example usage:
+    from documented_filters import apply_vintage_filter
+    from PIL import Image
+
+    img = Image.open("photo.jpg")
+    vintage = apply_vintage_filter(img)
+    vintage.save("vintage_photo.jpg")
+"""
+
+from PIL import Image
+
+def apply_vintage_filter(img, sepia_strength=0.8, vignette_strength=0.3):
+    """
+    Apply a vintage filter effect to an image.
+
+    Combines sepia tone with vignette (darkened edges) for
+    an old photograph look.
+
+    Args:
+        img (PIL.Image): Input image to filter
+        sepia_strength (float): Intensity of sepia (0.0-1.0)
+            0.0 = no sepia, 1.0 = full sepia
+        vignette_strength (float): Intensity of vignette (0.0-1.0)
+            0.0 = no vignette, 1.0 = heavy darkening
+
+    Returns:
+        PIL.Image: Filtered image with vintage effect
+
+    Raises:
+        ValueError: If strength parameters are out of range
+
+    Example:
+        >>> img = Image.open("photo.jpg")
+        >>> vintage = apply_vintage_filter(img, 0.9, 0.4)
+        >>> vintage.save("vintage.jpg")
+    """
+    # Validate input
+    if not (0.0 <= sepia_strength <= 1.0):
+        raise ValueError("sepia_strength must be between 0.0 and 1.0")
+    if not (0.0 <= vignette_strength <= 1.0):
+        raise ValueError("vignette_strength must be between 0.0 and 1.0")
+
+    width, height = img.size
+    pixels = img.load()
+
+    # Create result image
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    # Calculate center for vignette
+    center_x = width / 2
+    center_y = height / 2
+    max_distance = ((center_x ** 2) + (center_y ** 2)) ** 0.5
+
+    # Process each pixel
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+
+            # Apply sepia tone
+            if sepia_strength > 0:
+                sepia_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+                sepia_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+                sepia_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+
+                # Blend original with sepia based on strength
+                r = int(r * (1 - sepia_strength) + sepia_r * sepia_strength)
+                g = int(g * (1 - sepia_strength) + sepia_g * sepia_strength)
+                b = int(b * (1 - sepia_strength) + sepia_b * sepia_strength)
+
+            # Apply vignette (darken edges)
+            if vignette_strength > 0:
+                # Calculate distance from center
+                dx = x - center_x
+                dy = y - center_y
+                distance = (dx ** 2 + dy ** 2) ** 0.5
+
+                # Calculate darkening factor (1.0 at center, less at edges)
+                factor = 1.0 - (distance / max_distance) * vignette_strength
+                factor = max(0.0, factor)  # Ensure non-negative
+
+                # Apply darkening
+                r = int(r * factor)
+                g = int(g * factor)
+                b = int(b * factor)
+
+            # Clamp to valid range and set pixel
+            r = max(0, min(255, r))
+            g = max(0, min(255, g))
+            b = max(0, min(255, b))
+            result_pixels[x, y] = (r, g, b)
+
+    return result
+
+def create_thumbnail(img, max_size=200):
+    """
+    Create a thumbnail version of an image.
+
+    Resizes image to fit within max_size x max_size
+    while maintaining aspect ratio.
+
+    Args:
+        img (PIL.Image): Input image
+        max_size (int): Maximum width or height in pixels
+
+    Returns:
+        PIL.Image: Thumbnail image
+    """
+    width, height = img.size
+
+    # Calculate new size maintaining aspect ratio
+    if width > height:
+        new_width = max_size
+        new_height = int(height * (max_size / width))
+    else:
+        new_height = max_size
+        new_width = int(width * (max_size / height))
+
+    return img.resize((new_width, new_height))
+
+# Module-level constants
+DEFAULT_SEPIA = 0.8
+DEFAULT_VIGNETTE = 0.3
+THUMBNAIL_SIZE = 200
+
+if __name__ == "__main__":
+    # Test the documented functions
+    print("Testing documented_filters module...")
+
+    try:
+        img = Image.open("images/sample.jpg")
+
+        # Test vintage filter
+        vintage = apply_vintage_filter(img)
+        vintage.save("test_vintage.jpg")
+        print("[OK] Vintage filter test passed")
+
+        # Test thumbnail
+        thumb = create_thumbnail(img, 150)
+        thumb.save("test_thumb.jpg")
+        print("[OK] Thumbnail test passed")
+
+        print("\nAll documentation examples work!")
+    except Exception as e:
+        print(f"[X] Test failed: {e}")
+\end{lstlisting}
+
+\task{Mini-Project: Batch Image Processor}
+
+Build a command-line tool that processes multiple images.
+
+\textbf{Create \texttt{batch\_processor.py}:}
+\begin{lstlisting}
+"""
+Batch Image Processor
+
+Command-line tool for processing multiple images at once.
+
+Usage:
+    python batch_processor.py input_folder output_folder filter_name
+
+Example:
+    python batch_processor.py images/ processed/ grayscale
+"""
+
+import os
+import sys
+from PIL import Image
+
+def grayscale_filter(img):
+    """Convert to grayscale."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+            result_pixels[x, y] = (gray, gray, gray)
+
+    return result
+
+def sepia_filter(img):
+    """Apply sepia tone."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            new_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+            new_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+            new_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+            result_pixels[x, y] = (min(255, new_r), min(255, new_g), min(255, new_b))
+
+    return result
+
+def thumbnail_filter(img):
+    """Create thumbnail (200x200 max)."""
+    return img.resize((200, 200))
+
+def brighten_filter(img):
+    """Increase brightness."""
+    width, height = img.size
+    pixels = img.load()
+    result = Image.new("RGB", (width, height))
+    result_pixels = result.load()
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            result_pixels[x, y] = (min(255, r + 30), min(255, g + 30), min(255, b + 30))
+
+    return result
+
+# Available filters
+FILTERS = {
+    'grayscale': grayscale_filter,
+    'sepia': sepia_filter,
+    'thumbnail': thumbnail_filter,
+    'brighten': brighten_filter
+}
+
+def process_image(input_path, output_path, filter_func):
+    """Process a single image."""
+    try:
+        img = Image.open(input_path)
+        processed = filter_func(img)
+        processed.save(output_path)
+        return True
+    except Exception as e:
+        print(f"  Error: {e}")
+        return False
+
+def batch_process(input_folder, output_folder, filter_name):
+    """Process all images in a folder."""
+    # Validate filter
+    if filter_name not in FILTERS:
+        print(f"Error: Unknown filter '{filter_name}'")
+        print(f"Available filters: {', '.join(FILTERS.keys())}")
+        return
+
+    filter_func = FILTERS[filter_name]
+
+    # Create output folder if needed
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        print(f"Created output folder: {output_folder}")
+
+    # Find all image files
+    image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif')
+    image_files = [f for f in os.listdir(input_folder)
+                   if f.lower().endswith(image_extensions)]
+
+    if not image_files:
+        print(f"No image files found in {input_folder}")
+        return
+
+    # Process each image
+    print(f"\nProcessing {len(image_files)} images with '{filter_name}' filter...")
+    print("-" * 60)
+
+    success_count = 0
+    for filename in image_files:
+        input_path = os.path.join(input_folder, filename)
+
+        # Create output filename
+        name, ext = os.path.splitext(filename)
+        output_filename = f"{name}_{filter_name}{ext}"
+        output_path = os.path.join(output_folder, output_filename)
+
+        print(f"Processing: {filename}...", end=" ")
+
+        if process_image(input_path, output_path, filter_func):
+            print("[OK]")
+            success_count += 1
+        else:
+            print("[X]")
+
+    # Summary
+    print("-" * 60)
+    print(f"Completed: {success_count}/{len(image_files)} images processed")
+    print(f"Output saved to: {output_folder}")
+
+def print_usage():
+    """Print usage instructions."""
+    print("Batch Image Processor")
+    print("=" * 60)
+    print("Usage:")
+    print("  python batch_processor.py <input_folder> <output_folder> <filter>")
+    print()
+    print("Available filters:")
+    for name in FILTERS.keys():
+        print(f"  - {name}")
+    print()
+    print("Example:")
+    print("  python batch_processor.py images/ processed/ grayscale")
+    print("=" * 60)
+
+def main():
+    """Main entry point."""
+    # Check command-line arguments
+    if len(sys.argv) != 4:
+        print_usage()
+        sys.exit(1)
+
+    input_folder = sys.argv[1]
+    output_folder = sys.argv[2]
+    filter_name = sys.argv[3]
+
+    # Validate input folder
+    if not os.path.exists(input_folder):
+        print(f"Error: Input folder '{input_folder}' does not exist")
+        sys.exit(1)
+
+    # Run batch processing
+    batch_process(input_folder, output_folder, filter_name)
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\textbf{Test your batch processor:}
+\begin{enumerate}
+    \item Put several images in \texttt{images/} folder
+    \item Run: \texttt{python batch\_processor.py images/ output/ grayscale}
+    \item Check \texttt{output/} folder for processed images
+    \item Try other filters: sepia, thumbnail, brighten
+\end{enumerate}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Configuration Files}
+Read processing settings from a JSON or INI configuration file.
+
+\subsection*{Challenge 2: Progress Bar}
+Add a progress bar showing percentage of images processed.
+
+\subsection*{Challenge 3: Error Logging}
+Write errors to a log file instead of just printing them.
+
+\subsection*{Challenge 4: Parallel Processing}
+Use multiprocessing to process multiple images simultaneously.
+
+\subsection*{Challenge 5: GUI Interface}
+Create a simple graphical interface using tkinter.
+
+\section{Key Concepts}
+
+\textbf{Software engineering principles:}
+\begin{itemize}
+    \item \textbf{Functions:} Reusable blocks of code
+    \item \textbf{Modules:} Organized collections of functions
+    \item \textbf{Documentation:} Docstrings and comments
+    \item \textbf{Testing:} Systematic verification
+    \item \textbf{Debugging:} Finding and fixing errors
+    \item \textbf{CLI:} Command-line interface
+    \item \textbf{Batch processing:} Automated repetitive tasks
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{Module not found:}
+\begin{itemize}
+    \item Ensure module file is in same directory
+    \item Check spelling of module name
+    \item Don't include .py when importing
+\end{itemize}
+
+\textbf{Import errors:}
+\begin{itemize}
+    \item Check for circular imports
+    \item Verify all dependencies are installed
+    \item Check PYTHONPATH if needed
+\end{itemize}
+
+\textbf{Tests failing:}
+\begin{itemize}
+    \item Read assertion error message
+    \item Use print statements in tests
+    \item Test with simple, known inputs
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your media\_tools module with multiple functions
+    \item A program that imports and uses your module
+    \item Your test functions running successfully
+    \item Your batch processor working on multiple images
+    \item Explain what a module is and why we use them
+\end{enumerate}
+
+\section{What's Next}
+
+In Lab 09, we'll learn to read and write text files, process CSV data, and add text captions to images!
+
+\end{document}

@@ -1,0 +1,541 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{04}
+\labtitle{Image Transformations}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Understand coordinate transformations for images
+    \item Mirror images horizontally and vertically
+    \item Rotate images by 90, 180, and 270 degrees
+    \item Crop portions of images
+    \item Scale images up and down
+    \item Combine transformations to create complex effects
+    \item Work with image dimensions and coordinate systems
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your transformations
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Today you'll learn to transform images geometrically—moving, rotating, and resizing them. Unlike filters that change colors, transformations change the structure and layout of images. These are fundamental operations used in photo editing, computer graphics, and computer vision.
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab04}
+    \item Ensure Pillow is installed: \texttt{pip install Pillow}
+    \item Gather several test images (landscapes and portraits work well)
+    \item Put images in an \texttt{images} subfolder
+\end{enumerate}
+
+\textbf{Recommended test images:}
+\begin{itemize}
+    \item A square image (same width and height)
+    \item A rectangular landscape image (wider than tall)
+    \item A rectangular portrait image (taller than wide)
+    \item An image with recognizable text or asymmetric features
+\end{itemize}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Horizontal Mirror (Flip)}
+
+Mirror an image along the vertical axis (left becomes right).
+
+\textbf{Create \texttt{mirror\_horizontal.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Create mirrored image
+mirrored = Image.new("RGB", (width, height))
+mirrored_pixels = mirrored.load()
+
+# Mirror horizontally
+for y in range(height):
+    for x in range(width):
+        # Copy pixel from position x to position (width - 1 - x)
+        mirrored_pixels[width - 1 - x, y] = pixels[x, y]
+
+mirrored.save("mirrored_horizontal.jpg")
+print("Created mirrored_horizontal.jpg")
+mirrored.show()
+
+# Compare with Pillow's built-in method
+img_flipped = img.transpose(Image.FLIP_LEFT_RIGHT)
+img_flipped.save("flipped_builtin.jpg")
+print("Created flipped_builtin.jpg (using built-in)")
+\end{lstlisting}
+
+\textbf{Understanding the transformation:}
+\begin{itemize}
+    \item Original pixel at x=0 goes to x=(width-1)
+    \item Original pixel at x=(width-1) goes to x=0
+    \item Formula: new\_x = width - 1 - old\_x
+    \item y-coordinates stay the same
+\end{itemize}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Mirror different images
+    \item Verify your manual version matches Pillow's built-in
+    \item Try mirroring an image with text—can you read it?
+\end{enumerate}
+
+\task{Vertical Mirror (Flip)}
+
+Now flip an image vertically (top becomes bottom).
+
+\textbf{Create \texttt{mirror\_vertical.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Create vertically mirrored image
+mirrored = Image.new("RGB", (width, height))
+mirrored_pixels = mirrored.load()
+
+# Mirror vertically
+for y in range(height):
+    for x in range(width):
+        # Copy pixel from position y to position (height - 1 - y)
+        mirrored_pixels[x, height - 1 - y] = pixels[x, y]
+
+mirrored.save("mirrored_vertical.jpg")
+print("Created mirrored_vertical.jpg")
+mirrored.show()
+
+# Compare with Pillow's method
+img_flipped = img.transpose(Image.FLIP_TOP_BOTTOM)
+img_flipped.save("flipped_vertical_builtin.jpg")
+\end{lstlisting}
+
+\textbf{Challenge:} Create a function that can mirror in either direction:
+\begin{lstlisting}
+def mirror_image(img, direction):
+    """
+    Mirror an image.
+    direction: 'horizontal' or 'vertical'
+    """
+    # Your code here
+    pass
+\end{lstlisting}
+
+\task{Rotate 90 Degrees Clockwise}
+
+Rotation changes both position AND dimensions!
+
+\textbf{Create \texttt{rotate\_90.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# For 90-degree rotation, dimensions swap!
+rotated = Image.new("RGB", (height, width))  # Note: swapped
+rotated_pixels = rotated.load()
+
+# Rotate 90 degrees clockwise
+for y in range(height):
+    for x in range(width):
+        # Transformation for 90-degree clockwise rotation
+        # (x, y) -> (height - 1 - y, x)
+        new_x = height - 1 - y
+        new_y = x
+        rotated_pixels[new_x, new_y] = pixels[x, y]
+
+rotated.save("rotated_90.jpg")
+print(f"Original size: {width}x{height}")
+print(f"Rotated size: {height}x{width}")
+rotated.show()
+
+# Compare with Pillow's method
+img_rotated = img.transpose(Image.ROTATE_90)
+img_rotated.save("rotated_90_builtin.jpg")
+\end{lstlisting}
+
+\begin{note}
+When you rotate 90 degrees, a 800x600 image becomes 600x800. The dimensions swap! This is why we create the new image with (height, width) instead of (width, height).
+\end{note}
+
+\textbf{Questions to explore:}
+\begin{enumerate}
+    \item What happens to a square image when rotated?
+    \item Rotate a rectangular image—how do dimensions change?
+    \item What transformation maps (0,0) after 90-degree rotation?
+\end{enumerate}
+
+\task{Multiple Rotations}
+
+Implement 180 and 270-degree rotations.
+
+\textbf{Create \texttt{rotate\_all.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+def rotate_180(img):
+    """Rotate image 180 degrees"""
+    width, height = img.size
+    pixels = img.load()
+
+    rotated = Image.new("RGB", (width, height))
+    rotated_pixels = rotated.load()
+
+    for y in range(height):
+        for x in range(width):
+            # 180 degrees: both x and y flip
+            new_x = width - 1 - x
+            new_y = height - 1 - y
+            rotated_pixels[new_x, new_y] = pixels[x, y]
+
+    return rotated
+
+def rotate_270(img):
+    """Rotate image 270 degrees (or 90 counter-clockwise)"""
+    width, height = img.size
+    pixels = img.load()
+
+    # Dimensions swap for 90/270 rotations
+    rotated = Image.new("RGB", (height, width))
+    rotated_pixels = rotated.load()
+
+    for y in range(height):
+        for x in range(width):
+            # 270 degrees clockwise (or 90 counter-clockwise)
+            new_x = y
+            new_y = width - 1 - x
+            rotated_pixels[new_x, new_y] = pixels[x, y]
+
+    return rotated
+
+# Test all rotations
+img = Image.open("images/sample.jpg")
+
+rotated_180 = rotate_180(img)
+rotated_180.save("rotated_180.jpg")
+print("Created rotated_180.jpg")
+
+rotated_270 = rotate_270(img)
+rotated_270.save("rotated_270.jpg")
+print("Created rotated_270.jpg")
+
+rotated_180.show()
+rotated_270.show()
+\end{lstlisting}
+
+\textbf{Verify your understanding:}
+\begin{enumerate}
+    \item Rotate an image 90 degrees four times—you should get back to the original
+    \item Does rotating 180 degrees twice restore the original?
+    \item Is rotating 270 degrees the same as rotating 90 degrees three times?
+\end{enumerate}
+
+\task{Cropping Images}
+
+Extract a rectangular region from an image.
+
+\textbf{Create \texttt{crop.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Define crop region (x1, y1, x2, y2)
+x1, y1 = 100, 100  # Top-left corner
+x2, y2 = 400, 400  # Bottom-right corner
+
+crop_width = x2 - x1
+crop_height = y2 - y1
+
+# Create cropped image
+cropped = Image.new("RGB", (crop_width, crop_height))
+cropped_pixels = cropped.load()
+
+# Copy the region
+for y in range(crop_height):
+    for x in range(crop_width):
+        # Source coordinates in original image
+        src_x = x1 + x
+        src_y = y1 + y
+        # Destination coordinates in cropped image
+        cropped_pixels[x, y] = pixels[src_x, src_y]
+
+cropped.save("cropped.jpg")
+print(f"Cropped region: ({x1},{y1}) to ({x2},{y2})")
+print(f"Cropped size: {crop_width}x{crop_height}")
+cropped.show()
+
+# Compare with Pillow's method
+cropped_builtin = img.crop((x1, y1, x2, y2))
+cropped_builtin.save("cropped_builtin.jpg")
+\end{lstlisting}
+
+\textbf{Cropping experiments:}
+\begin{enumerate}
+    \item Crop the center quarter of an image
+    \item Crop just the top half
+    \item Extract a face from a portrait (manually find coordinates)
+    \item Create a function that crops to a percentage of the original
+\end{enumerate}
+
+\begin{hint}
+To crop the center quarter of an image:
+\begin{lstlisting}
+x1 = width // 4
+y1 = height // 4
+x2 = width * 3 // 4
+y2 = height * 3 // 4
+\end{lstlisting}
+\end{hint}
+
+\task{Scaling (Resizing) Images}
+
+Make images larger or smaller.
+
+\textbf{Create \texttt{scale.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("images/sample.jpg")
+width, height = img.size
+pixels = img.load()
+
+# Scale factor
+scale = 0.5  # Make half the size
+
+new_width = int(width * scale)
+new_height = int(height * scale)
+
+# Create scaled image
+scaled = Image.new("RGB", (new_width, new_height))
+scaled_pixels = scaled.load()
+
+# Simple nearest-neighbor scaling
+for y in range(new_height):
+    for x in range(new_width):
+        # Map destination coordinates to source coordinates
+        src_x = int(x / scale)
+        src_y = int(y / scale)
+
+        # Ensure we don't go out of bounds
+        src_x = min(src_x, width - 1)
+        src_y = min(src_y, height - 1)
+
+        scaled_pixels[x, y] = pixels[src_x, src_y]
+
+scaled.save("scaled_half.jpg")
+print(f"Original: {width}x{height}")
+print(f"Scaled: {new_width}x{new_height}")
+scaled.show()
+
+# Try scaling up (2x)
+scale_up = 2.0
+new_width_up = int(width * scale_up)
+new_height_up = int(height * scale_up)
+
+scaled_up = Image.new("RGB", (new_width_up, new_height_up))
+scaled_pixels_up = scaled_up.load()
+
+for y in range(new_height_up):
+    for x in range(new_width_up):
+        src_x = int(x / scale_up)
+        src_y = int(y / scale_up)
+        src_x = min(src_x, width - 1)
+        src_y = min(src_y, height - 1)
+        scaled_pixels_up[x, y] = pixels[src_x, src_y]
+
+scaled_up.save("scaled_double.jpg")
+print(f"Scaled up: {new_width_up}x{new_height_up}")
+scaled_up.show()
+\end{lstlisting}
+
+\textbf{Scaling experiments:}
+\begin{enumerate}
+    \item Create thumbnail versions (scale to 0.25 or 0.1)
+    \item Scale to exact dimensions (e.g., 640x480)
+    \item What happens when you scale up? (Notice pixelation)
+    \item Compare your scaling with Pillow's \texttt{resize()} method
+\end{enumerate}
+
+\begin{note}
+This uses "nearest neighbor" interpolation—simple but can look blocky. Professional programs use better methods like bilinear or bicubic interpolation. Pillow's \texttt{resize()} method uses better algorithms.
+\end{note}
+
+\task{Mini-Project: Photo Transform Gallery}
+
+Create a program that applies multiple transformations to one image.
+
+\textbf{Create \texttt{transform\_gallery.py}:}
+
+Your program should:
+\begin{enumerate}
+    \item Load one source image
+    \item Create and save:
+    \begin{itemize}
+        \item Horizontally mirrored version
+        \item Vertically mirrored version
+        \item 90-degree rotated version
+        \item 180-degree rotated version
+        \item Cropped center (50\% of original)
+        \item Scaled thumbnail (25\% size)
+        \item A "fun" combination (e.g., rotate then mirror)
+    \end{itemize}
+    \item Display a summary of all created images
+\end{enumerate}
+
+\textbf{Example structure:}
+\begin{lstlisting}
+from PIL import Image
+
+def apply_all_transforms(filename):
+    """Apply all transformations and save results"""
+    img = Image.open(filename)
+    base_name = filename.split('.')[0]
+
+    # Mirror horizontal
+    # ... your code ...
+
+    # Mirror vertical
+    # ... your code ...
+
+    # Rotate 90
+    # ... your code ...
+
+    # Continue for all transformations
+
+    print("Gallery complete!")
+    print("Created files:")
+    print("  - {}_mirror_h.jpg".format(base_name))
+    print("  - {}_mirror_v.jpg".format(base_name))
+    # ... list all created files ...
+
+# Run the gallery
+apply_all_transforms("images/sample.jpg")
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Kaleidoscope Effect}
+Create a kaleidoscope by mirroring an image multiple ways and arranging the pieces in a grid.
+
+\subsection*{Challenge 2: Arbitrary Angle Rotation}
+Rotate an image by 45 degrees. Hint: You'll need trigonometry (sin, cos) and may need to expand the canvas.
+
+\subsection*{Challenge 3: Smart Crop}
+Create a function that automatically crops to the most "interesting" part of an image (highest color variation).
+
+\subsection*{Challenge 4: Tile Image}
+Create a function that tiles a small image to fill a larger canvas (repeat the image in a grid pattern).
+
+\subsection*{Challenge 5: Transform Animation}
+Create a sequence of images showing smooth rotation from 0 to 360 degrees (in 10-degree increments).
+
+\section{Understanding Coordinate Transformations}
+
+\textbf{Key transformation formulas:}
+
+\begin{itemize}
+    \item \textbf{Horizontal mirror:} $(x, y) \rightarrow (W-1-x, y)$
+    \item \textbf{Vertical mirror:} $(x, y) \rightarrow (x, H-1-y)$
+    \item \textbf{Rotate 90° CW:} $(x, y) \rightarrow (H-1-y, x)$
+    \item \textbf{Rotate 180°:} $(x, y) \rightarrow (W-1-x, H-1-y)$
+    \item \textbf{Rotate 270° CW:} $(x, y) \rightarrow (y, W-1-x)$
+\end{itemize}
+
+Where $W$ is width and $H$ is height.
+
+\section{Common Issues}
+
+\textbf{IndexError: image index out of range}
+\begin{itemize}
+    \item Check your coordinate calculations
+    \item Make sure you're not accessing pixels outside the image bounds
+    \item Remember: coordinates go from 0 to (width-1) and 0 to (height-1)
+\end{itemize}
+
+\textbf{Rotated image looks wrong}
+\begin{itemize}
+    \item Verify you swapped dimensions for 90/270 rotations
+    \item Double-check your transformation formulas
+    \item Test with an asymmetric image (e.g., with text) to see the rotation clearly
+\end{itemize}
+
+\textbf{Scaled image is blocky}
+\begin{itemize}
+    \item This is normal with nearest-neighbor scaling
+    \item For better quality, use Pillow's built-in resize with LANCZOS filter
+    \item Example: \texttt{img.resize((new\_width, new\_height), Image.LANCZOS)}
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your horizontal and vertical mirror functions working
+    \item At least two rotation functions (90° and 180°)
+    \item Your cropping function with a custom region
+    \item Your transform gallery showing multiple effects
+    \item Explain the formula for horizontal mirroring
+\end{enumerate}
+
+\section{What's Next?}
+
+In Lab 05, we'll combine multiple images to create collages, learn about image blending and transparency, and explore chromakey (green screen) effects!
+
+\end{document}

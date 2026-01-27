@@ -1,0 +1,578 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+% Lab information
+\labnumber{05}
+\labtitle{Combining Images and Collages}
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\semester{Fall 2024}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Combine multiple images into collages
+    \item Paste images onto larger canvases
+    \item Implement image blending and transparency
+    \item Create chromakey (green screen) effects
+    \item Work with alpha channels and masks
+    \item Design creative photo compositions
+    \item Understand image layering techniques
+\end{objectives}
+
+\begin{grading}
+\textbf{Participation-Based Grading:} Complete the tasks during the lab session and get checked off by the instructor or TA.
+
+\textbf{To receive credit:}
+\begin{itemize}
+    \item Attend the entire lab session
+    \item Complete Tasks 1-6 (Bonus is optional)
+    \item Demonstrate your collage programs
+    \item Get checked off before leaving
+\end{itemize}
+\end{grading}
+
+\section{Introduction}
+
+Today you'll learn to combine multiple images to create collages, compositions, and special effects! You'll work with multiple images simultaneously, understanding how professional photo editing software layers and blends images. By the end, you'll be able to create your own photo montages and even implement green screen effects!
+
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/lab05}
+    \item Ensure Pillow is installed: \texttt{pip install Pillow}
+    \item Gather 5-10 diverse images:
+    \begin{itemize}
+        \item Different sizes (small logos, medium photos, large backgrounds)
+        \item A plain colored background or gradient
+        \item Several photos you want to combine
+        \item Optional: A green screen image (or take one with phone)
+    \end{itemize}
+    \item Put images in an \texttt{images} subfolder
+\end{enumerate}
+\end{setup}
+
+\section{Lab Tasks}
+
+\task{Pasting Images onto a Canvas}
+
+Learn the basic operation of placing one image onto another.
+
+\textbf{Create \texttt{paste\_simple.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a canvas (background)
+canvas_width = 800
+canvas_height = 600
+canvas = Image.new("RGB", (canvas_width, canvas_height), (255, 255, 255))
+
+# Load images to paste
+img1 = Image.open("images/photo1.jpg")
+img2 = Image.open("images/photo2.jpg")
+
+# Resize images to fit nicely
+img1 = img1.resize((200, 200))
+img2 = img2.resize((200, 200))
+
+# Paste images at specific positions
+canvas.paste(img1, (50, 50))     # Top-left
+canvas.paste(img2, (550, 50))    # Top-right
+
+# Save result
+canvas.save("simple_collage.jpg")
+print("Created simple_collage.jpg")
+canvas.show()
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Add more images to different positions
+    \item Try different canvas colors: black (0,0,0), blue (100,150,200)
+    \item What happens if you paste outside the canvas bounds?
+    \item Overlap images by pasting to nearby positions
+\end{enumerate}
+
+\begin{note}
+The \texttt{paste()} method takes an image and a position tuple (x, y) representing the top-left corner where the image will be placed.
+\end{note}
+
+\task{Creating a Grid Collage}
+
+Arrange multiple images in a neat grid pattern.
+
+\textbf{Create \texttt{grid\_collage.py}:}
+\begin{lstlisting}
+from PIL import Image
+import os
+
+# Configuration
+images_per_row = 3
+image_size = 200
+padding = 10
+
+# Load images
+image_folder = "images"
+image_files = [f for f in os.listdir(image_folder)
+               if f.endswith(('.jpg', '.png', '.jpeg'))][:9]
+
+# Calculate canvas size
+canvas_width = (image_size + padding) * images_per_row + padding
+rows = (len(image_files) + images_per_row - 1) // images_per_row
+canvas_height = (image_size + padding) * rows + padding
+
+# Create canvas
+canvas = Image.new("RGB", (canvas_width, canvas_height), (50, 50, 50))
+
+# Place images in grid
+for idx, img_file in enumerate(image_files):
+    img = Image.open(os.path.join(image_folder, img_file))
+
+    # Resize to square
+    img = img.resize((image_size, image_size))
+
+    # Calculate grid position
+    col = idx % images_per_row
+    row = idx // images_per_row
+
+    x = padding + col * (image_size + padding)
+    y = padding + row * (image_size + padding)
+
+    # Paste image
+    canvas.paste(img, (x, y))
+    print(f"Placed {img_file} at ({x}, {y})")
+
+canvas.save("grid_collage.jpg")
+print(f"\nCreated grid_collage.jpg with {len(image_files)} images")
+canvas.show()
+\end{lstlisting}
+
+\textbf{Customizations to try:}
+\begin{enumerate}
+    \item Change images per row (2, 4, 5)
+    \item Adjust padding between images
+    \item Try different background colors
+    \item Add white borders around each image
+    \item Make rectangular images instead of squares
+\end{enumerate}
+
+\task{Image Blending}
+
+Blend two images together for artistic effects.
+
+\textbf{Create \texttt{blend\_images.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load two images
+img1 = Image.open("images/photo1.jpg")
+img2 = Image.open("images/photo2.jpg")
+
+# They must be the same size for blending
+# Resize both to common dimensions
+size = (600, 400)
+img1 = img1.resize(size)
+img2 = img2.resize(size)
+
+# Get pixel data
+width, height = size
+pixels1 = img1.load()
+pixels2 = img2.load()
+
+# Create blended image
+blended = Image.new("RGB", size)
+blended_pixels = blended.load()
+
+# Blend with 50-50 mix
+alpha = 0.5  # Blend ratio (0.0 = all img1, 1.0 = all img2)
+
+for y in range(height):
+    for x in range(width):
+        r1, g1, b1 = pixels1[x, y]
+        r2, g2, b2 = pixels2[x, y]
+
+        # Weighted average
+        new_r = int(r1 * (1 - alpha) + r2 * alpha)
+        new_g = int(g1 * (1 - alpha) + g2 * alpha)
+        new_b = int(b1 * (1 - alpha) + b2 * alpha)
+
+        blended_pixels[x, y] = (new_r, new_g, new_b)
+
+blended.save("blended_50_50.jpg")
+print("Created blended_50_50.jpg")
+blended.show()
+
+# Try different blend ratios
+for alpha in [0.25, 0.75]:
+    blended2 = Image.new("RGB", size)
+    blended2_pixels = blended2.load()
+
+    for y in range(height):
+        for x in range(width):
+            r1, g1, b1 = pixels1[x, y]
+            r2, g2, b2 = pixels2[x, y]
+
+            new_r = int(r1 * (1 - alpha) + r2 * alpha)
+            new_g = int(g1 * (1 - alpha) + g2 * alpha)
+            new_b = int(b1 * (1 - alpha) + b2 * alpha)
+
+            blended2_pixels[x, y] = (new_r, new_g, new_b)
+
+    blended2.save(f"blended_{int(alpha*100)}.jpg")
+    print(f"Created blended_{int(alpha*100)}.jpg")
+\end{lstlisting}
+
+\textbf{Experiments:}
+\begin{enumerate}
+    \item Try alpha values: 0.1, 0.3, 0.5, 0.7, 0.9
+    \item Blend a portrait with a landscape
+    \item Create a "dissolve" effect with multiple alpha values
+    \item Blend three images (blend result of first two with third)
+\end{enumerate}
+
+\begin{hint}
+Pillow has a built-in blend function: \texttt{Image.blend(img1, img2, alpha)}. Compare your manual version with the built-in!
+\end{hint}
+
+\task{Gradient Blending}
+
+Create smooth transitions between images using position-based blending.
+
+\textbf{Create \texttt{gradient\_blend.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load images
+img1 = Image.open("images/photo1.jpg")
+img2 = Image.open("images/photo2.jpg")
+
+# Resize to same dimensions
+size = (800, 400)
+img1 = img1.resize(size)
+img2 = img2.resize(size)
+
+width, height = size
+pixels1 = img1.load()
+pixels2 = img2.load()
+
+# Create gradient blended image
+gradient_blend = Image.new("RGB", size)
+gb_pixels = gradient_blend.load()
+
+# Horizontal gradient blend (left to right)
+for y in range(height):
+    for x in range(width):
+        # Alpha changes from 0 (left) to 1 (right)
+        alpha = x / width
+
+        r1, g1, b1 = pixels1[x, y]
+        r2, g2, b2 = pixels2[x, y]
+
+        new_r = int(r1 * (1 - alpha) + r2 * alpha)
+        new_g = int(g1 * (1 - alpha) + g2 * alpha)
+        new_b = int(b1 * (1 - alpha) + b2 * alpha)
+
+        gb_pixels[x, y] = (new_r, new_g, new_b)
+
+gradient_blend.save("gradient_blend_horizontal.jpg")
+print("Created gradient_blend_horizontal.jpg")
+gradient_blend.show()
+
+# Vertical gradient blend
+vertical_blend = Image.new("RGB", size)
+vb_pixels = vertical_blend.load()
+
+for y in range(height):
+    for x in range(width):
+        # Alpha changes from 0 (top) to 1 (bottom)
+        alpha = y / height
+
+        r1, g1, b1 = pixels1[x, y]
+        r2, g2, b2 = pixels2[x, y]
+
+        new_r = int(r1 * (1 - alpha) + r2 * alpha)
+        new_g = int(g1 * (1 - alpha) + g2 * alpha)
+        new_b = int(b1 * (1 - alpha) + b2 * alpha)
+
+        vb_pixels[x, y] = (new_r, new_g, new_b)
+
+vertical_blend.save("gradient_blend_vertical.jpg")
+print("Created gradient_blend_vertical.jpg")
+vertical_blend.show()
+\end{lstlisting}
+
+\textbf{Try these variations:}
+\begin{enumerate}
+    \item Diagonal blend (use both x and y)
+    \item Radial blend (circular from center)
+    \item Custom blend patterns (checkerboard, stripes)
+\end{enumerate}
+
+\task{Chromakey (Green Screen) Effect}
+
+Replace a specific color (like green) with another image!
+
+\textbf{Create \texttt{chromakey.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+# Load foreground (person on green screen) and background
+foreground = Image.open("images/greenscreen.jpg")
+background = Image.open("images/background.jpg")
+
+# Resize to match
+size = foreground.size
+background = background.resize(size)
+
+width, height = size
+fg_pixels = foreground.load()
+bg_pixels = background.load()
+
+# Create result image
+result = Image.new("RGB", size)
+result_pixels = result.load()
+
+# Define "green" threshold
+green_threshold = 100
+
+for y in range(height):
+    for x in range(width):
+        r, g, b = fg_pixels[x, y]
+
+        # Check if pixel is "greenish"
+        # Green is dominant and significantly higher than red and blue
+        if g > green_threshold and g > r and g > b:
+            # Replace with background
+            result_pixels[x, y] = bg_pixels[x, y]
+        else:
+            # Keep foreground
+            result_pixels[x, y] = (r, g, b)
+
+result.save("chromakey_result.jpg")
+print("Created chromakey_result.jpg")
+result.show()
+\end{lstlisting}
+
+\textbf{Improve the chromakey:}
+\begin{enumerate}
+    \item Adjust green\_threshold for better detection
+    \item Check if green is much larger than r and b: \texttt{g > r + 50 and g > b + 50}
+    \item Try with blue screen (blue > red and blue > green)
+    \item Soften edges by partially blending border pixels
+\end{enumerate}
+
+\begin{note}
+Professional chromakey is more sophisticated, using color distance in HSV space and edge softening. But this simple version demonstrates the core concept!
+\end{note}
+
+\task{Picture Frame Effect}
+
+Add decorative frames and borders to images.
+
+\textbf{Create \texttt{picture\_frame.py}:}
+\begin{lstlisting}
+from PIL import Image
+
+def add_frame(img, frame_width, frame_color):
+    """Add a colored frame around an image"""
+    old_width, old_height = img.size
+
+    # New dimensions include frame
+    new_width = old_width + 2 * frame_width
+    new_height = old_height + 2 * frame_width
+
+    # Create framed image with frame color
+    framed = Image.new("RGB", (new_width, new_height), frame_color)
+
+    # Paste original image in center
+    framed.paste(img, (frame_width, frame_width))
+
+    return framed
+
+def add_fancy_frame(img, outer_width, inner_width,
+                    outer_color, inner_color):
+    """Add a two-color decorative frame"""
+    # Add inner frame
+    framed = add_frame(img, inner_width, inner_color)
+
+    # Add outer frame
+    framed = add_frame(framed, outer_width, outer_color)
+
+    return framed
+
+# Load image
+img = Image.open("images/photo1.jpg")
+
+# Simple frame
+simple_frame = add_frame(img, 20, (255, 215, 0))  # Gold
+simple_frame.save("simple_frame.jpg")
+print("Created simple_frame.jpg")
+
+# Fancy frame
+fancy_frame = add_fancy_frame(img, 15, 5,
+                              (139, 69, 19),   # Brown
+                              (255, 215, 0))   # Gold
+fancy_frame.save("fancy_frame.jpg")
+print("Created fancy_frame.jpg")
+fancy_frame.show()
+
+# Multiple images with frames in a grid
+canvas = Image.new("RGB", (1200, 400), (50, 50, 50))
+images = ["images/photo1.jpg", "images/photo2.jpg",
+          "images/photo3.jpg"]
+
+x_pos = 50
+for img_file in images[:3]:
+    img = Image.open(img_file)
+    img = img.resize((300, 300))
+    framed = add_frame(img, 10, (255, 255, 255))
+    canvas.paste(framed, (x_pos, 50))
+    x_pos += 350
+
+canvas.save("framed_gallery.jpg")
+print("Created framed_gallery.jpg")
+canvas.show()
+\end{lstlisting}
+
+\task{Mini-Project: Create a Collage}
+
+Design your own creative photo collage!
+
+\textbf{Create \texttt{my\_collage.py}:}
+
+Your collage should include:
+\begin{enumerate}
+    \item A large canvas (at least 1200x800)
+    \item At least 5 different images
+    \item Images at different sizes
+    \item Some overlapping elements
+    \item A creative layout (not just a grid)
+    \item Optional: frames, borders, or blend effects
+\end{enumerate}
+
+\textbf{Ideas for layouts:}
+\begin{itemize}
+    \item \textbf{Magazine cover:} Large central image with smaller images around
+    \item \textbf{Photo strip:} Vertical sequence of images
+    \item \textbf{Scattered polaroids:} Random positions and slight rotations
+    \item \textbf{Overlap art:} Blend overlapping images
+    \item \textbf{Story board:} Sequential images telling a story
+\end{itemize}
+
+\textbf{Example structure:}
+\begin{lstlisting}
+from PIL import Image
+
+# Create large canvas
+canvas = Image.new("RGB", (1200, 800), (240, 240, 240))
+
+# Load and prepare images
+img1 = Image.open("images/photo1.jpg").resize((500, 400))
+img2 = Image.open("images/photo2.jpg").resize((300, 300))
+img3 = Image.open("images/photo3.jpg").resize((250, 250))
+# ... more images ...
+
+# Paste in creative positions
+canvas.paste(img1, (50, 200))
+canvas.paste(img2, (600, 50))
+canvas.paste(img3, (700, 450))
+# ... more placements ...
+
+# Add frames or effects
+# ... your creative touches ...
+
+canvas.save("my_collage.jpg")
+canvas.show()
+\end{lstlisting}
+
+\section{Bonus Challenges}
+
+\subsection*{Challenge 1: Vignette Effect}
+Add a vignette (darkened edges) to an image by blending it with a black image using radial gradient.
+
+\subsection*{Challenge 2: Before/After Slider}
+Create a split image showing before/after of a filtered image with a vertical divider line.
+
+\subsection*{Challenge 3: Photo Mosaic}
+Create a large image made up of many tiny thumbnail images arranged in a grid.
+
+\subsection*{Challenge 4: Watermark}
+Add a semi-transparent text or logo watermark to an image.
+
+\subsection*{Challenge 5: Animated Blend}
+Create a series of images with gradually changing blend ratios (0.0, 0.1, 0.2, ... 1.0) for animation.
+
+\section{Key Concepts}
+
+\textbf{Important techniques covered:}
+\begin{itemize}
+    \item \textbf{Pasting:} Placing one image onto another at specific coordinates
+    \item \textbf{Blending:} Weighted average of two images' pixels
+    \item \textbf{Alpha:} Blend ratio (0.0 to 1.0)
+    \item \textbf{Canvas:} Background image to paste onto
+    \item \textbf{Chromakey:} Color-based image replacement
+    \item \textbf{Compositing:} Combining multiple images with various techniques
+\end{itemize}
+
+\section{Common Issues}
+
+\textbf{Images different sizes:}
+\begin{itemize}
+    \item Use \texttt{resize()} to make them compatible
+    \item Crop to same dimensions first
+    \item Paste smaller onto larger without blending
+\end{itemize}
+
+\textbf{Pasting outside canvas bounds:}
+\begin{itemize}
+    \item Check position + image size < canvas size
+    \item Pillow will crop automatically but might not look as expected
+\end{itemize}
+
+\textbf{Chromakey not working:}
+\begin{itemize}
+    \item Adjust threshold values
+    \item Ensure green screen is evenly lit
+    \item Check color values with pixel inspection
+    \item Try different color comparison formulas
+\end{itemize}
+
+\section{Checkoff}
+
+Before you leave, show your instructor or TA:
+\begin{enumerate}
+    \item Your grid collage with at least 6 images
+    \item Your blended images showing different alpha values
+    \item Your chromakey effect (or gradient blend if no green screen)
+    \item Your creative collage project
+    \item Explain how blending works (weighted average)
+\end{enumerate}
+
+\section{What's Next?}
+
+In Lab 06, we'll switch from images to sounds! You'll learn how digital audio works and create your own sound effects. Bring headphones!
+
+\end{document}

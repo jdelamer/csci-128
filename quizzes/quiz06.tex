@@ -1,0 +1,72 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Introduction to Computer Science}
+\courseshort{CSCI 128}
+\exam{Quiz 6}
+\examdate{Winter 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lecture 9 (Building Bigger Programs)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[2] What are three benefits of organizing your code into functions?
+\vspace{1.5in}
+
+\question[2] What is a module in Python? How do you import a function from a custom module?
+\vspace{1.5in}
+
+\question[3] What is the purpose of the following line at the end of a Python file?
+\begin{lstlisting}[numbers=none]
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+\vspace{1.5in}
+
+\question[2] What is the difference between testing code interactively and writing test functions?
+\vspace{1.5in}
+
+\question[3] Write a function called \texttt{increase\_brightness} that takes an image as a parameter and returns a new image with all RGB values increased by 20 (without exceeding 255).
+\vspace{1.5in}
+
+\question[3] What is debugging? Name two strategies for debugging a program that isn't working correctly.
+\vspace{1.5in}
+
+\end{questions}
+
+\end{document}
