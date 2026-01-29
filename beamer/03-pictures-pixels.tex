@@ -14,14 +14,12 @@
     commentstyle=\color{green!50!black}\itshape,
     showstringspaces=false,
     breaklines=true,
-    frame=single,
-    numbers=left,
-    numberstyle=\tiny\color{gray}
+    frame=single
 }
 
 % Course information
 \title{Introduction to Pictures and Pixels}
-\course{CSCI 128: Introduction to Computer Science}
+\course{CSCI 128: Conding for Problem Solving}
 \courseshort{CSCI 128}
 \term{Winter 2026}
 \author{Dr. Jean-Alexis Delamer}
@@ -47,12 +45,6 @@
         \item<4-> Access pixel information
         \item<5-> Set up Pillow library for image manipulation
     \end{itemize}
-
-    \vspace{1em}
-
-    \begin{center}
-        \onslide<6->{\textit{This is where programming becomes \textcolor{marigold}{\textbf{visual and fun!}}}}
-    \end{center}
 \end{frame}
 
 \begin{frame}{Why Pictures?}
@@ -287,10 +279,6 @@ print(f"Mode: {img.mode}")
 print(f"Format: {img.format}")
     \end{lstlisting}
 
-    \vspace{1em}
-
-    \pause
-
     \textbf{Common modes:}
     \begin{itemize}
         \item<2-> \textcolor{marigold}{"RGB"} - Color image (3 channels)
@@ -324,8 +312,6 @@ print(f"Format: {img.format}")
         \end{tikzpicture}
     \end{center}
 
-    \vspace{0.5em}
-
     \begin{itemize}
         \item<2-> \textcolor{stfxblue}{x} increases going \textcolor{marigold}{right}
         \item<3-> \textcolor{stfxblue}{y} increases going \textcolor{marigold}{down} (not up like in math!)
@@ -351,8 +337,6 @@ print(pixel_color)
 r, g, b = img.getpixel((100, 50))
 print(f"Red: {r}, Green: {g}, Blue: {b}")
     \end{lstlisting}
-
-    \vspace{1em}
 
     \pause
 
@@ -439,8 +423,62 @@ img = Image.new("RGB", (400, 400), (0, 0, 0))
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Drawing on Images}
-    \textbf{Let's draw a simple pattern:}
+\begin{frame}[fragile]{Introduction to Loops}
+    \textbf{To work with many pixels, we need loops!}
+
+    \vspace{1em}
+
+    \textbf{The \texttt{for} loop with \texttt{range()}:}
+
+    \begin{lstlisting}
+# Print numbers 0 through 4
+for i in range(5):
+    print(i)
+# Output: 0, 1, 2, 3, 4
+
+# Print numbers 10 through 14
+for i in range(10, 15):
+    print(i)
+# Output: 10, 11, 12, 13, 14
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \texttt{range(n)} generates numbers from 0 to n-1
+        \item \texttt{range(start, stop)} generates numbers from start to stop-1
+        \item Perfect for iterating over pixel coordinates!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Drawing a Line with a Loop}
+    \textbf{Let's draw a simple horizontal line:}
+
+    \begin{lstlisting}
+from PIL import Image
+
+# Create a 100x100 white image
+img = Image.new("RGB", (100, 100), (255, 255, 255))
+
+# Draw a red horizontal line across the middle (y=50)
+for x in range(100):
+    img.putpixel((x, 50), (255, 0, 0))
+
+img.show()
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{What's happening?}
+    \begin{itemize}
+        \item Loop runs 100 times: x = 0, 1, 2, ..., 99
+        \item Each iteration sets one pixel to red at position (x, 50)
+        \item Result: A horizontal red line across row 50
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Drawing a Cross Pattern}
+    \textbf{Now let's combine two loops to draw a cross:}
 
     \begin{lstlisting}
 from PIL import Image
@@ -459,9 +497,7 @@ for y in range(100):
 img.show()
     \end{lstlisting}
 
-    \vspace{1em}
-
-    This creates a red cross pattern!
+    This creates a red cross pattern with a blue vertical line!
 \end{frame}
 
 \begin{frame}[fragile]{Loops with Pixels}
@@ -484,8 +520,6 @@ for x in range(200):
 
 img.show()
     \end{lstlisting}
-
-    \vspace{1em}
 
     \pause
 
