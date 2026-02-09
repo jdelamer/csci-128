@@ -8,7 +8,7 @@
 % Python code styling
 \lstset{
     language=Python,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\scriptsize,
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
@@ -623,6 +623,106 @@ img.show()
     \vspace{0.5em}
 
     Try different numbers of levels!
+\end{frame}
+
+\begin{frame}{What is a Condition?}
+    \begin{itemize}
+        \item A \textbf{condition} is a question the computer can answer with \texttt{True} or \texttt{False}.
+        \item Example questions:
+        \begin{itemize}
+            \item Is this number greater than 10?
+            \item Is this pixel brighter than 128?
+            \item Is this color equal to pure red?
+        \end{itemize}
+        \item In Python, conditions are written with comparison operators like:
+        \begin{itemize}
+            \item \texttt{==} (equal), \texttt{!=} (not equal)
+            \item \texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{if}: Making Decisions}
+    \begin{itemize}
+        \item We use \texttt{if} to run code \textbf{only when} a condition is \texttt{True}.
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \begin{lstlisting}
+x = 7
+
+if x > 5:
+    print("x is big!")
+
+print("Done")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    \begin{itemize}
+        \item The line under \texttt{if} is \textbf{indented}.
+        \item It runs only if \texttt{x > 5} is \texttt{True}.
+        \item \texttt{"Done"} prints every time, because it is not indented.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{if} and \texttt{else}}
+    \begin{itemize}
+        \item \texttt{else} tells Python what to do when the condition is \texttt{False}.
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \begin{lstlisting}
+temperature = 3
+
+if temperature > 0:
+    print("Above freezing")
+else:
+    print("At or below freezing")
+
+print("Check complete")
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    \begin{itemize}
+        \item Exactly one of the two blocks runs:
+        \begin{itemize}
+            \item the \texttt{if} block (when condition is \texttt{True}), or
+            \item the \texttt{else} block (when condition is \texttt{False}).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Connecting to Images}
+    \begin{itemize}
+        \item We can use \texttt{if} and \texttt{else} to decide:
+        \begin{itemize}
+            \item Should this pixel be darker or lighter?
+            \item Should this pixel become white or black?
+            \item Is this pixel part of the background or the foreground?
+        \end{itemize}
+        \item Example idea:
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \begin{lstlisting}
+if pixel_brightness > 128:
+    # make bright pixels white
+    set_pixel_to_white()
+else:
+    # make dark pixels black
+    set_pixel_to_black()
+    \end{lstlisting}
+
+    \vspace{0.5em}
+
+    \begin{itemize}
+        \item Next: we will write real code like this to create a threshold filter.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Threshold Filter}
