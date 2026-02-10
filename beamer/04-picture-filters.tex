@@ -8,7 +8,7 @@
 % Python code styling
 \lstset{
     language=Python,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\scriptsize,
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
@@ -21,9 +21,9 @@
 
 % Course information
 \title{Picture Manipulation and Filters}
-\course{CSCI 128: Introduction to Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
 \courseshort{CSCI 128}
-\term{Winter 2025}
+\term{Winter 2026}
 \author{Dr. Jean-Alexis Delamer}
 
 \begin{document}
@@ -83,7 +83,6 @@
     \begin{lstlisting}
 from PIL import Image
 
-# Load the image
 img = Image.open("photo.jpg")
 pixels = img.load()
 width, height = img.size
@@ -93,13 +92,10 @@ for x in range(width):
     for y in range(height):
         # Get current color
         r, g, b = pixels[x, y]
-
         # Calculate new color
         new_r, new_g, new_b = # ... transformation ...
-
         # Set new color
         pixels[x, y] = (new_r, new_g, new_b)
-
 img.show()
     \end{lstlisting}
 \end{frame}
@@ -185,8 +181,6 @@ img.save("grayscale.jpg")
 img.show()
     \end{lstlisting}
 
-    \vspace{1em}
-
     \textbf{Note:} We use \texttt{//} for integer division
 \end{frame}
 
@@ -241,8 +235,6 @@ img.save("grayscale_luminance.jpg")
 img.show()
     \end{lstlisting}
 
-    \vspace{1em}
-
     This produces more \textcolor{marigold}{natural-looking} grayscale images!
 \end{frame}
 
@@ -288,8 +280,6 @@ img.show()
         \item<9-> $\text{new\_blue} = 255 - \text{old\_blue}$
     \end{itemize}
 
-    \vspace{1em}
-
     \pause
 
     \textbf{Example:} \textcolor{red}{Red (255, 0, 0)} becomes \textcolor{cyan}{Cyan (0, 255, 255)}
@@ -298,7 +288,6 @@ img.show()
 \begin{frame}[fragile]{Creating a Negative}
     \begin{lstlisting}
 from PIL import Image
-
 img = Image.open("photo.jpg")
 pixels = img.load()
 width, height = img.size
@@ -306,7 +295,6 @@ width, height = img.size
 for x in range(width):
     for y in range(height):
         r, g, b = pixels[x, y]
-
         # Invert each color channel
         new_r = 255 - r
         new_g = 255 - g
@@ -317,8 +305,6 @@ for x in range(width):
 img.save("negative.jpg")
 img.show()
     \end{lstlisting}
-
-    \vspace{1em}
 
     \textbf{Simple but \textcolor{marigold}{dramatic} effect!}
 \end{frame}
@@ -399,8 +385,6 @@ for x in range(width):
 img.save("brighter.jpg")
 img.show()
     \end{lstlisting}
-
-    \vspace{0.5em}
 
     \textcolor{stfxblue}{\texttt{min()}} ensures we don't exceed 255
 \end{frame}
