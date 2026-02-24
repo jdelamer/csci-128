@@ -581,11 +581,9 @@ img.show()
 \begin{frame}[fragile]{Posterization Implementation}
     \begin{lstlisting}
 from PIL import Image
-
 img = Image.open("photo.jpg")
 pixels = img.load()
 width, height = img.size
-
 levels = 4  # Number of levels per channel
 step = 256 // levels
 
@@ -603,32 +601,30 @@ for x in range(width):
 img.save("posterized.jpg")
 img.show()
     \end{lstlisting}
-
-    \vspace{0.5em}
-
-    Try different numbers of levels!
 \end{frame}
 
 \begin{frame}{What is a Condition?}
     \begin{itemize}
-        \item A \textbf{condition} is a question the computer can answer with \texttt{True} or \texttt{False}.
+        \item A \textbf{condition} (or \textbf{boolean expression}) is a question the computer can answer with \texttt{True} or \texttt{False}.
         \item Example questions:
         \begin{itemize}
             \item Is this number greater than 10?
             \item Is this pixel brighter than 128?
             \item Is this color equal to pure red?
         \end{itemize}
-        \item In Python, conditions are written with comparison operators like:
+        \item In Python, conditions use \textbf{comparison operators}:
         \begin{itemize}
             \item \texttt{==} (equal), \texttt{!=} (not equal)
             \item \texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}
         \end{itemize}
+        \item Example: \texttt{x > 5} evaluates to \texttt{True} if \texttt{x} is 7, or \texttt{False} if \texttt{x} is 3.
     \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{\texttt{if}: Making Decisions}
     \begin{itemize}
         \item We use \texttt{if} to run code \textbf{only when} a condition is \texttt{True}.
+        \item Syntax: \texttt{if condition:} (note the \textbf{colon}!)
     \end{itemize}
 
     \vspace{0.5em}
@@ -645,9 +641,10 @@ print("Done")
     \vspace{0.5em}
 
     \begin{itemize}
-        \item The line under \texttt{if} is \textbf{indented}.
+        \item The line under \texttt{if} is \textbf{indented} (4 spaces or 1 tab).
         \item It runs only if \texttt{x > 5} is \texttt{True}.
-        \item \texttt{"Done"} prints every time, because it is not indented.
+        \item \texttt{"Done"} prints every time (not indented = not part of \texttt{if}).
+        \item \textbf{Output:} \texttt{x is big!} then \texttt{Done}
     \end{itemize}
 \end{frame}
 
@@ -672,11 +669,13 @@ print("Check complete")
     \vspace{0.5em}
 
     \begin{itemize}
-        \item Exactly one of the two blocks runs:
+        \item Exactly \textbf{one} of the two blocks runs:
         \begin{itemize}
-            \item the \texttt{if} block (when condition is \texttt{True}), or
-            \item the \texttt{else} block (when condition is \texttt{False}).
+            \item the \texttt{if} block (when \texttt{True}), or
+            \item the \texttt{else} block (when \texttt{False}).
         \end{itemize}
+        \item \textbf{Output:} \texttt{Above freezing} then \texttt{Check complete}
+        \item If \texttt{temperature = -5}: \texttt{At or below freezing} then \texttt{Check complete}
     \end{itemize}
 \end{frame}
 
@@ -763,170 +762,6 @@ img.show()
     \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Lab Exercise: Build a Filter Function}
-    \textbf{Let's organize our code better:}
-
-    \vspace{1em}
-
-    Instead of writing the same nested loop structure every time, create reusable functions!
-
-    \vspace{1em}
-
-    \textbf{Structure:}
-    \begin{enumerate}
-        \item Define a function for each filter
-        \item Pass the image as a parameter
-        \item Return the modified image
-        \item Easy to combine filters!
-    \end{enumerate}
-
-    \vspace{1em}
-
-    \begin{center}
-        This is better programming practice!
-    \end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Filter Functions Example}
-    \begin{lstlisting}
-from PIL import Image
-
-def grayscale(img):
-    pixels = img.load()
-    width, height = img.size
-
-    for x in range(width):
-        for y in range(height):
-            r, g, b = pixels[x, y]
-            gray = int(0.299*r + 0.587*g + 0.114*b)
-            pixels[x, y] = (gray, gray, gray)
-
-    return img
-
-# Use the function
-img = Image.open("photo.jpg")
-img = grayscale(img)
-img.save("output.jpg")
-img.show()
-    \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Combining Filters}
-    \textbf{With functions, we can easily chain filters:}
-
-    \begin{lstlisting}
-from PIL import Image
-
-# Define your filter functions here...
-# def grayscale(img): ...
-# def increase_brightness(img, amount): ...
-# def negative(img): ...
-
-# Load image
-img = Image.open("photo.jpg")
-
-# Apply multiple filters in sequence
-img = increase_brightness(img, 30)
-img = grayscale(img)
-
-# Or all at once
-img = grayscale(increase_brightness(
-        Image.open("photo.jpg"), 30))
-
-img.save("processed.jpg")
-img.show()
-    \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Lab Activity: Complete Filter Suite}
-    \begin{center}
-        \Large \textbf{Main Lab Activity!}
-    \end{center}
-
-    \vspace{1em}
-
-    \textbf{Create a Python program with these functions:}
-    \begin{enumerate}
-        \item \texttt{grayscale(img)} - Convert to grayscale
-        \item \texttt{negative(img)} - Create negative
-        \item \texttt{brighten(img, amount)} - Increase brightness
-        \item \texttt{darken(img, amount)} - Decrease brightness
-        \item \texttt{sepia(img)} - Apply sepia tone
-        \item \texttt{threshold(img, value)} - Black \& white
-    \end{enumerate}
-
-    \vspace{1em}
-
-    \textbf{Test each function and save the results!}
-
-    \vspace{0.5em}
-
-    \textbf{Bonus:} Create your own custom filter!
-\end{frame}
-
-\begin{frame}{Tips for Lab Success}
-    \textbf{Best practices:}
-
-    \vspace{1em}
-
-    \begin{enumerate}
-        \item \textbf{Test on small images first}
-            \begin{itemize}
-                \item Faster to process
-                \item Easier to debug
-            \end{itemize}
-
-        \item \textbf{Save intermediate results}
-            \begin{itemize}
-                \item Don't lose your work!
-                \item Compare different approaches
-            \end{itemize}
-
-        \item \textbf{Use descriptive filenames}
-            \begin{itemize}
-                \item \texttt{photo\_grayscale.jpg}
-                \item \texttt{photo\_negative.jpg}
-            \end{itemize}
-
-        \item \textbf{Add comments}
-            \begin{itemize}
-                \item Explain what each filter does
-                \item Note the formulas used
-            \end{itemize}
-    \end{enumerate}
-\end{frame}
-
-\begin{frame}{Common Debugging Issues}
-    \textbf{If your filter doesn't work:}
-
-    \vspace{1em}
-
-    \begin{enumerate}
-        \item \textbf{Check your loops}
-            \begin{itemize}
-                \item Are you iterating over width and height correctly?
-            \end{itemize}
-
-        \item \textbf{Verify value ranges}
-            \begin{itemize}
-                \item RGB values must be 0-255
-                \item Use \texttt{min()} and \texttt{max()} to clamp
-            \end{itemize}
-
-        \item \textbf{Integer vs float}
-            \begin{itemize}
-                \item RGB values must be integers
-                \item Use \texttt{int()} to convert
-            \end{itemize}
-
-        \item \textbf{Test on a tiny image first}
-            \begin{itemize}
-                \item Create a 10×10 test image
-                \item Print pixel values to debug
-            \end{itemize}
-    \end{enumerate}
-\end{frame}
-
 \begin{frame}{Advanced Challenge: Edge Detection Preview}
     \textbf{Looking ahead:}
 
@@ -956,73 +791,5 @@ img.show()
     \end{center}
 \end{frame}
 
-\begin{frame}{Key Takeaways}
-    \textbf{Today you learned:}
-    \begin{itemize}
-        \item The standard pattern for processing all pixels
-        \item How to create grayscale images (two methods)
-        \item How to create negative images
-        \item How to adjust brightness
-        \item How to apply color tints
-        \item How to create sepia tone
-        \item How to organize filters into functions
-    \end{itemize}
-
-    \vspace{1em}
-
-    \begin{center}
-        \textbf{You can now create Instagram-style filters from scratch!}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Understanding Image Processing}
-    \textbf{What you've really learned:}
-
-    \vspace{1em}
-
-    \begin{itemize}
-        \item \textbf{Algorithms:} Step-by-step procedures to solve problems
-        \item \textbf{Data transformation:} Converting data from one form to another
-        \item \textbf{Iteration:} Processing large amounts of data systematically
-        \item \textbf{Functions:} Organizing code into reusable components
-    \end{itemize}
-
-    \vspace{1em}
-
-    \begin{center}
-        These are \textit{fundamental computer science concepts}!
-    \end{center}
-
-    \vspace{1em}
-
-    You've been learning CS theory while having fun with pictures!
-\end{frame}
-
-\begin{frame}{For Next Class}
-    \textbf{Before next session:}
-    \begin{itemize}
-        \item Complete all lab filter functions
-        \item Experiment with different images
-        \item Try combining multiple filters
-        \item Read Chapter 4 of the textbook
-        \item Think about: What other transformations could we do?
-    \end{itemize}
-
-    \vspace{1em}
-
-    \textbf{Next session:}
-    \begin{itemize}
-        \item Picture transformations (flip, mirror, rotate)
-        \item Copying regions of images
-        \item Creating image collages
-        \item More advanced manipulations
-    \end{itemize}
-
-    \vspace{1em}
-
-    \begin{center}
-        \textbf{Questions?}
-    \end{center}
-\end{frame}
 
 \end{document}

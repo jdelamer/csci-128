@@ -8,7 +8,7 @@
 % Python code styling
 \lstset{
     language=Python,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\scriptsize,
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
@@ -21,9 +21,9 @@
 
 % Course information
 \title{Picture Transformations}
-\course{CSCI 128: Introduction to Computer Science}
+\course{CSCI 128: Coding For Problem Solving}
 \courseshort{CSCI 128}
-\term{Winter 2025}
+\term{Winter 2026}
 \author{Dr. Jean-Alexis Delamer}
 
 \begin{document}
@@ -41,61 +41,415 @@
 
     \textbf{Learning Objectives:}
     \begin{itemize}
-        \item<1-> Copy pixels from one image to another
-        \item<2-> \textcolor{marigold}{Mirror} images horizontally and vertically
-        \item<3-> \textcolor{stfxblue}{Rotate} images 90 degrees
-        \item<4-> \textcolor{marigold}{Crop} portions of images
-        \item<5-> \textcolor{stfxblue}{Scale} images up and down
-        \item<6-> Understand coordinate transformations
+        \item Copy pixels from one image to another
+        \item \textcolor{marigold}{Mirror} images horizontally and vertically
+        \item \textcolor{stfxblue}{Rotate} images 90 degrees
+        \item \textcolor{marigold}{Crop} portions of images
+        \item \textcolor{stfxblue}{Scale} images up and down
+        \item Understand coordinate transformations
     \end{itemize}
 
     \vspace{1em}
 
     \begin{center}
-        \onslide<7->{\textit{Today we manipulate \textcolor{marigold}{\textbf{image structure}}, not just color!}}
+        \textit{Today we manipulate \textcolor{marigold}{\textbf{image structure}}, not just color!}
     \end{center}
 \end{frame}
 
-\begin{frame}{Review: What We Know}
-    \textbf{So far we've learned:}
+\begin{frame}{A Problem: Repeating Code}
+    \textbf{Last classes, we wrote similar code over and over:}
+
+    \vspace{1em}
+
     \begin{itemize}
-        \item<1-> How to load and save images
-        \item<2-> How to access and modify pixel \textcolor{marigold}{colors}
-        \item<3-> How to process all pixels with nested loops
-        \item<4-> How to create filters (grayscale, negative, etc.)
+        \item Grayscale filter: loop through pixels, transform colors
+        \item Negative filter: loop through pixels, transform colors
+        \item Sepia filter: loop through pixels, transform colors
+        \item Brightness filter: loop through pixels, transform colors
     \end{itemize}
 
     \vspace{1em}
 
     \pause
 
-    \textbf{Today's focus:}
+    \textbf{This is repetitive and error-prone!}
+
+    \vspace{1em}
+
+    \pause
+
+    \begin{center}
+        \Large \textcolor{marigold}{We need a better way to organize our code.}
+    \end{center}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<2->{\textit{Enter: \textcolor{stfxblue}{\textbf{Functions!}}}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{What is a Function?}
+    \textbf{A \textcolor{stfxblue}{function} is a reusable block of code with a name.}
+
+    \vspace{1em}
+
+    \textbf{Think of it like a recipe:}
     \begin{itemize}
-        \item<6-> Not changing colors, but changing \textcolor{stfxblue}{\textbf{positions}}
-        \item<7-> Moving pixels to different locations
-        \item<8-> Creating new images from parts of old ones
+        \item<1-> Has a name: "Make Grayscale"
+        \item<2-> Takes ingredients (inputs): an image
+        \item<3-> Follows steps: loop through pixels, average RGB
+        \item<4-> Produces a result (output): grayscale image
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{Benefits:}
+    \begin{itemize}
+        \item<6-> \textcolor{marigold}{Reusable}: Write once, use many times
+        \item<7-> \textcolor{marigold}{Organized}: Each function has one job
+        \item<8-> \textcolor{marigold}{Readable}: Code is easier to understand
+        \item<9-> \textcolor{marigold}{Maintainable}: Fix bugs in one place
     \end{itemize}
 \end{frame}
+
+\begin{frame}[fragile]{Function Syntax}
+    \textbf{Basic structure of a function:}
+
+    \begin{lstlisting}
+def function_name(parameter1, parameter2):
+    """Optional description of what function does"""
+    # Code goes here
+    result = # ... do something ...
+    return result
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Key parts:}
+    \begin{itemize}
+        \item \texttt{\textcolor{blue}{def}}: keyword to define a function
+        \item \texttt{function\_name}: descriptive name (use snake\_case)
+        \item \texttt{(parameters)}: inputs the function needs
+        \item \texttt{:} colon (don't forget!)
+        \item Indented code block: the function body
+        \item \texttt{\textcolor{blue}{return}}: sends result back to caller
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Your First Function: Simple Example}
+    \begin{lstlisting}
+def greet(name):
+    """Greet someone by name"""
+    message = "Hello, " + name + "!"
+    return message
+
+# Using the function
+greeting1 = greet("Alice")
+print(greeting1)  # Hello, Alice!
+
+greeting2 = greet("Bob")
+print(greeting2)  # Hello, Bob!
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{What happened:}
+    \begin{itemize}
+        \item We \textcolor{stfxblue}{defined} the function once
+        \item We \textcolor{marigold}{called} it twice with different inputs
+        \item Each call returned a different result
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Function Parameters and Arguments}
+    \textbf{Parameters vs Arguments:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{\textcolor{stfxblue}{Parameter}}: Variable in function definition
+        \item \textbf{\textcolor{marigold}{Argument}}: Actual value passed when calling
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+def add_numbers(a, b):  # a and b are parameters
+    """Add two numbers together"""
+    total = a + b
+    return total
+
+# 5 and 3 are arguments
+result = add_numbers(5, 3)
+print(result)  # 8
+
+# 10 and 20 are arguments
+result2 = add_numbers(10, 20)
+print(result2)  # 30
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The Return Statement}
+    \textbf{Return sends a value back to the caller:}
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+def square(x):
+    """Calculate square of a number"""
+    result = x * x
+    return result
+
+answer = square(5)
+print(answer)  # 25
+
+# Can use directly in expressions
+total = square(3) + square(4)
+print(total)  # 9 + 16 = 25
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Important:}
+    \begin{itemize}
+        \item \texttt{return} exits the function immediately
+        \item Code after \texttt{return} doesn't run
+        \item Functions without \texttt{return} return \texttt{None}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Functions Without Return}
+    \textbf{Not all functions need to return a value:}
+
+    \vspace{1em}
+
+    \begin{lstlisting}
+def print_header(title):
+    """Print a fancy header"""
+    print("=" * 40)
+    print(title.upper())
+    print("=" * 40)
+
+print_header("My Program")
+# ========================================
+# MY PROGRAM
+# ========================================
+
+print_header("Section 2")
+# ========================================
+# SECTION 2
+# ========================================
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{This function performs an action but doesn't return anything.}
+\end{frame}
+
+\begin{frame}[fragile]{Multiple Parameters}
+    \textbf{Functions can take multiple inputs:}
+
+    \begin{lstlisting}
+def calculate_area(width, height):
+    """Calculate area of a rectangle"""
+    area = width * height
+    return area
+
+def make_full_name(first, last):
+    """Combine first and last name"""
+    return first + " " + last
+
+# Using the functions
+rect_area = calculate_area(10, 5)
+print(rect_area)  # 50
+
+name = make_full_name("John", "Smith")
+print(name)  # John Smith
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \textbf{Order matters!} Arguments are assigned to parameters by position.
+\end{frame}
+
+\begin{frame}[fragile]{Applying Functions to Images}
+    \textbf{Now let's use functions for image processing!}
+
+    \vspace{1em}
+
+    \textbf{Without functions (what we did before):}
+    \begin{lstlisting}
+# Convert to grayscale
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+        gray = (r + g + b) // 3
+        pixels[x, y] = (gray, gray, gray)
+
+# Apply negative
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+        new_r = 255 - r
+        new_g = 255 - g
+        new_b = 255 - b
+        pixels[x, y] = (new_r, new_g, new_b)
+    \end{lstlisting}
+
+    \textcolor{red}{Lots of repeated code!}
+\end{frame}
+
+\begin{frame}[fragile]{With Functions: Much Better!}
+    \begin{lstlisting}
+def grayscale(img):
+    """Convert image to grayscale"""
+    pixels = img.load()
+    width, height = img.size
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            gray = (r + g + b) // 3
+            pixels[x, y] = (gray, gray, gray)
+    return img
+
+# Now we can use it easily!
+from PIL import Image
+img = Image.open("photo.jpg")
+img = grayscale(img)
+img.save("grayscale.jpg")
+
+# Want to apply it again? Easy!
+img2 = Image.open("another.jpg")
+img2 = grayscale(img2)  # Same function, different image!
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Building a Filter Library}
+    \textbf{We can create many filter functions:}
+
+    \begin{lstlisting}
+def grayscale(img):
+    # ... implementation ...
+    return img
+
+def sepia(img):
+    # ... implementation ...
+    return img
+
+def brighten(img, amount):
+    # ... implementation ...
+    return img
+
+# Using our library
+img = Image.open("photo.jpg")
+img = sepia(img)
+img = brighten(img, 30)
+img.save("result.jpg")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Functions Calling Functions}
+    \textbf{Functions can use other functions:}
+
+    \begin{lstlisting}
+def grayscale(img):
+    # ... convert to grayscale ...
+
+def threshold(img, value):
+    # ... apply threshold ...
+
+def black_and_white(img):
+    """Convert to pure black and white"""
+    # First make grayscale, then threshold
+    img = grayscale(img)
+    img = threshold(img, 128)
+    return img
+
+img = Image.open("photo.jpg")
+img = black_and_white(img)
+img.save("bw.jpg")
+    \end{lstlisting}
+
+    \textbf{This is called \textcolor{marigold}{composition}!}
+\end{frame}
+
+\begin{frame}[fragile]{Try It: Create Your First Function}
+
+    \textbf{Create a function that doubles a number:}
+
+    \begin{lstlisting}
+def double(x):
+    """Return twice the input value"""
+    # Your code here
+    pass # Remove this when you're done
+
+# Test it
+print(double(5))   # Should print 10
+print(double(21))  # Should print 42
+    \end{lstlisting}
+
+    \textbf{Then create a function that takes two numbers and returns their average:}
+
+    \begin{lstlisting}
+def average(a, b):
+    """Return average of two numbers"""
+    # Your code here
+    pass # Remove this when you're done
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Why Functions Matter for Image Processing}
+    \textbf{Today we'll create transformation functions:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item<1-> \texttt{mirror\_horizontal(img)} - flip left-right
+        \item<2-> \texttt{mirror\_vertical(img)} - flip top-bottom
+        \item<3-> \texttt{rotate\_90(img)} - rotate clockwise
+        \item<4-> \texttt{crop\_image(img, x, y, w, h)} - extract region
+        \item<5-> \texttt{scale\_image(img, factor)} - resize
+    \end{itemize}
+
+    \vspace{1em}
+
+    \pause
+
+    \textbf{With functions, we can:}
+    \begin{itemize}
+        \item<7-> Reuse transformations on different images
+        \item<8-> Combine transformations easily
+        \item<9-> Build a personal image processing library
+        \item<10-> Share code with others
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<11->{\textcolor{marigold}{\textbf{Functions make complex tasks manageable!}}}
+    \end{center}
+\end{frame}
+
+
 
 \begin{frame}[fragile]{Copying Images}
     \textbf{Why copy an image?}
     \begin{itemize}
-        \item<1-> \textcolor{stfxblue}{Preserve} the original
-        \item<2-> Create a base for modifications
-        \item<3-> Combine multiple images
+        \item \textcolor{stfxblue}{Preserve} the original
+        \item Create a base for modifications
+        \item Combine multiple images
     \end{itemize}
-
-    \vspace{1em}
 
     \pause
 
     \textbf{Two approaches:}
     \begin{enumerate}
-        \item<5-> Use Pillow's built-in \textcolor{marigold}{\texttt{copy()}} method
-        \item<6-> Copy pixel-by-pixel (to understand the process)
+        \item<2-> Use Pillow's built-in \textcolor{marigold}{\texttt{copy()}} method
+        \item<3-> Copy pixel-by-pixel (to understand the process)
     \end{enumerate}
-
-    \vspace{1em}
 
     \begin{lstlisting}
 from PIL import Image
@@ -108,7 +462,8 @@ img_copy = img.copy()
     \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Copying Pixel by Pixel}
+\begin{frame}[fragile]{Copying Pixel by Pixel (As a Function!)}
+
     \begin{lstlisting}
 from PIL import Image
 
@@ -120,7 +475,6 @@ def copy_image(source_img):
     src_pixels = source_img.load()
     dst_pixels = new_img.load()
 
-    # Copy each pixel
     for x in range(width):
         for y in range(height):
             dst_pixels[x, y] = src_pixels[x, y]
@@ -137,29 +491,21 @@ copy.show()
     \textbf{\textcolor{marigold}{Horizontal mirror} (flip left-right):}
     \begin{itemize}
         \item<1-> Left side becomes right side
-        \item<2-> Right side becomes left side
-        \item<3-> Like looking in a mirror
+        \item<1-> Right side becomes left side
+        \item<1-> Like looking in a mirror
     \end{itemize}
-
-    \vspace{1em}
-
-    \pause
 
     \textbf{\textcolor{stfxblue}{Vertical mirror} (flip top-bottom):}
     \begin{itemize}
-        \item<5-> Top becomes bottom
-        \item<6-> Bottom becomes top
-        \item<7-> Like a reflection in water
+        \item<2-> Top becomes bottom
+        \item<2-> Bottom becomes top
+        \item<2-> Like a reflection in water
     \end{itemize}
-
-    \vspace{1em}
-
-    \pause
 
     \textbf{Key idea:}
     \begin{itemize}
-        \item<9-> Read pixels from one location
-        \item<10-> Write to a \textcolor{marigold}{different, calculated} location
+        \item<3-> Read pixels from one location
+        \item<3-> Write to a \textcolor{marigold}{different, calculated} location
     \end{itemize}
 \end{frame}
 
@@ -170,8 +516,8 @@ copy.show()
 
     \begin{itemize}
         \item<1-> Image width: \texttt{W}
-        \item<2-> Pixel at position \texttt{x}
-        \item<3-> Should map to position \textcolor{stfxblue}{\texttt{W - 1 - x}}
+        \item<1-> Pixel at position \texttt{x}
+        \item<1-> Should map to position \textcolor{stfxblue}{\texttt{W - 1 - x}}
     \end{itemize}
 
     \vspace{1em}
@@ -180,23 +526,23 @@ copy.show()
 
     \textbf{Examples (for width = 100):}
     \begin{itemize}
-        \item<5-> \texttt{x = 0} maps to \texttt{100 - 1 - 0 = \textcolor{marigold}{99}}
-        \item<6-> \texttt{x = 10} maps to \texttt{100 - 1 - 10 = \textcolor{marigold}{89}}
-        \item<7-> \texttt{x = 99} maps to \texttt{100 - 1 - 99 = \textcolor{marigold}{0}}
+        \item<2-> \texttt{x = 0} maps to \texttt{100 - 1 - 0 = \textcolor{marigold}{99}}
+        \item<3-> \texttt{x = 10} maps to \texttt{100 - 1 - 10 = \textcolor{marigold}{89}}
+        \item<4-> \texttt{x = 99} maps to \texttt{100 - 1 - 99 = \textcolor{marigold}{0}}
     \end{itemize}
 
     \vspace{1em}
 
     \begin{center}
-        \onslide<8->{\textcolor{marigold}{First pixel becomes last, last becomes first!}}
+        \onslide<5->{\textcolor{marigold}{First pixel becomes last, last becomes first!}}
     \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Implementing Horizontal Mirror}
-    \begin{lstlisting}
-from PIL import Image
 
+    \begin{lstlisting}
 def mirror_horizontal(img):
+    """Mirror image horizontally (flip left-right)"""
     width, height = img.size
     mirrored = Image.new("RGB", (width, height))
 
@@ -221,9 +567,8 @@ mirrored.show()
 
 \begin{frame}[fragile]{Implementing Vertical Mirror}
     \begin{lstlisting}
-from PIL import Image
-
 def mirror_vertical(img):
+    """Mirror image vertically (flip top-bottom)"""
     width, height = img.size
     mirrored = Image.new("RGB", (width, height))
 
@@ -298,12 +643,10 @@ mirrored.show()
 
 \begin{frame}[fragile]{Rotating 90° Clockwise}
     \begin{lstlisting}
-from PIL import Image
-
 def rotate_90_clockwise(img):
+    """Rotate image 90 degrees clockwise"""
     width, height = img.size
-    # Note: dimensions are swapped!
-    rotated = Image.new("RGB", (height, width))
+    rotated = Image.new("RGB", (height, width)) # Dimensions are swapped!
 
     src_pixels = img.load()
     dst_pixels = rotated.load()
@@ -326,9 +669,8 @@ rotated.show()
 
 \begin{frame}[fragile]{Rotating 90° Counter-Clockwise}
     \begin{lstlisting}
-from PIL import Image
-
 def rotate_90_counter_clockwise(img):
+    """Rotate image 90 degrees counter-clockwise"""
     width, height = img.size
     rotated = Image.new("RGB", (height, width))
 
@@ -383,12 +725,10 @@ rotated.show()
 
 \begin{frame}[fragile]{Implementing Crop}
     \begin{lstlisting}
-from PIL import Image
-
 def crop_image(img, start_x, start_y, width, height):
+    """Crop a rectangular region from an image"""
     # Create new image with crop dimensions
     cropped = Image.new("RGB", (width, height))
-
     src_pixels = img.load()
     dst_pixels = cropped.load()
 
@@ -402,6 +742,7 @@ def crop_image(img, start_x, start_y, width, height):
 
     return cropped
 
+# Using our function with 5 arguments!
 img = Image.open("photo.jpg")
 cropped = crop_image(img, 100, 50, 200, 300)
 cropped.show()
@@ -423,8 +764,6 @@ cropped = img.crop(box)
 cropped.show()
     \end{lstlisting}
 
-    \vspace{1em}
-
     \textbf{Parameters:}
     \begin{itemize}
         \item \texttt{left}: x-coordinate of left edge
@@ -433,7 +772,6 @@ cropped.show()
         \item \texttt{bottom}: y-coordinate of bottom edge (exclusive)
     \end{itemize}
 
-    \vspace{1em}
 
     \textit{Use this for efficiency, but understand the manual version!}
 \end{frame}
@@ -481,24 +819,22 @@ scaled_down = img.resize((width // 2, height // 2))
 scaled.show()
     \end{lstlisting}
 
-    \vspace{1em}
-
     \textbf{Note:} \texttt{resize()} uses good interpolation by default
 \end{frame}
 
 \begin{frame}[fragile]{Maintaining Aspect Ratio}
-    \textbf{Often we want to scale proportionally:}
+    \textbf{Helper functions make common tasks easy:}
 
     \begin{lstlisting}
-from PIL import Image
-
 def scale_by_factor(img, factor):
+    """Scale image by a multiplication factor"""
     width, height = img.size
     new_width = int(width * factor)
     new_height = int(height * factor)
     return img.resize((new_width, new_height))
 
 def scale_to_width(img, new_width):
+    """Scale image to specific width, maintain aspect ratio"""
     width, height = img.size
     factor = new_width / width
     new_height = int(height * factor)
@@ -519,8 +855,6 @@ width_400 = scale_to_width(img, 400)
 
     \textbf{Create a transformation toolkit:}
     \begin{enumerate}
-        \item Implement mirror functions (horizontal \& vertical)
-        \item Implement rotation functions (90° CW \& CCW)
         \item Create a crop function
         \item Create a scale function that maintains aspect ratio
     \end{enumerate}
@@ -535,9 +869,7 @@ width_400 = scale_to_width(img, 400)
 \end{frame}
 
 \begin{frame}[fragile]{Combining Transformations}
-    \textbf{Transformations can be chained:}
-
-    \vspace{1em}
+    \textbf{Functions make it easy to chain transformations:}
 
     \begin{lstlisting}
 img = Image.open("photo.jpg")
@@ -557,6 +889,7 @@ img.show()
         \item Crop then rotate $\neq$ rotate then crop
         \item Dimensions change with each transformation
         \item Plan your sequence carefully
+        \item \textcolor{marigold}{Functions make experimentation easy!}
     \end{itemize}
 \end{frame}
 
@@ -581,43 +914,15 @@ img.show()
     \end{center}
 \end{frame}
 
-\begin{frame}{Key Takeaways}
-    \textbf{Today you learned:}
-    \begin{itemize}
-        \item How to copy images pixel by pixel
-        \item Coordinate transformations for mirroring
-        \item How to rotate images 90 degrees
-        \item How to crop regions from images
-        \item How to scale images up and down
-        \item How to maintain aspect ratios
-        \item How to chain transformations
-    \end{itemize}
-
-    \vspace{1em}
-
-    \begin{center}
-        \textbf{You now have a complete image transformation toolkit!}
-    \end{center}
-\end{frame}
-
 \begin{frame}{For Next Class}
-    \textbf{Before next session:}
-    \begin{itemize}
-        \item Complete all transformation functions
-        \item Experiment with chaining transformations
-        \item Try creating interesting combinations
-        \item Read Chapter 4 (continued) of the textbook
-    \end{itemize}
-
-    \vspace{1em}
 
     \textbf{Next session:}
     \begin{itemize}
+        \item More practice with functions
         \item Combining multiple images
         \item Creating collages
         \item Overlaying images
         \item Blending effects
-        \item Lab: Build your own photo collage!
     \end{itemize}
 
     \vspace{1em}

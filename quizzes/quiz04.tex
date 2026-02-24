@@ -18,10 +18,10 @@
 }
 
 % Course information
-\course{CSCI 128: Introduction to Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
 \courseshort{CSCI 128}
 \exam{Quiz 4}
-\examdate{Winter 2025}
+\examdate{Winter 2026}
 
 \begin{document}
 
@@ -30,7 +30,7 @@
 \begin{rules}
 \textbf{Instructions:}
 \begin{itemize}
-    \item This quiz covers material from Lectures 7-8 (Functions and Advanced Functions)
+    \item This quiz covers material from Lecture 4 (Picture Manipulation and Filters)
     \item Answer all questions in the space provided
     \item Show your work where applicable
     \item Time limit: 15 minutes
@@ -45,44 +45,46 @@
 
 \begin{questions}
 
-\question[1] What is the purpose of defining a function in Python? Give one benefit of using functions.
-\vspace{1.5in}
+\question[2] For an image with dimensions 640×480, how many total iterations will the nested loop perform?
+\vspace{1in}
 
-\question[1] What is the difference between a function parameter and a function argument?
-\vspace{1.5in}
-
-\question[1] What will the following code print?
-\begin{lstlisting}[numbers=none]
-def double(x):
-    return x * 2
-
-result = double(5)
-print(result)
-\end{lstlisting}
-Answer: \underline{\hspace{1in}}
-
-\question[3] Write a Python function called \texttt{area\_of\_circle} that takes a radius as a parameter and returns the area of the circle. Use $\pi \approx 3.14159$.
-\vspace{1.5in}
-
-\question[2] What is the difference between a function that uses \texttt{return} and a function that uses \texttt{print}?
-\vspace{1.5in}
-
-\question[2] What is a default parameter value? Give an example of when you might use one.
-\vspace{1.5in}
-
-\question[3] Consider the following function:
-\begin{lstlisting}[numbers=none]
-def greet(name, greeting="Hello"):
-    return f"{greeting}, {name}!"
-\end{lstlisting}
-What will be the output of:
+\question[3] What are the two methods for converting a color image to grayscale discussed in class? Give the formulas.
 \begin{parts}
-    \part \texttt{greet("Alice")} \hfill \underline{\hspace{2in}}
-    \part \texttt{greet("Bob", "Hi")} \hfill \underline{\hspace{2in}}
+    \part \underline{\hspace{3in}}
+    \part \underline{\hspace{3in}}
 \end{parts}
 
-\question[2] What is variable scope? Why does it matter in functions?
+\vspace{0.2cm}
+
+\question[2] Why does the luminance method produce more natural-looking grayscale images?
 \vspace{1.5in}
+
+\question[2] What formula is used to create a negative image? If a pixel has RGB values (200, 50, 100), what would its values be after applying the negative filter?
+
+Original: (200, 50, 100) \hspace{0.5in} Negative: \underline{\hspace{2in}}
+\vspace{0.3cm}
+
+\question[3] Given the following code, what does it do to the image?
+\begin{lstlisting}
+from PIL import Image
+img = Image.open("photo.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+        new_r = min(r + 75, 255)
+        new_g = min(g + 75, 255)
+        new_b = min(b + 75, 255)
+        pixels[x, y] = (new_r, new_g, new_b)
+\end{lstlisting}
+
+\newpage
+
+\question[3] Write Python code to apply a simple red tint to an image by reducing the blue and green channels by 50\%.
+
+\vspace{0.5in}
 
 \end{questions}
 
