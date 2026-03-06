@@ -4,11 +4,13 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,calc}
 
 % Python code styling
 \lstset{
     language=Python,
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\tiny,
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
@@ -16,14 +18,15 @@
     breaklines=true,
     frame=single,
     numbers=left,
-    numberstyle=\tiny\color{gray}
+    numberstyle=\tiny\color{gray},
+    literate={×}{x}1
 }
 
 % Course information
 \title{Combining Images and Collages}
-\course{CSCI 128: Introduction to Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
 \courseshort{CSCI 128}
-\term{Winter 2025}
+\term{Winter 2026}
 \author{Dr. Jean-Alexis Delamer}
 
 \begin{document}
@@ -59,10 +62,10 @@
 \begin{frame}{Review: Our Toolkit So Far}
     \textbf{We can now:}
     \begin{itemize}
-        \item<1-> Load and save images
-        \item<2-> Modify pixel \textcolor{marigold}{colors} (filters)
-        \item<3-> Transform images (mirror, rotate, crop, scale)
-        \item<4-> Process all pixels systematically
+        \item Load and save images
+        \item Modify pixel \textcolor{marigold}{colors} (filters)
+        \item Transform images (mirror, rotate, crop, scale)
+        \item Process all pixels systematically
     \end{itemize}
 
     \vspace{1em}
@@ -71,11 +74,65 @@
 
     \textbf{Today we add:}
     \begin{itemize}
-        \item<6-> Working with \textcolor{stfxblue}{multiple images}
-        \item<7-> Copying regions between images
-        \item<8-> Creating \textcolor{marigold}{compositions}
-        \item<9-> Advanced effects
+        \item<2-> Working with \textcolor{stfxblue}{multiple images}
+        \item<2-> Copying regions between images
+        \item<2-> Creating \textcolor{marigold}{compositions}
+        \item<2-> Advanced effects
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Concept: What is a Canvas?}
+    \begin{center}
+        \Large Think of it like a physical canvas for painting
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Canvas = Base Image}
+    \begin{itemize}
+        \item<1-> A blank or existing image we build upon
+        \item<2-> Has fixed dimensions (width $\times$ height)
+        \item<3-> Can be empty (solid color) or have content
+        \item<4-> We'll paste other images \textit{onto} this canvas
+    \end{itemize}
+
+    \vspace{1em}
+
+    \onslide<5->{
+    \textbf{Analogy:}
+    \begin{itemize}
+        \item Canvas = Your poster board
+        \item Source images = Photos you'll glue on
+        \item Pasting = Gluing photos at specific positions
+    \end{itemize}
+    }
+\end{frame}
+
+\begin{frame}{Concept: Canvas and Coordinate System}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            % Canvas
+            \draw[thick, fill=blue!10] (0,0) rectangle (8,6);
+            \node at (4,6.5) {\textbf{Canvas (800 × 600)}};
+
+            % Coordinate system
+            \draw[->, thick] (0,0) -- (1.5,0) node[right] {x};
+            \draw[->, thick] (0,0) -- (0,1.5) node[above] {y};
+            \node[below left] at (0,0) {(0,0)};
+
+            % Source image
+            \draw[thick, fill=green!20] (2,2) rectangle (5,4.5);
+            \node at (3.5,3.25) {\small Image};
+
+            % Position indicator
+            \draw[->, red, very thick] (0,0) -- (2,2);
+            \node[red, above right] at (1,1) {paste at (200, 200)};
+            \draw[red, dashed] (2,2) -- (2,0) node[below] {\small x=200};
+            \draw[red, dashed] (2,2) -- (0,2) node[left] {\small y=200};
+        \end{tikzpicture}
+    \end{center}
+
+    \textbf{Key idea:} Position (x, y) specifies the \textcolor{red}{top-left corner} of pasted image
 \end{frame}
 
 \begin{frame}{Pasting One Image onto Another}
@@ -86,7 +143,7 @@
     \begin{enumerate}
         \item<1-> Start with a \textcolor{stfxblue}{canvas} (background image)
         \item<2-> Load a source image
-        \item<3-> Choose where to place it
+        \item<3-> Choose where to place it (x, y coordinates)
         \item<4-> Copy pixels from source to canvas
     \end{enumerate}
 
@@ -97,23 +154,68 @@
     \textbf{Key decisions:}
     \begin{itemize}
         \item<6-> What size should the canvas be?
-        \item<7-> Where should we place the image?
-        \item<8-> What if the image goes off the edge?
-        \item<9-> Should we scale the image first?
+        \item<7-> Where should we place the image? (positioning)
+        \item<8-> What if the image goes off the edge? (bounds checking)
+        \item<9-> Should we scale the image first? (resizing)
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Bounds Checking: Why It Matters}
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \textbf{Problem:} Image can go off canvas!
+
+        \vspace{0.5em}
+
+        If we paste a 200×200 image at position (700, 400) on an 800×600 canvas:
+
+        \begin{itemize}
+            \item Right edge: $700 + 200 = 900$ \\
+                  \textcolor{red}{Exceeds canvas width of 800!}
+            \item Bottom edge: $400 + 200 = 600$ \\
+                  \textcolor{green!60!black}{Just fits!}
+        \end{itemize}
+
+        \vspace{0.5em}
+
+        \textbf{Solution:} Check bounds before pasting each pixel
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.65]
+            % Canvas
+            \draw[thick, fill=blue!10] (0,0) rectangle (6,4.5);
+            \node at (3,4.9) {\small Canvas (800×600)};
+            \draw (0,0) node[below left] {\tiny (0,0)};
+            \draw (6,4.5) node[above right] {\tiny (800,600)};
+
+            % Good placement
+            \draw[thick, fill=green!30] (0.5,0.5) rectangle (2,2);
+            \node at (1.25,1.25) {\tiny OK};
+            \draw[->, green!60!black] (0.5,0.5) -- (0.5,0) node[below] {\tiny (100,100)};
+
+            % Bad placement - goes off edge
+            \draw[thick, fill=red!30] (5,2.5) rectangle (7.5,4);
+            \node at (6,3.25) {\tiny BAD};
+            \draw[->, red, thick] (5,2.5) -- (5,2) node[below] {\tiny (700,400)};
+
+            % Show overflow
+            \draw[red, very thick, dashed] (6,2.5) -- (7.5,2.5) -- (7.5,4);
+            \node[red, right] at (7.5,3.25) {\tiny Off canvas!};
+        \end{tikzpicture}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Creating a Canvas}
     \begin{lstlisting}
-from PIL import Image
-
 # Create a blank white canvas
+# Image.new(mode, (width, height), color)
 canvas = Image.new("RGB", (800, 600), (255, 255, 255))
 
 # Or a black canvas
 canvas = Image.new("RGB", (800, 600), (0, 0, 0))
 
-# Or a colored canvas
+# Or a colored canvas (light blue)
 canvas = Image.new("RGB", (800, 600), (200, 220, 255))
 
 # Or load an existing image as the base
@@ -122,15 +224,13 @@ canvas = Image.open("background.jpg")
 canvas.show()
     \end{lstlisting}
 
-    \vspace{1em}
+\textbf{The \textcolor{stfxblue}{canvas} is the foundation of your composition}
 
-    \textbf{The \textcolor{stfxblue}{canvas} is the foundation of your composition}
+\textit{Everything else gets pasted on top!}
 \end{frame}
 
 \begin{frame}[fragile]{Pasting an Image: Manual Method}
     \begin{lstlisting}
-from PIL import Image
-
 def paste_image(canvas, source, x_offset, y_offset):
     canvas_pixels = canvas.load()
     source_pixels = source.load()
@@ -138,16 +238,15 @@ def paste_image(canvas, source, x_offset, y_offset):
 
     for x in range(src_width):
         for y in range(src_height):
-            # Calculate destination position
-            dest_x = x_offset + x
+            # Calculate where this pixel goes on canvas
+            dest_x = x_offset + x  # Shift by offset
             dest_y = y_offset + y
 
-            # Check bounds
+            # Check bounds (don't go off canvas!)
             if (0 <= dest_x < canvas.size[0] and
                 0 <= dest_y < canvas.size[1]):
-                canvas_pixels[dest_x, dest_y] = \
-                    source_pixels[x, y]
-
+                # Copy the pixel color
+                canvas_pixels[dest_x, dest_y] = source_pixels[x, y]
     return canvas
     \end{lstlisting}
 \end{frame}
@@ -156,8 +255,6 @@ def paste_image(canvas, source, x_offset, y_offset):
     \textbf{Pillow provides a convenient paste() method:}
 
     \begin{lstlisting}
-from PIL import Image
-
 # Load images
 canvas = Image.new("RGB", (800, 600), (255, 255, 255))
 photo = Image.open("photo.jpg")
@@ -169,7 +266,6 @@ canvas.save("composition.jpg")
 canvas.show()
     \end{lstlisting}
 
-    \vspace{1em}
 
     \pause
 
@@ -190,9 +286,9 @@ canvas.show()
 
     \textbf{Create a simple 2-photo collage:}
     \begin{enumerate}
-        \item Create a white 800×400 canvas
+        \item Create a white 800$\times$400 canvas
         \item Load two photos
-        \item Scale them to 350×400 (or similar)
+        \item Scale them to 350$\times$400 (or similar)
         \item Paste one on the left side
         \item Paste one on the right side
         \item Save the result
@@ -200,7 +296,58 @@ canvas.show()
 
     \vspace{1em}
 
-    \textbf{Hint:} Calculate positions to center them with a gap
+    \textbf{Hints:}
+    \begin{itemize}
+        \item Left image position: (25, 0) leaves 25px margin
+        \item Right image position: (425, 0) leaves 50px gap in middle
+        \item Don't forget to \texttt{.show()} to see your work!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Why Grid Collages?}
+    \begin{center}
+        \textbf{Grid layouts are everywhere in modern design!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Examples you see daily:}
+    \begin{itemize}
+        \item Instagram photo grids
+        \item Photo contact sheets
+        \item Year-in-review collages
+        \item Family photo displays
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Visualizing a Grid Collage}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.7]
+            % 2x3 grid example
+            \foreach \row in {0,1} {
+                \pgfmathsetmacro{\y}{-\row*2.2}
+                \foreach \col in {0,1,2} {
+                    \pgfmathsetmacro{\x}{\col*2.2}
+
+                    \pgfmathsetmacro{\imgnum}{int(\row*3 + \col)}
+
+                    % Draw cell
+                    \draw[thick, fill=blue!20] (\x,\y) rectangle ++(2,2);
+                    \node at (\x+1,\y+1) {\Large \imgnum};
+
+                    % Label position
+                    \node[below, font=\tiny] at (\x+1,\y) {col \col};
+                }
+                \node[left, font=\tiny] at (0,\y+1) {row \row};
+            }
+
+            % Dimensions
+            \draw[<->, thick, red] (0,-0.3) -- (2,-0.3) node[midway,below] {\small cell\_size};
+            \draw[<->, thick, blue] (0,2.5) -- (6.4,2.5) node[midway,above] {\small canvas\_width = 3 × cell\_size};
+        \end{tikzpicture}
+    \end{center}
+
+    \textbf{2×3 Grid:} 2 rows, 3 columns = 6 images total
 \end{frame}
 
 \begin{frame}{Creating a Grid Collage}
@@ -211,97 +358,155 @@ canvas.show()
     \begin{itemize}
         \item 2×2 grid: 4 images
         \item 3×3 grid: 9 images
-        \item 2×3 grid: 6 images
+        \item 2×3 grid: 6 images (2 rows, 3 columns)
     \end{itemize}
 
     \vspace{1em}
 
-    \textbf{Algorithm:}
+    \textbf{Algorithm (step-by-step):}
     \begin{enumerate}
         \item Decide grid dimensions (rows × columns)
-        \item Calculate cell size
-        \item Calculate canvas size
+        \item Calculate cell size (how big each photo)
+        \item Calculate canvas size (rows × cell height, cols × cell width)
         \item Scale images to fit cells
         \item Place each image in its grid position
     \end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]{2×2 Grid Collage}
+\begin{frame}[fragile]{2×2 Grid Collage: Step-by-Step}
     \begin{lstlisting}
-from PIL import Image
-
-# Load and scale images
+# Step 1: Load and scale images to same size
 img1 = Image.open("photo1.jpg").resize((300, 300))
 img2 = Image.open("photo2.jpg").resize((300, 300))
 img3 = Image.open("photo3.jpg").resize((300, 300))
 img4 = Image.open("photo4.jpg").resize((300, 300))
 
-# Create canvas
+# Step 2: Create canvas (2 cols x 300) by (2 rows x 300)
 canvas = Image.new("RGB", (600, 600))
 
-# Paste in grid positions
-canvas.paste(img1, (0, 0))      # Top-left
-canvas.paste(img2, (300, 0))    # Top-right
-canvas.paste(img3, (0, 300))    # Bottom-left
-canvas.paste(img4, (300, 300))  # Bottom-right
+# Step 3: Paste in grid positions
+canvas.paste(img1, (0, 0))      # Top-left: col 0, row 0
+canvas.paste(img2, (300, 0))    # Top-right: col 1, row 0
+canvas.paste(img3, (0, 300))    # Bottom-left: col 0, row 1
+canvas.paste(img4, (300, 300))  # Bottom-right: col 1, row 1
 
 canvas.save("grid_collage.jpg")
 canvas.show()
     \end{lstlisting}
 \end{frame}
 
+\begin{frame}{Understanding Row/Column Math}
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \textbf{For a 3×3 grid (3 columns):}
+        \begin{itemize}\small
+            \item Image 0: row=\textbf{0}, col=\textbf{0}
+            \item Image 1: row=\textbf{0}, col=\textbf{1}
+            \item Image 2: row=\textbf{0}, col=\textbf{2}
+            \item Image 3: row=\textbf{1}, col=\textbf{0}
+            \item Image 4: row=\textbf{1}, col=\textbf{1}
+            \item Image 5: row=\textbf{1}, col=\textbf{2}
+        \end{itemize}
+
+        \vspace{0.5em}
+
+        \textbf{Pattern:}
+        \begin{itemize}\small
+            \item \texttt{row = i // cols}
+            \item \texttt{col = i \% cols}
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.6]
+            \foreach \i in {0,...,5} {
+                \pgfmathsetmacro{\row}{int(floor(\i/3))}
+                \pgfmathsetmacro{\col}{int(mod(\i,3))}
+                \pgfmathsetmacro{\x}{\col*1.5}
+                \pgfmathsetmacro{\y}{-\row*1.5}
+
+                \draw[thick, fill=blue!30] (\x,\y) rectangle ++(1.3,1.3);
+                \node[font=\Large] at (\x+0.65,\y+0.65) {\i};
+            }
+
+            % Row labels
+            \node[left] at (-0.3,0.65) {row 0};
+            \node[left] at (-0.3,-0.85) {row 1};
+
+            % Col labels
+            \node[above] at (0.65, 1.5) {col 0};
+            \node[above] at (2.15, 1.5) {col 1};
+            \node[above] at (3.65, 1.5) {col 2};
+        \end{tikzpicture}
+    \end{column}
+    \end{columns}
+\end{frame}
+
 \begin{frame}[fragile]{Generalized Grid Collage}
     \begin{lstlisting}
-from PIL import Image
-
 def create_grid_collage(images, rows, cols, cell_size):
+    # Calculate total canvas size
     canvas_width = cols * cell_size
     canvas_height = rows * cell_size
     canvas = Image.new("RGB", (canvas_width, canvas_height))
-
     for i, img in enumerate(images):
-        if i >= rows * cols:
+        if i >= rows * cols:  # Don't exceed grid capacity
             break
-
-        # Calculate grid position
-        row = i // cols
-        col = i % cols
-        x = col * cell_size
-        y = row * cell_size
-
+        # Calculate grid position using math trick
+        row = i // cols  # Which row? (integer division)
+        col = i % cols   # Which column? (remainder)
+        x = col * cell_size  # Pixel x position
+        y = row * cell_size  # Pixel y position
         # Scale and paste
         scaled = img.resize((cell_size, cell_size))
         canvas.paste(scaled, (x, y))
-
     return canvas
     \end{lstlisting}
 \end{frame}
 
 \begin{frame}{Adding Borders and Spacing}
-    \textbf{Make collages more polished:}
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \textbf{Make collages more polished:}
+        \begin{itemize}
+            \item Add padding between images
+            \item Add borders around images
+            \item Use a colored background
+        \end{itemize}
 
-    \vspace{1em}
+        \vspace{1em}
 
-    \begin{itemize}
-        \item Add padding between images
-        \item Add borders around images
-        \item Use a colored background
-    \end{itemize}
+        \textbf{Approach:}
+        \begin{itemize}
+            \item Make canvas larger
+            \item Calculate positions with spacing
+            \item Draw borders if desired
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.55]
+            % Canvas with spacing
+            \draw[fill=gray!20] (0,0) rectangle (7,5);
 
-    \vspace{1em}
+            % Four cells with spacing
+            \foreach \row in {0,1} {
+                \foreach \col in {0,1} {
+                    \pgfmathsetmacro{\x}{0.5 + \col*3.25}
+                    \pgfmathsetmacro{\y}{0.5 + (1-\row)*2.25}
 
-    \textbf{Approach:}
-    \begin{itemize}
-        \item Make canvas larger to account for gaps
-        \item Calculate positions with spacing
-        \item Optionally draw borders
-    \end{itemize}
+                    % Draw cell
+                    \draw[thick, fill=blue!30] (\x,\y) rectangle ++(2.75,1.75);
+                }
+            }
+
+            \node[below] at (3.5,-0.3) {\small With Spacing};
+        \end{tikzpicture}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Grid Collage with Spacing}
     \begin{lstlisting}
-def create_grid_with_spacing(images, rows, cols,
-                             cell_size, spacing):
+def create_grid_with_spacing(images, rows, cols, cell_size, spacing):
     canvas_width = cols * cell_size + (cols + 1) * spacing
     canvas_height = rows * cell_size + (rows + 1) * spacing
     canvas = Image.new("RGB", (canvas_width, canvas_height),
@@ -315,7 +520,6 @@ def create_grid_with_spacing(images, rows, cols,
         col = i % cols
         x = (col + 1) * spacing + col * cell_size
         y = (row + 1) * spacing + row * cell_size
-
         scaled = img.resize((cell_size, cell_size))
         canvas.paste(scaled, (x, y))
 
@@ -324,39 +528,63 @@ def create_grid_with_spacing(images, rows, cols,
 \end{frame}
 
 \begin{frame}{Blending Images}
-    \textbf{Blending combines two images:}
+    \begin{columns}
+    \begin{column}{0.55\textwidth}
+        \textbf{Blending combines two images:}
+        \begin{itemize}
+            \item Both images contribute
+            \item Creates "double exposure"
+            \item Controlled by alpha ($\alpha$)
+        \end{itemize}
 
-    \vspace{1em}
+        \vspace{0.5em}
 
-    \begin{itemize}
-        \item Both images contribute to the result
-        \item Creates a "double exposure" effect
-        \item Controlled by an alpha (blend factor)
-    \end{itemize}
+        \textbf{Formula per pixel:}
+        \begin{center}
+            $\text{result} = \alpha \times \text{img1} + (1-\alpha) \times \text{img2}$
+        \end{center}
 
-    \vspace{1em}
+        \vspace{0.5em}
 
-    \textbf{Formula:}
-    \begin{center}
-        $\text{result} = \alpha \times \text{img1} + (1-\alpha) \times \text{img2}$
-    \end{center}
+        \textbf{Understanding $\alpha$:}
+        \begin{itemize}\small
+            \item $\alpha = 0.0$: Only img2
+            \item $\alpha = 0.5$: Equal blend
+            \item $\alpha = 1.0$: Only img1
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+            % Alpha slider visualization
+            \draw[thick, ->, >=stealth] (0,0) -- (4,0) node[right] {$\alpha$};
 
-    \vspace{1em}
+            % Tick marks
+            \foreach \a/\label in {0/0.0, 2/0.5, 4/1.0} {
+                \draw (\a,0.1) -- (\a,-0.1) node[below] {\small \label};
+            }
 
-    \begin{itemize}
-        \item $\alpha = 0.5$: Equal blend (50/50)
-        \item $\alpha = 0.7$: More of img1
-        \item $\alpha = 0.3$: More of img2
-    \end{itemize}
+            % Image 2 side
+            \node[fill=green!40, minimum width=1cm, minimum height=0.8cm] at (0,1.5) {Img2};
+            \draw[->, thick, green!60!black] (0,1) -- (0,0.3);
+
+            % Image 1 side
+            \node[fill=blue!40, minimum width=1cm, minimum height=0.8cm] at (4,1.5) {Img1};
+            \draw[->, thick, blue!60!black] (4,1) -- (4,0.3);
+
+            % Middle blend
+            \node[fill=green!20!blue!20, minimum width=1cm, minimum height=0.8cm] at (2,1.5) {Both};
+            \draw[->, thick, purple] (2,1) -- (2,0.3);
+
+            \node[above, font=\small\bfseries] at (2,2.5) {Blend Result};
+        \end{tikzpicture}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Implementing Image Blending}
     \begin{lstlisting}
-from PIL import Image
-
 def blend_images(img1, img2, alpha):
-    # Ensure same size
-    width, height = img1.size
+    width, height = img1.size # Ensure same size
     img2 = img2.resize((width, height))
 
     result = Image.new("RGB", (width, height))
@@ -368,11 +596,9 @@ def blend_images(img1, img2, alpha):
         for y in range(height):
             r1, g1, b1 = pix1[x, y]
             r2, g2, b2 = pix2[x, y]
-
             r = int(alpha * r1 + (1 - alpha) * r2)
             g = int(alpha * g1 + (1 - alpha) * g2)
             b = int(alpha * b1 + (1 - alpha) * b2)
-
             result_pix[x, y] = (r, g, b)
 
     return result
@@ -428,26 +654,48 @@ blended.show()
 \end{frame}
 
 \begin{frame}{Chromakey (Green Screen)}
-    \textbf{Chromakey replaces a specific color:}
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \textbf{Chromakey replaces a specific color:}
+        \begin{itemize}\small
+            \item Film subject in front of green screen
+            \item Replace green with different background
+            \item Used in movies and TV!
+        \end{itemize}
 
-    \vspace{1em}
+        \vspace{0.5em}
 
-    \begin{itemize}
-        \item Used in movies and TV
-        \item Film subject in front of green/blue screen
-        \item Replace that color with a different background
-        \item Creates illusion of different location
-    \end{itemize}
+        \textbf{Algorithm:}
+        \begin{enumerate}\small
+            \item For each pixel
+            \item \textbf{If} close to green
+            \item \quad → Use background
+            \item \textbf{Else}
+            \item \quad → Use foreground
+        \end{enumerate}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.65]
+            % Green screen with person
+            \draw[fill=green!60] (0,0) rectangle (3,4);
+            \draw[fill=brown!60] (1.2,0) rectangle (1.8,1.5);
+            \draw[fill=pink!60] (1.5,1.5) circle (0.4);
 
-    \vspace{1em}
+            % Arrow
+            \node at (3.8,2) {\Large +};
 
-    \textbf{Algorithm:}
-    \begin{enumerate}
-        \item For each pixel in foreground image
-        \item If pixel is close to the key color (green)
-        \item Copy pixel from background instead
-        \item Otherwise, copy pixel from foreground
-    \end{enumerate}
+            % Background (beach)
+            \draw[fill=blue!30] (4.5,2) rectangle (7,4);
+            \draw[fill=yellow!40] (4.5,0) rectangle (7,2);
+
+            % Result
+            \draw[fill=blue!30] (1.5,-2.5) rectangle (4.5,-0.5);
+            \draw[fill=yellow!40] (1.5,-4.5) rectangle (4.5,-2.5);
+            \draw[fill=brown!60] (2.7,-4.5) rectangle (3.3,-3.0);
+            \draw[fill=pink!60] (3,-3.0) circle (0.4);
+        \end{tikzpicture}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Simple Chromakey Implementation}
@@ -465,15 +713,14 @@ def chromakey(foreground, background, key_color,
         for y in range(foreground.size[1]):
             r, g, b = fg_pixels[x, y]
 
-            # Calculate distance to key color
-            distance = abs(r - key_color[0]) + \
-                      abs(g - key_color[1]) + \
-                      abs(b - key_color[2])
+            # Calculate "color distance" to key color
+            # (How different is this pixel from green?)
+            distance = abs(r - key_color[0]) + abs(g - key_color[1]) + abs(b - key_color[2])
 
-            if distance < threshold:
-                result_pixels[x, y] = bg_pixels[x, y]
-            else:
-                result_pixels[x, y] = (r, g, b)
+            if distance < threshold:  # Close to green?
+                result_pixels[x, y] = bg_pixels[x, y]  # Use background
+            else:  # Not green?
+                result_pixels[x, y] = (r, g, b)  # Use foreground
 
     return result
     \end{lstlisting}
@@ -505,54 +752,80 @@ result.show()
     \textbf{Note:} Threshold controls how close to green is replaced
 \end{frame}
 
-\begin{frame}{Improving Chromakey}
+\begin{frame}{Common Chromakey Problems \& Solutions}
     \textbf{Challenges with simple chromakey:}
 
     \vspace{1em}
 
     \begin{itemize}
-        \item Hard edges look unnatural
-        \item Shadows on green screen
-        \item Green spill on subject
-        \item Not all greens are the same
+        \item \textbf{Hard edges} → Looks like a cutout, not realistic
+        \item \textbf{Shadows on green screen} → Creates darker greens
+        \item \textbf{Green spill on subject} → Green reflects onto person
+        \item \textbf{Not all greens match} → Lighting variations
     \end{itemize}
 
     \vspace{1em}
 
-    \textbf{Improvements:}
+    \textbf{Professional improvements:}
     \begin{itemize}
-        \item Use HSV color space instead of RGB
-        \item Add edge feathering (gradual transparency)
-        \item Adjust threshold per-region
-        \item Color correction for spill
+        \item Use HSV color space instead of RGB (better color matching)
+        \item Add edge feathering (gradual transparency for smooth edges)
+        \item Adjust threshold per-region (adapt to lighting)
+        \item Color correction for spill (remove green tint)
     \end{itemize}
 
     \vspace{1em}
 
-    \textit{Professional compositing is complex, but the basics are here!}
+    \textit{You've learned the foundation - Hollywood uses these same principles!}
 \end{frame}
 
 \begin{frame}{Overlaying with Transparency}
-    \textbf{Some images have transparent regions:}
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \textbf{Some images have transparent regions:}
 
-    \vspace{1em}
+        \begin{itemize}
+            \item PNG format supports alpha channel
+            \item Alpha = 0: Fully transparent
+            \item Alpha = 255: Fully opaque
+            \item In between: Partially transparent
+        \end{itemize}
 
-    \begin{itemize}
-        \item PNG format supports alpha channel
-        \item Alpha = 0: Fully transparent
-        \item Alpha = 255: Fully opaque
-        \item In between: Partially transparent
-    \end{itemize}
+        \vspace{0.5em}
 
-    \vspace{1em}
+        \textbf{Mode "RGBA":}
+        \begin{itemize}
+            \item R = Red (0-255)
+            \item G = Green (0-255)
+            \item B = Blue (0-255)
+            \item A = Alpha (0-255)
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+            % Background checkerboard to show transparency
+            \foreach \x in {0,0.5,...,2} {
+                \foreach \y in {0,0.5,...,2} {
+                    \pgfmathsetmacro{\col}{int(mod(\x+\y,1)*100)}
+                    \fill[gray!\col] (\x,\y) rectangle ++(0.5,0.5);
+                }
+            }
+            \node[below] at (1.25,-0.3) {\tiny Background};
 
-    \textbf{Mode "RGBA":}
-    \begin{itemize}
-        \item R = Red (0-255)
-        \item G = Green (0-255)
-        \item B = Blue (0-255)
-        \item A = Alpha (0-255)
-    \end{itemize}
+            % Overlay with different alphas
+            \fill[blue!80, opacity=0.3] (0.3,2.5) rectangle (1.2,3.5);
+            \node[right] at (1.2,3) {\tiny $\alpha=77$ (30\%)};
+
+            \fill[blue!80, opacity=0.6] (0.3,3.7) rectangle (1.2,4.7);
+            \node[right] at (1.2,4.2) {\tiny $\alpha=153$ (60\%)};
+
+            \fill[blue!80, opacity=1.0] (0.3,4.9) rectangle (1.2,5.9);
+            \node[right] at (1.2,5.4) {\tiny $\alpha=255$ (100\%)};
+
+            \node[above, font=\small\bfseries] at (1.25,6.2) {Alpha Channel Effect};
+        \end{tikzpicture}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Pasting with Transparency}
@@ -582,32 +855,6 @@ canvas.show()
     Transparent pixels won't overwrite the canvas!
 \end{frame}
 
-\begin{frame}{Lab: Create a Photo Collage}
-    \begin{center}
-        \Large \textbf{Main Lab Activity!}
-    \end{center}
-
-    \vspace{1em}
-
-    \textbf{Build a complete collage program that:}
-    \begin{enumerate}
-        \item Takes a list of image filenames
-        \item Creates a grid layout (you choose dimensions)
-        \item Scales all images to the same size
-        \item Adds spacing between images
-        \item Adds a title (use PIL's text capabilities or separate)
-        \item Saves the final result
-    \end{enumerate}
-
-    \vspace{1em}
-
-    \textbf{Requirements:}
-    \begin{itemize}
-        \item Use at least 4 images
-        \item Include error handling for missing files
-        \item Make it reusable (parameters for grid size, etc.)
-    \end{itemize}
-\end{frame}
 
 \begin{frame}[fragile]{Bonus: Adding Text to Images}
     \begin{lstlisting}
@@ -635,34 +882,6 @@ img.show()
     \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Lab Extensions}
-    \textbf{Additional challenges:}
-
-    \vspace{1em}
-
-    \begin{enumerate}
-        \item \textbf{Polaroid style:}
-            \begin{itemize}
-                \item Add white borders around each photo
-                \item Slight rotation for each image
-            \end{itemize}
-
-        \item \textbf{Gradient background:}
-            \begin{itemize}
-                \item Create a gradient-colored canvas
-            \end{itemize}
-
-        \item \textbf{Blended montage:}
-            \begin{itemize}
-                \item Blend overlapping images with varying alpha
-            \end{itemize}
-
-        \item \textbf{Picture-in-picture:}
-            \begin{itemize}
-                \item One large background, smaller images overlaid
-            \end{itemize}
-    \end{enumerate}
-\end{frame}
 
 \begin{frame}{Creative Ideas}
     \textbf{What else can you create?}
@@ -748,19 +967,45 @@ img = img.resize((800, 600))  # Scale first
 \begin{frame}{Key Takeaways}
     \textbf{Today you learned:}
     \begin{itemize}
-        \item How to paste images onto canvases
-        \item How to create grid collages
-        \item How to add spacing and borders
-        \item How to blend images together
-        \item How to implement chromakey (green screen)
-        \item How to work with transparency
-        \item How to combine all techniques for creative compositions
+        \item  How to paste images onto canvases
+        \item  How to create grid collages (with math!)
+        \item  How to add spacing and borders
+        \item  How to blend images together (double exposure)
+        \item  How to implement chromakey (green screen effects)
+        \item  How to work with transparency
+        \item  How to combine all techniques for creative compositions
     \end{itemize}
 
     \vspace{1em}
 
     \begin{center}
         \textbf{You can now create complex image compositions!}
+
+        \vspace{0.5em}
+
+        \textit{These are professional techniques used in real software}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Quick Self-Check}
+    \textbf{Can you answer these?}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item What's the difference between a canvas and a source image?
+        \item If I have 12 images in a 3-column grid, how many rows?
+        \item What does alpha = 0.8 mean in blending?
+        \item Why do we check bounds when pasting?
+        \item What color does chromakey typically replace?
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \pause
+
+    \begin{center}
+        \textit{If you're unsure about any, review those slides or ask questions!}
     \end{center}
 \end{frame}
 
