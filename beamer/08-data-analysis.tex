@@ -1,0 +1,753 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,calc}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Data Analysis and Visualization}
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\term{Winter 2026}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large From raw data to visual insight!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{Review:} loading and filtering CSV data
+        \item<2-> \textcolor{marigold}{Group} and summarize data by category
+        \item<3-> Compute \textcolor{stfxblue}{frequency counts}
+        \item<4-> Visualize data with \textcolor{marigold}{matplotlib} bar charts and line plots
+        \item<5-> \textcolor{stfxblue}{Compare groups} using statistics
+        \item<6-> Build a complete \textcolor{marigold}{data analysis script}
+        \item<7-> \textcolor{stfxblue}{Interpret results} and draw conclusions
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textit{Just like image filters transform pixels, charts \textcolor{marigold}{\textbf{transform numbers into stories!}}}}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Review: Our Data Toolkit So Far}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \textbf{\textcolor{stfxblue}{Topic 7 --- What We Learned:}}
+            \begin{itemize}
+                \item<1-> Read CSV files with \texttt{csv.DictReader}
+                \item<2-> Access rows and columns by name
+                \item<3-> Compute \texttt{min}, \texttt{max}, and average
+                \item<4-> Filter rows with \texttt{if} conditions
+                \item<5-> Write results to a new CSV
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \onslide<6->{
+            \textbf{\textcolor{marigold}{Topic 8 --- What We Add Today:}}
+            \begin{itemize}
+                \item<6-> Group rows by a \textcolor{marigold}{category}
+                \item<7-> Count value \textcolor{stfxblue}{frequencies}
+                \item<8-> Sort groups by computed values
+                \item<9-> Create \textcolor{marigold}{bar charts} and \textcolor{stfxblue}{line plots}
+                \item<10-> Produce charts as \texttt{.png} files
+            \end{itemize}
+            }
+        \end{column}
+    \end{columns}
+
+    \vspace{1em}
+
+    \onslide<11->{
+    \begin{center}
+        \textit{Think of Topic 7 as loading the image --- Topic 8 is applying the filter!}
+    \end{center}
+    }
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Asking Better Questions}
+    \textbf{Imagine we have this weather dataset:}
+
+    \vspace{0.5em}
+
+    \begin{center}
+    \begin{tabular}{|l|l|c|c|}
+        \hline
+        \textbf{City} & \textbf{Month} & \textbf{TempC} & \textbf{Rainfall} \\
+        \hline
+        Halifax   & January  & -5.2 & 110 \\
+        Toronto   & January  & -3.7 & 62  \\
+        Vancouver & January  &  4.1 & 154 \\
+        Halifax   & July     & 19.8 & 94  \\
+        Toronto   & July     & 22.3 & 74  \\
+        Vancouver & July     & 18.0 & 36  \\
+        \hline
+    \end{tabular}
+    \end{center}
+
+    \vspace{0.8em}
+
+    \textbf{Basic questions} (Topic 7):
+    \begin{itemize}
+        \item What is the highest temperature in the dataset?
+    \end{itemize}
+
+    \pause
+
+    \vspace{0.4em}
+
+    \textbf{\textcolor{marigold}{Better questions}} (Topic 8):
+    \begin{itemize}
+        \item<2-> Which \textcolor{stfxblue}{city} is warmest on average across all months?
+        \item<3-> Which \textcolor{stfxblue}{month} has the most rainfall across all cities?
+        \item<4-> How does temperature \textcolor{marigold}{change over the year} for each city?
+    \end{itemize}
+
+    \onslide<5->{\vspace{0.5em}
+    \begin{center}
+        \textit{Answering these requires \textcolor{marigold}{\textbf{grouping}} the data first.}
+    \end{center}}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Grouping Data: The Concept}
+    \textbf{Grouping = sorting rows into \textcolor{marigold}{buckets} by a shared value:}
+
+    \vspace{0.8em}
+
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={draw, rounded corners, minimum width=2.2cm, minimum height=0.55cm, font=\small},
+        bucket/.style={draw, fill=blue!10, rounded corners, minimum width=2.4cm, minimum height=2.2cm},
+        label/.style={font=\small\bfseries},
+        arrow/.style={->, thick, color=stfxblue}
+    ]
+        % Input rows
+        \node[box, fill=red!10]   (r1) at (0, 3.2)  {Halifax, Jan, -5.2};
+        \node[box, fill=green!10] (r2) at (0, 2.4)  {Toronto, Jan, -3.7};
+        \node[box, fill=yellow!20](r3) at (0, 1.6)  {Vancouver, Jan, 4.1};
+        \node[box, fill=red!10]   (r4) at (0, 0.8)  {Halifax, Jul, 19.8};
+        \node[box, fill=green!10] (r5) at (0, 0.0)  {Toronto, Jul, 22.3};
+        \node[box, fill=yellow!20](r6) at (0,-0.8)  {Vancouver, Jul, 18.0};
+
+        % Group-by label
+        \node[label] at (3.4, 3.6) {Group by \texttt{City}};
+
+        % Buckets
+        \node[bucket] (bH) at (3.2, 1.8) {};
+        \node[label, above] at (3.2, 2.9) {\textcolor{red!70!black}{Halifax}};
+        \node[font=\tiny] at (3.2, 2.3) {-5.2};
+        \node[font=\tiny] at (3.2, 1.8) {19.8};
+        \node[font=\tiny, color=gray] at (3.2, 1.3) {avg: 7.3};
+
+        \node[bucket] (bT) at (5.8, 1.8) {};
+        \node[label, above] at (5.8, 2.9) {\textcolor{green!50!black}{Toronto}};
+        \node[font=\tiny] at (5.8, 2.3) {-3.7};
+        \node[font=\tiny] at (5.8, 1.8) {22.3};
+        \node[font=\tiny, color=gray] at (5.8, 1.3) {avg: 9.3};
+
+        \node[bucket] (bV) at (8.4, 1.8) {};
+        \node[label, above] at (8.4, 2.9) {\textcolor{orange!80!black}{Vancouver}};
+        \node[font=\tiny] at (8.4, 2.3) {4.1};
+        \node[font=\tiny] at (8.4, 1.8) {18.0};
+        \node[font=\tiny, color=gray] at (8.4, 1.3) {avg: 11.1};
+
+        % Arrows
+        \draw[arrow, color=red!70!black]   (r1.east) to[out=0,in=180] (bH.west);
+        \draw[arrow, color=green!50!black] (r2.east) to[out=0,in=180] (bT.west);
+        \draw[arrow, color=orange!80!black](r3.east) to[out=0,in=180] (bV.west);
+        \draw[arrow, color=red!70!black]   (r4.east) to[out=0,in=180] (bH.west);
+        \draw[arrow, color=green!50!black] (r5.east) to[out=0,in=180] (bT.west);
+        \draw[arrow, color=orange!80!black](r6.east) to[out=0,in=180] (bV.west);
+    \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.3em}
+    \begin{center}
+        Each bucket holds all rows that share the same \textcolor{stfxblue}{\textbf{City}} value.\\
+        Then we can compute stats \textbf{per group}.
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Grouping with a Dictionary}
+    \textbf{The grouping pattern in Python:}
+
+    \begin{lstlisting}
+import csv
+
+# Load the data
+with open('weather.csv', newline='') as f:
+    reader = csv.DictReader(f)
+    data = list(reader)
+
+# Step 1: Build groups (dict of lists)
+groups = {}
+for row in data:
+    key = row['City']
+    if key not in groups:
+        groups[key] = []          # start a new bucket
+    groups[key].append(float(row['TempC']))
+
+# Step 2: Compute per-group averages
+averages = {}
+for city, temps in groups.items():
+    averages[city] = sum(temps) / len(temps)
+
+# Step 3: Display results
+for city, avg in averages.items():
+    print(f"{city}: {avg:.1f} C average")
+    \end{lstlisting}
+
+    \pause
+
+    \begin{center}
+        \textit{The \textcolor{marigold}{\texttt{if key not in groups}} check creates the bucket \textbf{on first encounter}.}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Try It: Group by Category}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{You have a file \texttt{sports.csv} with columns:}\\
+    \texttt{Team, Player, Goals, Assists, Wins}
+
+    \vspace{0.8em}
+
+    \textbf{Tasks:}
+    \begin{enumerate}
+        \item Load the CSV with \texttt{csv.DictReader}
+        \item Group the rows by \texttt{Team}
+        \item For each team, sum the \texttt{Wins} column
+        \item Print the team name and total wins for each team
+        \item Print which team has the \textbf{most} wins overall
+    \end{enumerate}
+
+    \vspace{0.8em}
+
+    \textbf{Bonus:} Also compute the average goals per team and rank teams by it.
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Frequency Counts}
+    \textbf{How many times does each value appear?}
+
+    \vspace{0.5em}
+
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+    \begin{lstlisting}
+import csv
+
+with open('grades.csv', newline='') as f:
+    reader = csv.DictReader(f)
+    data = list(reader)
+
+# Count occurrences of each grade
+counts = {}
+for row in data:
+    grade = row['LetterGrade']
+    if grade not in counts:
+        counts[grade] = 0
+    counts[grade] += 1
+
+# Print the frequency table
+for grade, n in sorted(counts.items()):
+    bar = '#' * n
+    print(f"{grade}: {bar} ({n})")
+    \end{lstlisting}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \onslide<2->{
+            \textbf{Sample output:}
+            \begin{center}
+            \begin{tabular}{ll}
+                \texttt{A:} & \texttt{\#\#\#\#\#\#\#\#\#\#\#\# (12)} \\
+                \texttt{B:} & \texttt{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# (18)} \\
+                \texttt{C:} & \texttt{\#\#\#\#\#\#\#\#\# (9)} \\
+                \texttt{D:} & \texttt{\#\#\#\#\# (5)} \\
+                \texttt{F:} & \texttt{\#\# (2)} \\
+            \end{tabular}
+            \end{center}
+
+            \vspace{0.5em}
+            \textit{This is the data behind a \textcolor{marigold}{\textbf{bar chart}} --- we'll plot it soon!}
+            }
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Sorting Groups by Value}
+    \textbf{Ranking your groups from highest to lowest:}
+
+    \begin{lstlisting}
+# averages is a dict: {'Halifax': 7.3, 'Toronto': 9.3, ...}
+
+# Sort by value, descending
+ranked = sorted(averages.items(), key=lambda x: x[1], reverse=True)
+
+print("Cities ranked by average temperature:")
+for rank, (city, avg) in enumerate(ranked, start=1):
+    print(f"  {rank}. {city}: {avg:.1f} C")
+    \end{lstlisting}
+
+    \pause
+
+    \textbf{How \texttt{sorted()} works here:}
+    \begin{itemize}
+        \item<2-> \texttt{averages.items()} gives pairs like \texttt{('Halifax', 7.3)}
+        \item<3-> \texttt{key=lambda x: x[1]} sorts by the \textcolor{marigold}{second element} (the value)
+        \item<4-> \texttt{reverse=True} orders from \textcolor{stfxblue}{largest to smallest}
+        \item<5-> \texttt{enumerate(..., start=1)} adds a \textcolor{marigold}{1-based rank counter}
+    \end{itemize}
+
+    \pause
+
+    \begin{center}
+        \textit{This same pattern works for \textbf{any} dictionary of numeric values.}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Introducing Matplotlib}
+    \textbf{What is \textcolor{marigold}{matplotlib}?}
+
+    \vspace{0.5em}
+
+    \begin{itemize}
+        \item<1-> The most popular Python library for creating \textcolor{stfxblue}{charts and graphs}
+        \item<2-> Produces publication-quality figures as PNG, PDF, SVG, and more
+        \item<3-> Used by scientists, journalists, and data analysts worldwide
+    \end{itemize}
+
+    \vspace{0.8em}
+
+    \onslide<4->{\textbf{Installing it} (it is not in the standard library):}
+    \onslide<4->{\begin{center}\texttt{pip install matplotlib}\end{center}}
+
+    \vspace{0.5em}
+
+    \onslide<5->{\textbf{Importing it} (the standard alias):}
+    \onslide<5->{\begin{center}\texttt{import matplotlib.pyplot as plt}\end{center}}
+
+    \vspace{0.8em}
+
+    \onslide<6->{\textbf{The basic pattern:}
+    \begin{enumerate}
+        \item<6-> Prepare your data as Python \textcolor{marigold}{lists}
+        \item<7-> Call a chart function: \texttt{plt.bar()}, \texttt{plt.plot()}, \texttt{plt.hist()}
+        \item<8-> Add labels with \texttt{plt.title()}, \texttt{plt.xlabel()}, \texttt{plt.ylabel()}
+        \item<9-> Save with \texttt{plt.savefig('chart.png')} and/or display with \texttt{plt.show()}
+    \end{enumerate}}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Your First Bar Chart}
+    \textbf{Plotting grade counts as a bar chart:}
+
+    \begin{lstlisting}
+import matplotlib.pyplot as plt
+
+# Data (from our frequency count earlier)
+labels = ['A', 'B', 'C', 'D', 'F']
+counts = [12, 18, 9, 5, 2]
+
+# Create the bar chart
+plt.bar(labels, counts)
+
+# Add labels and a title
+plt.title('Grade Distribution')
+plt.xlabel('Grade')
+plt.ylabel('Number of Students')
+
+# Save to a file, then display
+plt.savefig('grades.png')
+plt.show()
+    \end{lstlisting}
+
+    \pause
+
+    \begin{center}
+        \textit{Just six meaningful lines of code produce a complete, shareable chart!}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Customizing Charts}
+    \textbf{Making charts clearer and more professional:}
+
+    \begin{lstlisting}
+import matplotlib.pyplot as plt
+
+labels = ['A', 'B', 'C', 'D', 'F']
+counts = [12, 18, 9, 5, 2]
+
+# Set figure size (width, height in inches)
+plt.figure(figsize=(8, 5))
+
+# Bar color and edge color
+plt.bar(labels, counts,
+        color='steelblue',
+        edgecolor='black')
+
+# Labels and title
+plt.title('Grade Distribution --- CSCI 128', fontsize=14)
+plt.xlabel('Letter Grade', fontsize=12)
+plt.ylabel('Number of Students', fontsize=12)
+
+# Add a subtle horizontal grid (easier to read bar heights)
+plt.grid(axis='y', alpha=0.3)
+
+plt.tight_layout()          # prevent clipping
+plt.savefig('grades.png', dpi=150)
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Line Plots: Showing Change Over Time}
+    \textbf{A line plot is ideal when data has \textcolor{marigold}{order} (months, years, steps):}
+
+    \begin{lstlisting}
+import matplotlib.pyplot as plt
+
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+temps  = [-5.2, -4.1, 0.3, 5.8, 12.1, 17.4,
+           19.8, 19.2, 14.6, 8.3, 2.5, -2.9]
+
+plt.figure(figsize=(10, 5))
+
+# plot() draws a line; marker='o' adds a dot at each point
+plt.plot(months, temps, marker='o',
+         color='steelblue', linewidth=2, markersize=6)
+
+plt.title('Average Monthly Temperature --- Halifax')
+plt.xlabel('Month')
+plt.ylabel('Temperature (C)')
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.savefig('temperature_halifax.png', dpi=150)
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Connecting CSV Data to a Chart}
+    \textbf{The full pipeline: CSV $\rightarrow$ lists $\rightarrow$ chart:}
+
+    \begin{lstlisting}
+import csv
+import matplotlib.pyplot as plt
+
+# Step 1: Load CSV
+with open('city_avg_temps.csv', newline='') as f:
+    reader = csv.DictReader(f)
+    data = list(reader)
+
+# Step 2: Extract two columns into parallel lists
+cities = []
+avg_temps = []
+for row in data:
+    cities.append(row['City'])
+    avg_temps.append(float(row['AvgTempC']))
+
+# Step 3: Pass lists directly to plt.bar()
+plt.figure(figsize=(8, 5))
+plt.bar(cities, avg_temps, color='coral', edgecolor='black')
+plt.title('Average Annual Temperature by City')
+plt.xlabel('City')
+plt.ylabel('Average Temperature (C)')
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.savefig('city_temps.png', dpi=150)
+plt.show()
+    \end{lstlisting}
+
+    \pause
+    \begin{center}
+        \textit{The \textcolor{marigold}{\textbf{same two lists}} that fed \texttt{print()} now feed \texttt{plt.bar()} --- no other change!}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Try It: Visualize Your Dataset}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Choose any CSV dataset you have} (sports, weather, or grades).
+
+    \vspace{0.8em}
+
+    \textbf{Tasks:}
+    \begin{enumerate}
+        \item Load the CSV with \texttt{csv.DictReader}
+        \item Choose a \textbf{category column} to group by (e.g. Team, City, Grade)
+        \item Compute a \textbf{numeric summary} per group (total, average, or count)
+        \item Build two parallel lists: one for labels, one for values
+        \item Create a bar chart with a title, x-label, and y-label
+        \item Save the chart as \texttt{my\_chart.png}
+    \end{enumerate}
+
+    \vspace{0.8em}
+
+    \textbf{Bonus:} Customize the bar color and add a grid. Try sorting the bars from tallest to shortest before plotting.
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Comparing Two Groups}
+    \textbf{Side-by-side bars let us \textcolor{marigold}{compare two series} at once:}
+
+    \begin{lstlisting}
+import matplotlib.pyplot as plt
+import numpy as np
+
+cities = ['Halifax', 'Toronto', 'Vancouver']
+summer_temps = [19.8, 22.3, 18.0]
+winter_temps = [-5.2, -3.7,  4.1]
+
+x = np.arange(len(cities))   # [0, 1, 2]
+width = 0.35                  # width of each bar
+
+plt.figure(figsize=(8, 5))
+plt.bar(x - width/2, summer_temps, width,
+        label='July', color='coral',      edgecolor='black')
+plt.bar(x + width/2, winter_temps, width,
+        label='January', color='steelblue', edgecolor='black')
+
+plt.title('Summer vs. Winter Temperatures')
+plt.xlabel('City')
+plt.ylabel('Temperature (C)')
+plt.xticks(x, cities)         # replace 0,1,2 with city names
+plt.legend()
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.savefig('comparison.png', dpi=150)
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{Histograms: Distribution of a Single Column}
+    \textbf{A histogram shows how values are \textcolor{marigold}{spread out} across a range:}
+
+    \begin{lstlisting}
+import csv
+import matplotlib.pyplot as plt
+
+# Load exam scores
+with open('scores.csv', newline='') as f:
+    reader = csv.DictReader(f)
+    scores = [float(row['Score']) for row in reader]
+
+plt.figure(figsize=(8, 5))
+
+# bins=10 divides the range into 10 equal intervals
+plt.hist(scores, bins=10, color='steelblue',
+         edgecolor='black')
+
+plt.title('Distribution of Exam Scores')
+plt.xlabel('Score')
+plt.ylabel('Number of Students')
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.savefig('score_histogram.png', dpi=150)
+plt.show()
+    \end{lstlisting}
+
+    \pause
+
+    \textbf{Sound familiar?} In Topic 3 we asked ``how many pixels have this brightness?'' ---
+    a histogram answers \textcolor{marigold}{\textit{exactly}} that question, for \textit{any} column of numbers.
+\end{frame}
+
+% ============================================================
+\begin{frame}[fragile]{A Complete Analysis Script}
+    \textbf{Putting it all together in one cohesive program:}
+
+    \begin{lstlisting}
+import csv
+import matplotlib.pyplot as plt
+
+# 1. Load CSV
+with open('weather.csv', newline='') as f:
+    data = list(csv.DictReader(f))
+
+# 2. Group by City, collect temperatures
+groups = {}
+for row in data:
+    city = row['City']
+    if city not in groups:
+        groups[city] = []
+    groups[city].append(float(row['TempC']))
+
+# 3. Compute average per group
+averages = {city: sum(t)/len(t) for city, t in groups.items()}
+
+# 4. Sort from warmest to coldest
+ranked = sorted(averages.items(), key=lambda x: x[1], reverse=True)
+labels = [item[0] for item in ranked]
+values = [item[1] for item in ranked]
+
+# 5. Save a bar chart
+plt.figure(figsize=(9, 5))
+plt.bar(labels, values, color='coral', edgecolor='black')
+plt.title('Average Annual Temperature by City')
+plt.xlabel('City')
+plt.ylabel('Average Temperature (C)')
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.savefig('avg_temps.png', dpi=150)
+print("Chart saved to avg_temps.png")
+    \end{lstlisting}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Interpreting Results}
+    \textbf{Writing code is only half the job --- reading results carefully matters too.}
+
+    \vspace{0.8em}
+
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{\textbf{Correlation $\neq$ causation}} \\
+            {\small Two things moving together does not mean one \textit{causes} the other.}
+
+        \vspace{0.4em}
+
+        \item<2-> \textcolor{marigold}{\textbf{Watch for outliers}} \\
+            {\small One extreme value can distort an average dramatically. Always check \texttt{min} and \texttt{max} alongside the mean.}
+
+        \vspace{0.4em}
+
+        \item<3-> \textcolor{stfxblue}{\textbf{Sample size matters}} \\
+            {\small An average based on 3 rows is far less reliable than one based on 3\,000 rows. Report \textit{n} alongside your statistics.}
+
+        \vspace{0.4em}
+
+        \item<4-> \textcolor{marigold}{\textbf{What story does the data tell?}} \\
+            {\small A good analysis ends with a plain-language sentence: \textit{``Vancouver has the highest average annual temperature of the three cities at 11.1\,\textdegree{}C.''}}
+
+        \vspace{0.4em}
+
+        \item<5-> \textcolor{stfxblue}{\textbf{Be honest about limitations}} \\
+            {\small Is the dataset complete? Is it representative? Was data collected consistently?}
+    \end{itemize}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Quick Self-Check}
+    \textbf{Can you answer these?}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item What Python data structure do we use to store per-group lists, and why?
+        \item What does \texttt{key=lambda x: x[1]} mean in \texttt{sorted()}?
+        \item Name two differences between \texttt{plt.bar()} and \texttt{plt.plot()}.
+        \item When is a histogram more useful than a bar chart?
+        \item You compute that Team A has a higher average score than Team B. Can you conclude Team A is better? What else would you need to know?
+    \end{enumerate}
+
+    \vspace{1em}
+
+    \pause
+
+    \begin{center}
+        \textit{If any of these feel uncertain, review those slides or ask questions!}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Real-World Applications}
+    \textbf{The skills from today power real careers and projects:}
+
+    \vspace{0.8em}
+
+    \begin{itemize}
+        \item<1-> \textbf{Sports analytics:} Grouping player stats by team, season, or position to find patterns and inform trades
+        \item<2-> \textbf{Climate science:} Aggregating temperature and rainfall data by region and decade to study long-term trends
+        \item<3-> \textbf{Public health:} Comparing disease rates across age groups or geographic areas to prioritize interventions
+        \item<4-> \textbf{Business intelligence:} Breaking down sales figures by product category, region, or quarter for executive dashboards
+        \item<5-> \textbf{Data journalism:} Turning government CSV datasets into charts that tell stories for a general audience
+        \item<6-> \textbf{Machine learning pipelines:} Exploratory data analysis (EDA) is the mandatory first step before training any model
+    \end{itemize}
+
+    \vspace{0.8em}
+
+    \onslide<7->{
+    \begin{center}
+        \textit{Every one of these domains uses the \textcolor{marigold}{\textbf{same group-summarize-visualize}} loop you practised today.}
+    \end{center}
+    }
+\end{frame}
+
+% ============================================================
+\begin{frame}{For Next Class}
+    \textbf{Before next session:}
+    \begin{itemize}
+        \item Complete the data analysis lab: load a CSV, group it, and produce at least two different charts
+        \item Make sure \texttt{matplotlib} is installed in your Python environment
+        \item Experiment: try changing \texttt{bins} in \texttt{plt.hist()} and observe what happens
+        \item Think about: what would happen if your CSV had \textit{thousands} of rows? What would change?
+    \end{itemize}
+
+    \vspace{1em}
+
+    \textbf{Next session --- Topic 9: Bigger Programs}
+    \begin{itemize}
+        \item Writing and calling your own \textcolor{marigold}{functions}
+        \item Organizing code into \textcolor{stfxblue}{modules}
+        \item Parameters, return values, and scope
+        \item Structuring a multi-file project
+        \item Reusing your analysis code across datasets
+    \end{itemize}
+
+    \vspace{0.8em}
+
+    \begin{center}
+        \textbf{Questions?}
+    \end{center}
+\end{frame}
+
+\end{document}

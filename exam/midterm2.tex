@@ -1,0 +1,422 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\normalsize,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\university{St. Francis Xavier University}
+\department{Department of Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\exam{Midterm 2}
+\examdate{Winter 2026}
+
+\begin{document}
+
+\maketitle
+\printanswers
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This exam is \textbf{75 minutes} long.
+    \item Answer all questions in the space provided.
+    \item This exam is worth \textbf{100 points}.
+    \item No calculators, books, or notes are permitted.
+    \item Write your answers clearly. Illegible answers will receive no credit.
+    \item For coding questions, write syntactically correct Python code.
+    \item Good luck!
+\end{itemize}
+\end{rules}
+
+\vspace{5mm}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+% ======================================
+% Section 1: Picture Filters - Concepts
+% ======================================
+
+\question[6] For each of the following RGB color values, calculate what the grayscale value would be using the \textbf{simple average} method.
+
+\begin{parts}
+    \part RGB(120, 90, 60) \hspace{0.5cm} Gray value: \underline{\hspace{3cm}}
+    \begin{solution}
+    $(120 + 90 + 60) / 3 = 270 / 3 = 90$
+    \end{solution}
+
+    \part RGB(0, 255, 0) \hspace{0.5cm} Gray value: \underline{\hspace{3cm}}
+    \begin{solution}
+    $(0 + 255 + 0) / 3 = 255 / 3 = 85$
+    \end{solution}
+
+    \part RGB(200, 200, 200) \hspace{0.5cm} Gray value: \underline{\hspace{3cm}}
+    \begin{solution}
+    $(200 + 200 + 200) / 3 = 600 / 3 = 200$
+    \end{solution}
+\end{parts}
+
+\vspace{0.5cm}
+
+\question[8] The \textbf{luminance method} for grayscale conversion uses weighted values: \\
+$\text{gray} = 0.299 \times R + 0.587 \times G + 0.114 \times B$
+
+\begin{parts}
+    \part Why does this formula use different weights for red, green, and blue instead of a simple average?
+    \vspace{5cm}
+    \begin{solution}
+    Human eyes don't perceive all colors equally. The luminance method uses different weights to approximate how humans actually see brightness/luminosity. This produces more natural-looking grayscale images that match human perception.
+    \end{solution}
+
+    \part Which color channel has the highest weight and why?
+    \vspace{5cm}
+    \begin{solution}
+    Green has the highest weight (0.587 or 58.7\%) because human eyes are most sensitive to green light. Red is second (29.9\%) and blue has the lowest weight (11.4\%) since we're least sensitive to blue.
+    \end{solution}
+\end{parts}
+
+\question[6] For the \textbf{negative filter}, each color channel is inverted.
+
+Calculate the result for each RGB color:
+
+\begin{parts}
+    \part RGB(255, 0, 0) becomes RGB\underline{\hspace{3cm}}
+    \begin{solution}
+    RGB(0, 255, 255) — Each channel: $255 - \text{old value}$
+    \end{solution}
+
+    \part RGB(100, 150, 200) becomes RGB\underline{\hspace{3cm}}
+    \begin{solution}
+    RGB(155, 105, 55) — $255-100=155$, $255-150=105$, $255-200=55$
+    \end{solution}
+
+    \part RGB(128, 128, 128) becomes RGB\underline{\hspace{3cm}}
+    \begin{solution}
+    RGB(127, 127, 127) — $255-128=127$
+    \end{solution}
+\end{parts}
+
+\newpage
+
+\question[6] Answer the following questions about brightness adjustment:
+
+\begin{parts}
+    \part If you have a pixel with RGB(200, 150, 100) and you want to increase brightness by 80, what would happen without clamping? Why is this a problem?
+    \vspace{3cm}
+    \begin{solution}
+    Without clamping: RGB(280, 230, 180). This is a problem because RGB values must be in the range 0-255. A value of 280 is invalid and would cause an error or unexpected behavior.
+    \end{solution}
+
+    \part What would be the final RGB value for the pixel in part (a) if we clamp it?
+    \vspace{3cm}
+    \begin{solution}
+    RGB(255, 230, 180) — The red channel is clamped to 255 using \texttt{min(200+80, 255)}.
+    \end{solution}
+
+    \part Write the expression to decrease a color value \texttt{r} by \texttt{amount} while ensuring it doesn't go below 0:
+
+    \texttt{new\_r = }
+    \vspace{1cm}
+    \begin{solution}
+    \texttt{new\_r = max(r - amount, 0)}
+    \end{solution}
+\end{parts}
+
+\question[10] Complete the following Python program that applies a negative filter to an image:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.______("photo.jpg")
+pixels = img.______
+width, height = img.______
+
+for x in range(______):
+    for y in range(______):
+        r, g, b = pixels[______, ______]
+
+        # Invert each color channel
+        new_r =
+        new_g =
+        new_b =
+
+        pixels[x, y] = (______, ______, ______)
+
+img.______("negative.jpg")
+\end{lstlisting}
+
+\begin{solution}
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("photo.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Invert each color channel
+        new_r = 255 - r
+        new_g = 255 - g
+        new_b = 255 - b
+
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.save("negative.jpg")
+\end{lstlisting}
+\end{solution}
+
+\newpage
+
+\question[15] Write a complete Python program using Pillow that:
+\begin{itemize}
+    \item Loads an image file named \texttt{"landscape.jpg"}
+    \item Converts it to grayscale using the \textbf{luminance method}:\\
+    $\text{gray} = 0.299 \times R + 0.587 \times G + 0.114 \times B$
+    \item Remember to convert the result to an integer using \texttt{int()}
+    \item Saves the result as \texttt{"landscape\_gray.jpg"}
+\end{itemize}
+
+\vspace{10cm}
+
+\begin{solution}
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("landscape.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Calculate luminance
+        gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+
+        # Set all channels to the same value
+        pixels[x, y] = (gray, gray, gray)
+
+img.save("landscape_gray.jpg")
+\end{lstlisting}
+\end{solution}
+
+\newpage
+
+% ======================================
+% Section 2: Functions
+% ======================================
+
+\question[6] Answer the following questions about functions:
+
+\begin{parts}
+    \part What keyword is used to define a function in Python?
+    \vspace{3cm}
+    \begin{solution}
+    \texttt{def}
+    \end{solution}
+
+    \part What is the difference between a \textbf{parameter} and an \textbf{argument}?
+    \vspace{3cm}
+    \begin{solution}
+    A parameter is a variable in the function definition (e.g., \texttt{def func(x):} — \texttt{x} is a parameter). An argument is the actual value passed when calling the function (e.g., \texttt{func(5)} — \texttt{5} is an argument).
+    \end{solution}
+
+    \part What does the \texttt{return} statement do in a function?
+    \vspace{3cm}
+    \begin{solution}
+    The \texttt{return} statement sends a value back to the caller and exits the function immediately. It allows the function to produce output that can be used elsewhere in the program.
+    \end{solution}
+\end{parts}
+
+\question[4] What is the output of the following code? Show exactly what gets printed.
+
+\begin{lstlisting}
+def process(x, y):
+    result = x * 2 + y
+    return result
+
+a = process(5, 3)
+b = process(10, a)
+print(a)
+print(b)
+\end{lstlisting}
+
+\vspace{3cm}
+
+\begin{solution}
+\begin{verbatim}
+13
+33
+\end{verbatim}
+Explanation:
+\begin{itemize}
+    \item \texttt{a = process(5, 3)} → $5 \times 2 + 3 = 13$
+    \item \texttt{b = process(10, a)} → \texttt{process(10, 13)} → $10 \times 2 + 13 = 33$
+\end{itemize}
+\end{solution}
+
+\newpage
+
+\question[12] Write a function called \texttt{brighten\_pixel} that:
+\begin{itemize}
+    \item Takes two parameters: \texttt{color} (an RGB tuple like (r, g, b)) and \texttt{amount} (an integer)
+    \item Increases each color channel by \texttt{amount}
+    \item Uses clamping with \texttt{min()} to ensure values don't exceed 255
+    \item Returns the new RGB tuple
+\end{itemize}
+
+\textbf{Example usage:}
+\begin{verbatim}
+new_color = brighten_pixel((200, 150, 100), 80)
+# Should return (255, 230, 180)
+# Note: 200+80=280, but clamped to 255
+\end{verbatim}
+
+\vspace{8cm}
+
+\begin{solution}
+\begin{lstlisting}
+def brighten_pixel(color, amount):
+    """Brighten an RGB pixel by amount with clamping"""
+    r, g, b = color
+
+    new_r = min(r + amount, 255)
+    new_g = min(g + amount, 255)
+    new_b = min(b + amount, 255)
+
+    return (new_r, new_g, new_b)
+\end{lstlisting}
+\end{solution}
+
+\newpage
+
+% ======================================
+% Section 3: Image Transformations
+% ======================================
+
+\question[6] For an image with dimensions 200×150 (width × height):
+
+\begin{parts}
+    \part In a horizontal mirror transformation, a pixel at position (10, 50) should be copied to position.
+
+    \textit{Hint: Use the formula} \texttt{new\_x = width - 1 - x}
+    \vspace{2cm}
+    \begin{solution}
+    (189, 50) — Using formula: $new\_x = 200 - 1 - 10 = 189$, y stays the same
+    \end{solution}
+
+    \part In a vertical mirror transformation, a pixel at position (100, 10) should be copied to position.
+    \textit{Hint: Use the formula} \texttt{new\_y = height - 1 - y}
+    \vspace{2cm}
+    \begin{solution}
+    (100, 139) — Using formula: $new\_y = 150 - 1 - 10 = 139$, x stays the same
+    \end{solution}
+
+    \part Why do we subtract 1 from the width/height in these formulas?
+    \vspace{2cm}
+    \begin{solution}
+    Because array/image indices start at 0. For a width of 200, valid x coordinates are 0-199, not 0-200. Without the -1, we would try to access index 200, which is out of bounds.
+    \end{solution}
+\end{parts}
+
+\question[6] Explain the difference between these two image operations:
+
+\begin{parts}
+    \part \textbf{Filter} (like grayscale or brightness adjustment):
+    \vspace{2.5cm}
+    \begin{solution}
+    A filter modifies the color values of pixels while keeping them in the same position. Each pixel's RGB values are changed according to some formula, but the pixel stays at coordinates (x, y).
+    \end{solution}
+
+    \part \textbf{Transformation} (like mirror or rotation):
+    \vspace{2.5cm}
+    \begin{solution}
+    A transformation changes the position/location of pixels in the image. Pixels are moved to different coordinates, which changes the structure or orientation of the image. The color values may stay the same, but pixels are relocated.
+    \end{solution}
+\end{parts}
+
+\newpage
+
+\question[15] Complete the following function that creates a horizontal mirror of an image:
+
+\begin{lstlisting}
+from PIL import Image
+
+def mirror_horizontal(img):
+    """Mirror image horizontally (flip left-right)"""
+    width, height = img.______
+    mirrored = Image.______("RGB", (______, ______))
+
+    src_pixels = img.______
+    dst_pixels = mirrored.______
+
+    for x in range(______):
+        for y in range(______):
+            # Get pixel from original position
+            color =
+
+            # Calculate mirrored x position
+            new_x =
+
+            # Put pixel at mirrored position
+
+
+    return mirrored
+\end{lstlisting}
+
+\vspace{2cm}
+
+\begin{solution}
+\begin{lstlisting}
+from PIL import Image
+
+def mirror_horizontal(img):
+    """Mirror image horizontally (flip left-right)"""
+    width, height = img.size
+    mirrored = Image.new("RGB", (width, height))
+
+    src_pixels = img.load()
+    dst_pixels = mirrored.load()
+
+    for x in range(width):
+        for y in range(height):
+            # Get pixel from original position
+            color = src_pixels[x, y]
+
+            # Calculate mirrored x position
+            new_x = width - 1 - x
+
+            # Put pixel at mirrored position
+            dst_pixels[new_x, y] = color
+
+    return mirrored
+\end{lstlisting}
+\end{solution}
+
+\newpage
+
+\end{questions}
+
+\end{document}

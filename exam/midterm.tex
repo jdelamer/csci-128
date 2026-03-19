@@ -1,0 +1,229 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\university{St. Francis Xavier University}
+\department{Department of Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\exam{Midterm 1}
+\examdate{Winter 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This exam is \textbf{50 minutes} long.
+    \item Answer all questions in the space provided.
+    \item This exam is worth \textbf{100 points}.
+    \item No calculators, books, or notes are permitted.
+    \item Write your answers clearly. Illegible answers will receive no credit.
+    \item For coding questions, write syntactically correct Python code.
+    \item Good luck!
+\end{itemize}
+\end{rules}
+
+\vspace{5mm}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+% ======================================
+% Section 1: Values, Types, and Variables
+% ======================================
+\question[6] For each expression below, determine the data type of the result. If there is an error, write "ERROR".
+
+\begin{parts}
+    \part \texttt{5 + 3.0} \hspace{0.5cm} Type: \underline{\hspace{3cm}}
+    \part \texttt{str(42) + "7"} \hspace{0.5cm} Type: \underline{\hspace{3cm}}
+    \part \texttt{int("3.14")} \hspace{0.5cm} Type/Result: \underline{\hspace{3cm}}
+    \part \texttt{10 / 2} \hspace{0.5cm} Type: \underline{\hspace{3cm}}
+    \part \texttt{10 // 3} \hspace{0.5cm} Type: \underline{\hspace{3cm}}
+    \part \texttt{"Python" * 2} \hspace{0.5cm} Type: \underline{\hspace{3cm}}
+\end{parts}
+
+\question[8] What is the output of the following code? Show exactly what gets printed.
+
+\begin{lstlisting}
+x = "5"
+y = 3
+x = int(x) + y
+y = str(y) * 2
+print(x, y)
+\end{lstlisting}
+\vspace{2.5cm}
+
+\question[8] Trace through the following code carefully and show what gets printed:
+\begin{lstlisting}
+a = 10
+b = 20
+a = b - a
+b = a + b
+a = b - a
+print(a)
+print(b)
+\end{lstlisting}
+\vspace{3cm}
+
+\newpage
+
+\question[14] Write a complete Python program that:
+\begin{itemize}
+    \item Asks the user for their age
+    \item Asks the user for the number of years to add
+    \item Calculates their future age
+    \item Calculates how many months old they will be (future age × 12)
+    \item Prints both results with appropriate labels
+\end{itemize}
+
+\textbf{Example run:}
+\begin{verbatim}
+Enter your age: 20
+Enter number of years: 5
+In 5 years you will be: 25
+That is 300 months old
+\end{verbatim}
+
+\vspace{8cm}
+
+\newpage
+
+\question[8] What is wrong with each of the following code snippets? Identify the error and explain how to fix it.
+
+\begin{parts}
+    \part
+\begin{lstlisting}
+age = input("Enter your age: ")
+next_year = age + 1
+print(next_year)
+\end{lstlisting}
+    \textbf{Error:} \underline{\hspace{10cm}}
+
+    \textbf{Fix:} \underline{\hspace{10cm}}
+    \vspace{1cm}
+
+    \part
+\begin{lstlisting}
+name = input("Enter your name: ")
+print("Hello " + name + ". You are " + 25 + " years old")
+\end{lstlisting}
+    \textbf{Error:} \underline{\hspace{10cm}}
+
+    \textbf{Fix:} \underline{\hspace{10cm}}
+    \vspace{1cm}
+\end{parts}
+
+\question[6] Explain the difference between the operators \texttt{/} and \texttt{//} in Python. Give an example showing different results for each.
+\vspace{4cm}
+
+\newpage
+
+% ======================================
+% Section 2: Pictures and Pixels
+% ======================================
+\question[6] Answer the following questions:
+
+\begin{parts}
+    \part What color would result from the RGB values (128, 128, 128)? What about (200, 200, 200)?
+    \vspace{1.5cm}
+
+    \part What RGB values would you use to create yellow?
+    \vspace{1.5cm}
+
+    \part In the RGB color model, how would you create orange? (Hint: orange is red + some green)
+    \vspace{1.5cm}
+\end{parts}
+
+\question[5] For an image with dimensions 100×100:
+
+\begin{parts}
+    \part What are the coordinates of the top-right corner pixel?
+    \vspace{1.5cm}
+
+    \part What are the coordinates of the bottom-left corner pixel?
+    \vspace{1.5cm}
+
+    \part If you wanted to access the pixel in the exact center of the image, what coordinates would you use?
+    \vspace{1.5cm}
+\end{parts}
+
+\newpage
+
+\question[15] Write a complete Python program using Pillow that:
+\begin{itemize}
+    \item Loads an image file named \texttt{"photo.jpg"}
+    \item Gets the width and height of the image and prints them
+    \item Gets the pixel color at position (10, 10)
+    \item Extracts the individual R, G, and B values from that pixel
+    \item Calculates the sum of the three color values (R + G + B)
+    \item Prints the results in this format:
+    \begin{itemize}
+        \item "Image size: [width] x [height]"
+        \item "Pixel at (10, 10) - Red: [R], Green: [G], Blue: [B]"
+        \item "Total color value: [sum]"
+    \end{itemize}
+\end{itemize}
+
+\textit{Hint: The pixel color is returned as a tuple (R, G, B). You can unpack it like: r, g, b = pixel\_color}
+
+\vspace{10cm}
+
+\newpage
+
+\question[12] Complete the following Python program by filling in the blanks. This program creates a vertical red stripe down the middle of a 200×200 image:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Create a new white image (200x200)
+img = Image.______("RGB", (______, ______), (255, 255, 255))
+
+# Draw a red vertical stripe in the middle (x from 95 to 105)
+for x in range(______, ______):
+    for y in range(______):
+        img.______((x, y), (______, ______, ______))
+
+# Save the image
+img.______("stripe.jpg")
+\end{lstlisting}
+
+\vspace{2cm}
+
+\question[12] Write a complete Python program using Pillow that:
+\begin{itemize}
+    \item Creates a new 100×100 RGB image with all pixels initially black
+    \item Uses nested loops to set all pixels in the left half (x from 0 to 49) to red (255, 0, 0)
+    \item Uses nested loops to set all pixels in the right half (x from 50 to 99) to green (0, 255, 0)
+    \item Saves the result as \texttt{"two\_colors.jpg"}
+\end{itemize}
+
+\textit{Remember: You need nested loops (one for x, one for y) to access all pixels.}
+
+\vspace{10cm}
+
+\end{questions}
+
+\end{document}

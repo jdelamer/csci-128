@@ -1,0 +1,505 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single
+}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{CSCI 128: Coding for Problem Solving}
+\rhead{Lab 03}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Lab 03: Pictures and Pixels}}\\
+    \vspace{0.5em}
+    {\large Introduction to Digital Images and the RGB Color Model}\\
+    \vspace{1em}
+    \includegraphics[width=0.3\textwidth]{LogoWordsBottom.png}
+\end{center}
+
+\section*{Introduction}
+
+Welcome to the world of media computation! Today you'll learn how digital images work and how to manipulate them using Python. You'll discover that images are just grids of colored dots (pixels), and each pixel's color can be represented by numbers. By the end of this lab, you'll be creating and modifying images programmatically!
+
+\section*{Getting Started}
+
+\subsection*{Installing Pillow}
+
+Before we begin, you need to install the Pillow library (Python Imaging Library). Open your terminal or command prompt and run:
+
+\begin{lstlisting}
+pip install Pillow
+\end{lstlisting}
+
+Once installed, create a new file called \texttt{lab03.py} for your work today.
+
+\section{Understanding RGB Colors}
+
+Every pixel in a digital image has a color made from mixing red, green, and blue light. Each component ranges from 0 (none) to 255 (maximum intensity).
+
+\subsection*{Activity 1: RGB Color Explorer}
+
+Let's explore how RGB values create colors. Create a program that prints out some basic colors:
+
+\begin{lstlisting}
+# RGB Color Explorer
+print("Color Mixing with RGB")
+print("=" * 40)
+
+# Basic colors
+print("Black: (0, 0, 0)")
+print("White: (255, 255, 255)")
+print("Pure Red: (255, 0, 0)")
+print("Pure Green: (0, 255, 0)")
+print("Pure Blue: (0, 0, 255)")
+print()
+
+# Mixed colors
+print("Yellow (Red + Green): (255, 255, 0)")
+print("Magenta (Red + Blue): (255, 0, 255)")
+print("Cyan (Green + Blue): (0, 255, 255)")
+\end{lstlisting}
+
+\textbf{Question:} What happens when all three RGB values are equal? Try predicting the color for (100, 100, 100) and (200, 200, 200).
+
+\subsection*{Activity 2: Interactive Color Mixer}
+
+Create a program that asks the user for RGB values and displays the color information:
+
+\begin{lstlisting}
+# Color mixer
+print("RGB Color Mixer")
+print("Enter values from 0 to 255")
+print()
+
+red = int(input("Red value: "))
+green = int(input("Green value: "))
+blue = int(input("Blue value: "))
+
+print(f"\nYour color is: ({red}, {green}, {blue})")
+print(f"Red component: {red}")
+print(f"Green component: {green}")
+print(f"Blue component: {blue}")
+
+# Calculate total brightness (sum of all components)
+brightness = red + green + blue
+print(f"Total brightness: {brightness}")
+print(f"Average brightness: {brightness / 3}")
+\end{lstlisting}
+
+\textbf{Your Turn:} Create different color combinations and observe how the brightness values change! Try pure colors like (255, 0, 0) and mixed colors like (100, 150, 200).
+
+\section{Loading and Inspecting Images}
+
+Now let's work with real images! You'll need to download a sample image or use one from your computer.
+
+\subsection*{Activity 3: Image Information Detective}
+
+Create a program that loads an image and tells you all about it:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Load an image (make sure it's in the same folder!)
+img = Image.open("sample.jpg")  # Change filename as needed
+
+# Get basic information
+width, height = img.size
+print(f"Image size: {width} x {height}")
+print(f"Total pixels: {width * height}")
+print(f"Color mode: {img.mode}")
+print(f"Format: {img.format}")
+
+# Display the image
+img.show()
+\end{lstlisting}
+
+\textbf{Experiment:} Try loading different images (JPEG, PNG, etc.) and see what information you get!
+
+\subsection*{Activity 4: Pixel Color Inspector}
+
+Let's look at individual pixel colors:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+
+# Get colors from different positions
+top_left = img.getpixel((0, 0))
+print(f"Top-left corner: {top_left}")
+
+width, height = img.size
+top_right = img.getpixel((width-1, 0))
+print(f"Top-right corner: {top_right}")
+
+bottom_left = img.getpixel((0, height-1))
+print(f"Bottom-left corner: {bottom_left}")
+
+center = img.getpixel((width//2, height//2))
+print(f"Center: {center}")
+
+# Unpack RGB values
+r, g, b = center
+print(f"\nCenter pixel breakdown:")
+print(f"  Red: {r}")
+print(f"  Green: {g}")
+print(f"  Blue: {b}")
+\end{lstlisting}
+
+\textbf{Challenge:} Ask the user for x and y coordinates, then print the color at that position!
+
+\section{Creating Images from Scratch}
+
+You don't always need to load images - you can create them!
+
+\subsection*{Activity 5: Your First Canvas}
+
+Create images with different background colors:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Create a 400x300 red image
+red_img = Image.new("RGB", (400, 300), (255, 0, 0))
+red_img.show()
+
+# Create a 300x300 purple image
+purple_img = Image.new("RGB", (300, 300), (128, 0, 128))
+purple_img.show()
+
+# Create a custom color
+my_color = (100, 150, 200)  # Light blue
+my_img = Image.new("RGB", (500, 200), my_color)
+my_img.save("my_first_image.png")
+\end{lstlisting}
+
+\textbf{Your Turn:} Create images in your favorite colors and save them with descriptive names!
+
+\subsection*{Activity 6: Drawing with Pixels}
+
+Let's draw patterns by setting individual pixels:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Create a white canvas
+img = Image.new("RGB", (200, 200), (255, 255, 255))
+
+# Draw a red horizontal line across the middle
+for x in range(200):
+    img.putpixel((x, 100), (255, 0, 0))
+
+# Draw a blue vertical line down the middle
+for y in range(200):
+    img.putpixel((100, y), (0, 0, 255))
+
+img.show()
+img.save("cross.png")
+\end{lstlisting}
+
+\textbf{Experiment:} What happens if you draw the lines at different positions? Try diagonal lines!
+
+\section{Pixel Patterns and Loops}
+
+Nested loops let us create complex patterns by visiting every pixel.
+
+\subsection*{Activity 7: Gradient Generator}
+
+Create a horizontal gradient from black to red:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Create a blank image
+width, height = 256, 100
+img = Image.new("RGB", (width, height), (0, 0, 0))
+
+# Create gradient
+for x in range(width):
+    for y in range(height):
+        # Red increases as x increases
+        red_value = x
+        img.putpixel((x, y), (red_value, 0, 0))
+
+img.show()
+img.save("red_gradient.png")
+\end{lstlisting}
+
+\textbf{Your Turn:} Create gradients for green and blue! Try creating a gradient that goes from one color to another (like blue to yellow).
+
+\subsection*{Activity 8: Checkerboard Pattern}
+
+Create a classic checkerboard pattern:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Create image
+size = 200
+square_size = 25
+img = Image.new("RGB", (size, size), (255, 255, 255))
+
+# Draw checkerboard
+for x in range(size):
+    for y in range(size):
+        # Determine which square we're in
+        square_x = x // square_size
+        square_y = y // square_size
+
+        # Alternate colors
+        if (square_x + square_y) % 2 == 0:
+            img.putpixel((x, y), (0, 0, 0))  # Black
+        else:
+            img.putpixel((x, y), (255, 255, 255))  # White
+
+img.show()
+img.save("checkerboard.png")
+\end{lstlisting}
+
+\textbf{Challenge:} Change the colors! Try red and white, or create a rainbow checkerboard.
+
+\section{Modifying Existing Images}
+
+Now let's modify pixels in loaded images.
+
+\subsection*{Activity 9: Single Pixel Modifier}
+
+Change specific pixels in an image:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+
+# Draw a small red square in the top-left
+for x in range(50):
+    for y in range(50):
+        img.putpixel((x, y), (255, 0, 0))
+
+# Draw a green dot in the center
+width, height = img.size
+for x in range(width//2 - 10, width//2 + 10):
+    for y in range(height//2 - 10, height//2 + 10):
+        img.putpixel((x, y), (0, 255, 0))
+
+img.show()
+img.save("marked_image.jpg")
+\end{lstlisting}
+
+\textbf{Experiment:} Draw shapes in different corners of the image!
+
+\subsection*{Activity 10: Efficient Pixel Processing}
+
+For processing many pixels, use the \texttt{load()} method:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()  # Faster pixel access
+width, height = img.size
+
+# Example: Make top half brighter
+for x in range(width):
+    for y in range(height // 2):
+        r, g, b = pixels[x, y]
+        # Increase brightness (cap at 255)
+        new_r = min(r + 50, 255)
+        new_g = min(g + 50, 255)
+        new_b = min(b + 50, 255)
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.show()
+\end{lstlisting}
+
+\textbf{Your Turn:} Make the bottom half darker instead!
+
+\section{Creative Challenges}
+
+\subsection*{Challenge 1: Four-Quadrant Image}
+
+Create a 200×200 image divided into four quadrants, each with a different color:
+
+\begin{itemize}
+    \item Top-left: Red (255, 0, 0)
+    \item Top-right: Green (0, 255, 0)
+    \item Bottom-left: Blue (0, 0, 255)
+    \item Bottom-right: Yellow (255, 255, 0)
+\end{itemize}
+
+\textbf{Hint:} Each quadrant is 100×100. Top-left goes from (0,0) to (99,99).
+
+\subsection*{Challenge 2: Color Gradient Band}
+
+Create a 300×100 image that shows a smooth color transition from left to right:
+\begin{itemize}
+    \item Start with pure blue on the left: (0, 0, 255)
+    \item Gradually transition to pure red on the right: (255, 0, 0)
+    \item As x increases, blue should decrease and red should increase
+\end{itemize}
+
+\textbf{Hint:} For each x position from 0 to 299, calculate red as \texttt{(x * 255) // 299} and blue as \texttt{255 - (x * 255) // 299}.
+
+\subsection*{Challenge 3: Stripe Pattern}
+
+Create an image with horizontal or vertical stripes alternating between two colors of your choice. Make the stripes 20 pixels wide.
+
+\subsection*{Challenge 4: Border Frame}
+
+Load an image and add a decorative border around all edges:
+\begin{itemize}
+    \item Add a 10-pixel wide red border on the top edge
+    \item Add a 10-pixel wide blue border on the left edge
+    \item Add borders on the remaining edges in colors of your choice
+    \item Save the result
+\end{itemize}
+
+\textbf{Hint:} Use loops! For the top border, loop through all x values from 0 to width, and y values from 0 to 10.
+
+\subsection*{Challenge 5: Pixel Art Creator}
+
+Create a simple pixel art image (like a smiley face or a house) by carefully setting pixels in a small image (try 50×50 or 100×100). Plan it out on graph paper first!
+
+\section{Putting It All Together}
+
+\subsection*{Final Project: Image Analysis Tool}
+
+Create a comprehensive program that:
+
+\begin{enumerate}
+    \item Loads an image from user input
+    \item Displays image information (size, format, mode)
+    \item Samples pixels from specific positions (corners and center) and shows their colors
+    \item Calculates the average RGB values across all pixels
+    \item Creates a new small image (50×50) showing the average color
+    \item Saves both the original and the average color sample
+\end{enumerate}
+
+\textbf{Example Output:}
+\begin{verbatim}
+=== IMAGE ANALYSIS TOOL ===
+Enter image filename: beach.jpg
+
+Image Information:
+- Size: 1920 x 1080
+- Total Pixels: 2,073,600
+- Format: JPEG
+- Mode: RGB
+
+Corner Samples:
+Top-left (0, 0): (142, 198, 235)
+Top-right (1919, 0): (180, 210, 240)
+Bottom-left (0, 1079): (120, 165, 200)
+Bottom-right (1919, 1079): (155, 190, 220)
+Center (960, 540): (165, 195, 225)
+
+Average Color: (165, 195, 220)
+Color sample saved as: beach_average.png
+\end{verbatim}
+
+\textbf{Hints:}
+\begin{itemize}
+    \item To calculate averages, sum all RGB values and divide by total pixels
+    \item Use nested loops to visit every pixel: \texttt{for x in range(width):} and \texttt{for y in range(height):}
+    \item Keep running totals: \texttt{total\_red}, \texttt{total\_green}, \texttt{total\_blue}
+    \item This might take a while for large images - start with a small test image!
+\end{itemize}
+
+\section*{Bonus Explorations}
+
+If you finish early, try these advanced challenges:
+
+\begin{itemize}
+    \item \textbf{Diagonal Line:} Draw a diagonal line from top-left to bottom-right corner
+    \item \textbf{Thumbnail Generator:} Resize an image to a small thumbnail (hint: sample every nth pixel)
+    \item \textbf{Image Flipper:} Flip an image horizontally or vertically by swapping pixels
+    \item \textbf{Pattern Maker:} Create complex geometric patterns using nested loops (concentric squares, grid patterns, etc.)
+    \item \textbf{Color Inverter:} For each pixel, calculate the inverse color: new\_r = 255 - old\_r (and same for green and blue)
+    \item \textbf{Brightness Adjuster:} Make an entire image brighter or darker by adding/subtracting a value from all RGB components
+\end{itemize}
+
+\section*{Important Concepts Review}
+
+\subsection*{RGB Color Model}
+\begin{itemize}
+    \item Each color has three components: Red, Green, Blue
+    \item Each component ranges from 0 to 255
+    \item (0, 0, 0) is black, (255, 255, 255) is white
+    \item Equal values create shades of gray
+    \item This is additive color mixing (like light, not paint!)
+\end{itemize}
+
+\subsection*{Image Coordinates}
+\begin{itemize}
+    \item Origin (0, 0) is at the top-left corner
+    \item x increases going right (width)
+    \item y increases going down (height)
+    \item Always use (x, y) format: width first, then height
+\end{itemize}
+
+\subsection*{Key Pillow Functions}
+\begin{itemize}
+    \item \texttt{Image.open(filename)}: Load an image from a file
+    \item \texttt{Image.new(mode, size, color)}: Create a new blank image
+    \item \texttt{img.size}: Get (width, height) tuple
+    \item \texttt{img.getpixel((x, y))}: Get color at position
+    \item \texttt{img.putpixel((x, y), (r, g, b))}: Set color at position
+    \item \texttt{img.show()}: Display the image
+    \item \texttt{img.save(filename)}: Save to a file
+    \item \texttt{img.load()}: Get pixel access object for efficiency
+\end{itemize}
+
+\section*{Reflection Questions}
+
+Think about these questions as you work:
+
+\begin{itemize}
+    \item How many colors can be represented with RGB values? (Hint: 256 × 256 × 256)
+    \item Why does the y-coordinate increase downward instead of upward like in math?
+    \item What's the difference between \texttt{getpixel()} and using \texttt{load()}?
+    \item How would you create a color that's "darker" or "lighter" than another color?
+    \item What happens if you try to set a pixel value greater than 255 or less than 0?
+    \item Why might processing a 4000×3000 image be slow?
+\end{itemize}
+
+\section*{Tips and Tricks}
+
+\begin{itemize}
+    \item Always test with small images first (200×200 or smaller) when developing
+    \item Use descriptive variable names: \texttt{red\_value} not \texttt{r}
+    \item Remember to save your work! \texttt{putpixel()} modifies in memory only
+    \item The image file must be in the same folder as your Python program (or use full path)
+    \item Use \texttt{min(value, 255)} and \texttt{max(value, 0)} to keep colors in valid range
+    \item Nested loops are your friend for processing all pixels
+\end{itemize}
+
+\vspace{2em}
+
+\begin{center}
+\textit{Congratulations! You can now create and manipulate images with code!\\
+Every Instagram filter, Photoshop tool, and computer vision algorithm\\
+starts with these fundamental pixel operations.}
+\end{center}
+
+\end{document}

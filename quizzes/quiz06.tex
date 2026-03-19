@@ -18,10 +18,10 @@
 }
 
 % Course information
-\course{CSCI 128: Introduction to Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
 \courseshort{CSCI 128}
 \exam{Quiz 6}
-\examdate{Winter 2025}
+\examdate{Winter 2026}
 
 \begin{document}
 
@@ -30,7 +30,7 @@
 \begin{rules}
 \textbf{Instructions:}
 \begin{itemize}
-    \item This quiz covers material from Lecture 9 (Building Bigger Programs)
+    \item This quiz covers material from Lecture 6 (Combining Images and Collages)
     \item Answer all questions in the space provided
     \item Show your work where applicable
     \item Time limit: 15 minutes
@@ -45,27 +45,112 @@
 
 \begin{questions}
 
-\question[2] What are three benefits of organizing your code into functions?
+\question[2] What is the difference between a \textbf{canvas} and a \textbf{source image} in the context of image composition?
+
 \vspace{1.5in}
 
-\question[2] What is a module in Python? How do you import a function from a custom module?
-\vspace{1.5in}
+\question[2] When pasting an image onto a canvas, the position argument specifies which corner of the pasted image?
 
-\question[3] What is the purpose of the following line at the end of a Python file?
-\begin{lstlisting}[numbers=none]
-if __name__ == "__main__":
-    main()
+\vspace{0.3cm}
+\underline{\hspace{4in}}
+\vspace{0.5in}
+
+\question[3] You have a canvas of size 800$\times$600 and you paste a 200$\times$200 image at position $(700, 500)$.
+
+\begin{parts}
+    \part What is the right edge x-coordinate of the pasted image? \underline{\hspace{2in}}
+    \part What is the bottom edge y-coordinate of the pasted image? \underline{\hspace{2in}}
+    \part Does the image go off the canvas? Explain briefly.
+    \vspace{0.8in}
+\end{parts}
+
+\question[3] For a grid collage with $N$ images arranged in a grid with \texttt{cols} columns, write the formulas to compute the row and column index of image $i$.
+
+\vspace{0.3cm}
+\texttt{row} $=$ \underline{\hspace{2.5in}}
+
+\vspace{0.3cm}
+\texttt{col} $=$ \underline{\hspace{2.5in}}
+
+\vspace{0.3cm}
+In a 3-column grid, what are the row and column of image 7?
+
+\vspace{0.3cm}
+\texttt{row} $=$ \underline{\hspace{1in}} \hspace{1cm} \texttt{col} $=$ \underline{\hspace{1in}}
+
+\newpage
+
+\question[3] What does the following code produce? Describe the output image in terms of its size and layout.
+
+\begin{lstlisting}
+from PIL import Image
+
+img1 = Image.open("photo1.jpg").resize((300, 300))
+img2 = Image.open("photo2.jpg").resize((300, 300))
+img3 = Image.open("photo3.jpg").resize((300, 300))
+img4 = Image.open("photo4.jpg").resize((300, 300))
+
+canvas = Image.new("RGB", (600, 600))
+canvas.paste(img1, (0, 0))
+canvas.paste(img2, (300, 0))
+canvas.paste(img3, (0, 300))
+canvas.paste(img4, (300, 300))
 \end{lstlisting}
+
 \vspace{1.5in}
 
-\question[2] What is the difference between testing code interactively and writing test functions?
-\vspace{1.5in}
+\question[3] In alpha blending, the result pixel is computed as:
+\[
+    \text{result} = \alpha \times \text{img1} + (1 - \alpha) \times \text{img2}
+\]
 
-\question[3] Write a function called \texttt{increase\_brightness} that takes an image as a parameter and returns a new image with all RGB values increased by 20 (without exceeding 255).
-\vspace{1.5in}
+\begin{parts}
+    \part What does the output look like when $\alpha = 0.0$? \underline{\hspace{2.5in}}
+    \part What does the output look like when $\alpha = 1.0$? \underline{\hspace{2.5in}}
+    \part Two pixels are blended with $\alpha = 0.25$. Pixel from img1 is $(200, 100, 0)$ and from img2 is $(0, 100, 200)$. Calculate the resulting RGB values.
 
-\question[3] What is debugging? Name two strategies for debugging a program that isn't working correctly.
-\vspace{1.5in}
+    \vspace{0.3cm}
+    R $=$ \underline{\hspace{1in}} \hspace{0.5cm}
+    G $=$ \underline{\hspace{1in}} \hspace{0.5cm}
+    B $=$ \underline{\hspace{1in}}
+\end{parts}
+
+\newpage
+
+\question[4] The function below implements a chromakey (green screen) effect. Read it carefully and answer the questions.
+
+\begin{lstlisting}
+def chromakey(foreground, background, key_color, threshold=50):
+    fg_pixels = foreground.load()
+    bg_pixels = background.load()
+    result = Image.new("RGB", foreground.size)
+    result_pixels = result.load()
+
+    for x in range(foreground.size[0]):
+        for y in range(foreground.size[1]):
+            r, g, b = fg_pixels[x, y]
+            distance = (abs(r - key_color[0]) + abs(g - key_color[1]) + abs(b - key_color[2]))
+            if distance < threshold:
+                result_pixels[x, y] = bg_pixels[x, y]
+            else:
+                result_pixels[x, y] = (r, g, b)
+    return result
+\end{lstlisting}
+
+\begin{parts}
+    \part What does the variable \texttt{distance} measure?
+    \vspace{0.8in}
+
+    \part A foreground pixel is $(10, 240, 20)$ and \texttt{key\_color} is $(0, 255, 0)$. Calculate \texttt{distance}.
+
+    \vspace{0.3cm}
+    \texttt{distance} $=$ \underline{\hspace{2in}}
+
+    \part With \texttt{threshold = 50}, does this pixel get replaced by the background or kept from the foreground?
+
+    \vspace{0.3cm}
+    \underline{\hspace{4in}}
+\end{parts}
 
 \end{questions}
 

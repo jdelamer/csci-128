@@ -1,0 +1,910 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single
+}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{CSCI 128: Coding for Problem Solving}
+\rhead{Lab 03B}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Lab 03B: Picture Filters}}\\
+    \vspace{0.5em}
+    {\large Creating Instagram-Like Effects with Conditionals}\\
+    \vspace{1em}
+    \includegraphics[width=0.3\textwidth]{LogoWordsBottom.png}
+\end{center}
+
+\section*{Introduction}
+
+Welcome to the world of image filters! Now that you understand how images work and can manipulate individual pixels, it's time to create dramatic visual effects. You'll learn to transform entire images by processing all pixels systematically, and you'll use conditional statements to make intelligent decisions about how to modify each pixel.
+
+By the end of this lab, you'll have created your own collection of filters similar to those found in Instagram, Snapchat, and photo editing apps!
+
+\section*{Learning Objectives}
+
+\begin{itemize}
+    \item Process all pixels in an image using nested loops
+    \item Create grayscale conversion filters
+    \item Build negative (inverted) images
+    \item Adjust image brightness
+    \item Apply color tints and sepia effects
+    \item Use conditional statements to make pixel-by-pixel decisions
+    \item Create threshold (black and white) effects
+    \item Understand image processing algorithms
+\end{itemize}
+
+\section*{Getting Started}
+
+\subsection*{Setup}
+
+\begin{enumerate}
+    \item Ensure Pillow is still installed: \texttt{pip install Pillow}
+    \item Create a new file called \texttt{lab03b.py} for your work today
+    \item Download 2-3 test images (photos work best):
+    \begin{itemize}
+        \item A colorful photo (landscape, portrait, etc.)
+        \item An image with varied brightness
+        \item An image with strong colors
+    \end{itemize}
+    \item Save them in the same folder as your Python file
+\end{enumerate}
+
+\textbf{Pro Tip:} Start with smaller images (under 1000×1000 pixels) for faster processing while you develop!
+
+\section{The Standard Pattern: Processing All Pixels}
+
+Before we create filters, let's understand the fundamental structure for processing every pixel in an image.
+
+\subsection*{Activity 1: Understanding Nested Loops}
+
+Here's the pattern you'll use in almost every filter:
+
+\begin{lstlisting}
+from PIL import Image
+
+# Load image
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+# Process every pixel
+for x in range(width):
+    for y in range(height):
+        # Get current color
+        r, g, b = pixels[x, y]
+
+        # Calculate new color (this is where the magic happens!)
+        new_r, new_g, new_b = r, g, b  # (no change yet)
+
+        # Set new color
+        pixels[x, y] = (new_r, new_g, new_b)
+
+# Save and show
+img.save("processed.jpg")
+img.show()
+\end{lstlisting}
+
+\textbf{Understanding the nested loops:}
+\begin{itemize}
+    \item The outer loop iterates through columns (x-coordinates)
+    \item The inner loop iterates through rows (y-coordinates)
+    \item Together they visit every single pixel exactly once
+    \item For a 800×600 image, the loops run 480,000 times total!
+\end{itemize}
+
+\textbf{Your Turn:} Run this program with your own image. It should load and save the image unchanged. This confirms your setup is working!
+
+\section{Grayscale Filters}
+
+Grayscale (black and white) images have no color—only brightness information. To create grayscale, we make all three RGB channels equal.
+
+\subsection*{Activity 2: Simple Average Grayscale}
+
+The simplest approach is to average the three color channels:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Calculate average brightness
+        gray = (r + g + b) // 3
+
+        # Set all channels to the same value
+        pixels[x, y] = (gray, gray, gray)
+
+img.save("grayscale_average.jpg")
+img.show()
+print("Grayscale conversion complete!")
+\end{lstlisting}
+
+\textbf{Why it works:} When R = G = B, the pixel appears as a shade of gray. The value determines how bright the gray is (0 = black, 255 = white).
+
+\textbf{Experiment:} Try this on different images. Notice how colorful images become shades of gray!
+
+\subsection*{Activity 3: Luminance Grayscale (Better Method)}
+
+Human eyes don't perceive all colors equally. We're more sensitive to green and less sensitive to blue. Professional grayscale conversion uses weighted averages:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Luminance formula (matches human perception)
+        gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+
+        # Set all channels to the same value
+        pixels[x, y] = (gray, gray, gray)
+
+img.save("grayscale_luminance.jpg")
+img.show()
+print("Luminance grayscale complete!")
+\end{lstlisting}
+
+\textbf{The weights:}
+\begin{itemize}
+    \item Green contributes most: 58.7\%
+    \item Red contributes next: 29.9\%
+    \item Blue contributes least: 11.4\%
+\end{itemize}
+
+\textbf{Compare:} Save both versions (average and luminance) and compare them side by side. Can you see the difference? The luminance version usually looks more natural.
+
+\section{Negative Filter}
+
+A negative image is like a film negative in old-school photography—light becomes dark, dark becomes light, and colors invert.
+
+\subsection*{Activity 4: Creating a Negative}
+
+The formula is simple: subtract each color value from 255.
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Invert each color channel
+        new_r = 255 - r
+        new_g = 255 - g
+        new_b = 255 - b
+
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.save("negative.jpg")
+img.show()
+print("Negative filter applied!")
+\end{lstlisting}
+
+\textbf{Color inversions:}
+\begin{itemize}
+    \item Black (0, 0, 0) → White (255, 255, 255)
+    \item White (255, 255, 255) → Black (0, 0, 0)
+    \item Red (255, 0, 0) → Cyan (0, 255, 255)
+    \item Green (0, 255, 0) → Magenta (255, 0, 255)
+    \item Blue (0, 0, 255) → Yellow (255, 255, 0)
+\end{itemize}
+
+\textbf{Fun Challenge:} What happens if you apply the negative filter twice to the same image? Try it and explain why!
+
+\section{Brightness Adjustment}
+
+Making images lighter or darker is a common need in photo editing.
+
+\subsection*{Activity 5: Increasing Brightness}
+
+To make an image brighter, add a value to all color channels:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+amount = 50  # How much to brighten
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Add to each channel (but don't exceed 255)
+        new_r = min(r + amount, 255)
+        new_g = min(g + amount, 255)
+        new_b = min(b + amount, 255)
+
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.save("brighter.jpg")
+img.show()
+print(f"Brightness increased by {amount}")
+\end{lstlisting}
+
+\textbf{Important:} The \texttt{min()} function ensures we don't exceed 255. This is called \textbf{clamping}.
+
+\textbf{Experiment:} Try different amounts (10, 30, 50, 100). What happens with very large values?
+
+\subsection*{Activity 6: Decreasing Brightness}
+
+To darken an image, subtract a value from all color channels:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+amount = 50  # How much to darken
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Subtract from each channel (but don't go below 0)
+        new_r = max(r - amount, 0)
+        new_g = max(g - amount, 0)
+        new_b = max(b - amount, 0)
+
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.save("darker.jpg")
+img.show()
+print(f"Brightness decreased by {amount}")
+\end{lstlisting}
+
+\textbf{Important:} The \texttt{max()} function ensures we don't go below 0 (clamping again).
+
+\textbf{Your Turn:} Create a function that can adjust brightness in either direction:
+
+\begin{lstlisting}
+def adjust_brightness(filename, amount):
+    """
+    Adjust image brightness.
+    amount: positive to brighten, negative to darken
+    """
+    # Your code here
+    pass
+\end{lstlisting}
+
+\section{Color Tinting}
+
+Tinting adds a color "cast" to an image, like looking through colored glass. This creates mood and atmosphere.
+
+\subsection*{Activity 7: Simple Warm Tint}
+
+A warm tint makes images feel cozy by reducing blue:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Reduce blue channel by 50%
+        new_b = b // 2
+
+        # Keep red and green the same
+        pixels[x, y] = (r, g, new_b)
+
+img.save("warm_tint.jpg")
+img.show()
+print("Warm tint applied!")
+\end{lstlisting}
+
+\textbf{Why it works:} Reducing blue makes the image appear warmer (more red/yellow tones).
+
+\subsection*{Activity 8: Cool Blue Tint}
+
+Create a cool, night-time feel by reducing red and green:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Reduce red and green by 30%
+        new_r = int(r * 0.7)
+        new_g = int(g * 0.7)
+        # Keep blue the same
+
+        pixels[x, y] = (new_r, new_g, b)
+
+img.save("cool_tint.jpg")
+img.show()
+print("Cool tint applied!")
+\end{lstlisting}
+
+\subsection*{Activity 9: Sepia Tone (Vintage Photo Effect)}
+
+Sepia creates the warm, brownish tone of vintage photographs:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Sepia transformation (standard formula)
+        new_r = int(0.393 * r + 0.769 * g + 0.189 * b)
+        new_g = int(0.349 * r + 0.686 * g + 0.168 * b)
+        new_b = int(0.272 * r + 0.534 * g + 0.131 * b)
+
+        # Clamp to valid range
+        new_r = min(new_r, 255)
+        new_g = min(new_g, 255)
+        new_b = min(new_b, 255)
+
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.save("sepia.jpg")
+img.show()
+print("Sepia tone applied!")
+\end{lstlisting}
+
+\textbf{Notice:} Each new color is calculated from all three original colors. This creates the authentic sepia look!
+
+\section{Conditionals in Image Processing}
+
+Now let's use \texttt{if} statements to make decisions about individual pixels!
+
+\subsection*{Quick Review: Conditionals}
+
+Before we apply them to images, let's review:
+
+\begin{lstlisting}
+# Simple condition
+x = 10
+if x > 5:
+    print("x is big!")
+
+# Condition with else
+temperature = 30
+if temperature > 25:
+    print("It's hot!")
+else:
+    print("It's cool!")
+\end{lstlisting}
+
+\textbf{Key points:}
+\begin{itemize}
+    \item Conditions answer True/False questions
+    \item Use \texttt{if} to run code only when condition is True
+    \item Use \texttt{else} to specify what happens when condition is False
+    \item Don't forget the colon (\texttt{:}) and indentation!
+\end{itemize}
+
+\subsection*{Activity 10: Threshold Filter (Black and White)}
+
+A threshold filter creates pure black and white images (not grayscale):
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+threshold = 128  # Middle of 0-255 range
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Calculate brightness
+        brightness = (r + g + b) // 3
+
+        # Apply threshold using if-else
+        if brightness > threshold:
+            # Bright pixels become white
+            pixels[x, y] = (255, 255, 255)
+        else:
+            # Dark pixels become black
+            pixels[x, y] = (0, 0, 0)
+
+img.save("threshold.jpg")
+img.show()
+print(f"Threshold filter applied (threshold = {threshold})")
+\end{lstlisting}
+
+\textbf{How it works:}
+\begin{enumerate}
+    \item Calculate each pixel's brightness
+    \item Compare to threshold value
+    \item Pixels above threshold → white
+    \item Pixels below threshold → black
+\end{enumerate}
+
+\textbf{Experiment:} Try different threshold values (64, 128, 192). How does it change the result?
+
+\subsection*{Activity 11: Selective Brightness Boost}
+
+Make only dark pixels brighter (leave bright pixels alone):
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        brightness = (r + g + b) // 3
+
+        # Only boost dark pixels
+        if brightness < 100:
+            # Make darker pixels brighter
+            new_r = min(r + 50, 255)
+            new_g = min(g + 50, 255)
+            new_b = min(b + 50, 255)
+            pixels[x, y] = (new_r, new_g, new_b)
+        # else: leave pixel unchanged (implicitly)
+
+img.save("selective_brighten.jpg")
+img.show()
+print("Dark pixels brightened!")
+\end{lstlisting}
+
+\textbf{This is useful for:} Bringing out details in shadows without overexposing bright areas.
+
+\subsection*{Activity 12: Highlight Detection}
+
+Color all bright pixels red to see where highlights are:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+highlight_threshold = 200
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        brightness = (r + g + b) // 3
+
+        # Mark bright pixels in red
+        if brightness > highlight_threshold:
+            pixels[x, y] = (255, 0, 0)  # Red
+        # else: leave pixel as is
+
+img.save("highlights.jpg")
+img.show()
+print(f"Highlights above {highlight_threshold} marked in red")
+\end{lstlisting}
+
+\textbf{Useful for:} Photography analysis, identifying overexposed areas.
+
+\subsection*{Activity 13: Red Eye Detector (Simplified)}
+
+Detect pixels that are very red:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Check if pixel is dominantly red
+        if r > 150 and r > g + 50 and r > b + 50:
+            # This pixel is very red
+            # Mark it with a green dot
+            pixels[x, y] = (0, 255, 0)
+
+img.save("red_detected.jpg")
+img.show()
+print("Red areas detected and marked in green")
+\end{lstlisting}
+
+\textbf{Conditions combined:} We use \texttt{and} to check multiple conditions at once.
+
+\section{Advanced Filters}
+
+\subsection*{Activity 14: Posterization}
+
+Reduce the number of colors for a poster art effect:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+levels = 4  # Number of levels per channel
+step = 256 // levels
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Round each channel to nearest level
+        new_r = (r // step) * step
+        new_g = (g // step) * step
+        new_b = (b // step) * step
+
+        pixels[x, y] = (new_r, new_g, new_b)
+
+img.save("posterized.jpg")
+img.show()
+print(f"Posterized to {levels} levels per channel")
+\end{lstlisting}
+
+\textbf{How it works:} Instead of 256 levels (0-255), we reduce to just a few levels (e.g., 4), creating a simplified color palette.
+
+\textbf{Experiment:} Try different numbers of levels (2, 4, 8, 16).
+
+\subsection*{Activity 15: Two-Tone Filter}
+
+Create an image with only two colors:
+
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("sample.jpg")
+pixels = img.load()
+width, height = img.size
+
+threshold = 128
+color1 = (50, 0, 100)   # Dark purple
+color2 = (255, 200, 0)  # Golden yellow
+
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        brightness = (r + g + b) // 3
+
+        if brightness > threshold:
+            pixels[x, y] = color2
+        else:
+            pixels[x, y] = color1
+
+img.save("two_tone.jpg")
+img.show()
+print("Two-tone filter applied!")
+\end{lstlisting}
+
+\textbf{Your Turn:} Try different color combinations! Make a red/blue filter, or green/yellow, etc.
+
+\section{Creative Challenges}
+
+\subsection*{Challenge 1: Filter Function Library}
+
+Create a library of filter functions:
+
+\begin{lstlisting}
+from PIL import Image
+
+def grayscale(img):
+    """Convert image to grayscale"""
+    pixels = img.load()
+    width, height = img.size
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            gray = int(0.299 * r + 0.587 * g + 0.114 * b)
+            pixels[x, y] = (gray, gray, gray)
+    return img
+
+def negative(img):
+    """Apply negative filter"""
+    # Your code here
+    return img
+
+def sepia(img):
+    """Apply sepia tone"""
+    # Your code here
+    return img
+
+# Use your filters
+img = Image.open("sample.jpg")
+img = grayscale(img)
+img.save("filtered.jpg")
+\end{lstlisting}
+
+\textbf{Task:} Complete the functions and add more filters!
+
+\subsection*{Challenge 2: Multi-Filter Processor}
+
+Create a program that applies multiple filters in sequence:
+
+\begin{lstlisting}
+# Example: apply sepia, then increase brightness, then posterize
+img = Image.open("sample.jpg")
+img = sepia(img)
+img = adjust_brightness(img, 30)
+img = posterize(img, levels=4)
+img.save("multi_filter.jpg")
+\end{lstlisting}
+
+\subsection*{Challenge 3: Custom Artistic Filter}
+
+Design your own unique filter! Combine techniques:
+\begin{itemize}
+    \item Mix multiple color transformations
+    \item Use conditionals to treat different regions differently
+    \item Combine brightness adjustments with tinting
+    \item Create something no one has seen before!
+\end{itemize}
+
+\subsection*{Challenge 4: Split Image Filter}
+
+Apply different filters to different parts of the image:
+
+\begin{lstlisting}
+# Example: Left half sepia, right half grayscale
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        if x < width // 2:
+            # Left half: sepia
+            # ...
+        else:
+            # Right half: grayscale
+            # ...
+\end{lstlisting}
+
+\textbf{Ideas:}
+\begin{itemize}
+    \item Top half bright, bottom half dark
+    \item Four quadrants with four different filters
+    \item Diagonal split
+    \item Circular region with different filter
+\end{itemize}
+
+\subsection*{Challenge 5: Conditional Color Replacement}
+
+Replace specific colors with other colors:
+
+\begin{lstlisting}
+# Example: Turn all blue pixels to gold
+for x in range(width):
+    for y in range(height):
+        r, g, b = pixels[x, y]
+
+        # Check if pixel is "mostly blue"
+        if b > 150 and b > r + 30 and b > g + 30:
+            # Replace with gold
+            pixels[x, y] = (255, 215, 0)
+\end{lstlisting}
+
+\textbf{Try:} Green screen effect, sky color changer, etc.
+
+\subsection*{Challenge 6: Instagram-Style Filter Pack}
+
+Create a collection of named filters:
+
+\begin{itemize}
+    \item \textbf{Vintage:} Sepia + slight brightness reduction + posterization
+    \item \textbf{Dramatic:} High contrast (darken darks, brighten brights)
+    \item \textbf{Cool Blues:} Reduce red/green, keep blue
+    \item \textbf{Warm Sunset:} Boost red/yellow, reduce blue
+    \item \textbf{High Contrast B\&W:} Threshold with low value (100)
+\end{itemize}
+
+\section{Mini-Project: Filter Gallery}
+
+Create a program that generates a gallery of filter effects:
+
+\begin{enumerate}
+    \item Load one source image
+    \item Apply each filter you've created
+    \item Save each result with a descriptive name
+    \item Print a summary of all filters applied
+\end{enumerate}
+
+\textbf{Example output:}
+\begin{verbatim}
+=== FILTER GALLERY ===
+Source image: vacation.jpg
+
+Filters applied:
+1. grayscale_average.jpg
+2. grayscale_luminance.jpg
+3. negative.jpg
+4. brighter.jpg
+5. darker.jpg
+6. warm_tint.jpg
+7. cool_tint.jpg
+8. sepia.jpg
+9. threshold.jpg
+10. posterized.jpg
+11. two_tone.jpg
+
+Gallery complete! 11 filters created.
+\end{verbatim}
+
+\section*{Understanding Filter Performance}
+
+\textbf{Why are some filters slow?}
+
+\begin{itemize}
+    \item Each pixel requires calculations
+    \item A 1920×1080 image has 2,073,600 pixels!
+    \item Nested loops visit every pixel
+    \item Complex calculations (like sepia) take longer
+\end{itemize}
+
+\textbf{Tips for faster development:}
+\begin{itemize}
+    \item Test with small images first (300×300)
+    \item Use larger images for final results
+    \item Save work frequently
+    \item Consider using \texttt{img.thumbnail()} to resize for testing
+\end{itemize}
+
+\section*{Key Concepts Review}
+
+\subsection*{Nested Loops for Image Processing}
+\begin{itemize}
+    \item Outer loop: x-coordinates (columns)
+    \item Inner loop: y-coordinates (rows)
+    \item Visit every pixel exactly once
+    \item Standard pattern for all filters
+\end{itemize}
+
+\subsection*{Color Transformations}
+\begin{itemize}
+    \item \textbf{Grayscale:} R = G = B (use average or luminance)
+    \item \textbf{Negative:} new = 255 - old
+    \item \textbf{Brightness:} add (brighter) or subtract (darker)
+    \item \textbf{Tinting:} adjust individual channels
+    \item \textbf{Sepia:} mix all channels with specific weights
+\end{itemize}
+
+\subsection*{Clamping}
+\begin{itemize}
+    \item RGB values must stay in 0-255 range
+    \item Use \texttt{min(value, 255)} to prevent exceeding 255
+    \item Use \texttt{max(value, 0)} to prevent going below 0
+    \item Essential for brightness adjustments
+\end{itemize}
+
+\subsection*{Conditionals in Filters}
+\begin{itemize}
+    \item Use \texttt{if} to make pixel-by-pixel decisions
+    \item Compare brightness, color channels, or positions
+    \item Create threshold effects (black and white)
+    \item Apply selective modifications
+    \item Detect and mark specific colors or regions
+\end{itemize}
+
+\section*{Common Issues and Solutions}
+
+\textbf{Image looks too dark/bright after filter:}
+\begin{itemize}
+    \item Check clamping (min/max functions)
+    \item Verify arithmetic (integer division vs float division)
+    \item Try adjusting constants (brightness amounts, thresholds)
+\end{itemize}
+
+\textbf{Filter has unexpected colors:}
+\begin{itemize}
+    \item Verify you're modifying the right channels
+    \item Check multiplication factors (should be between 0 and 1 for reduction)
+    \item Ensure you're using \texttt{int()} for floating-point calculations
+\end{itemize}
+
+\textbf{Program is slow:}
+\begin{itemize}
+    \item Normal for large images!
+    \item Test with smaller images first
+    \item Avoid unnecessary calculations inside loops
+    \item Be patient—image processing takes time
+\end{itemize}
+
+\textbf{Syntax errors with conditionals:}
+\begin{itemize}
+    \item Check for colon (\texttt{:}) after \texttt{if} and \texttt{else}
+    \item Verify indentation (use 4 spaces or 1 tab consistently)
+    \item Make sure conditions use comparison operators (\texttt{>}, \texttt{<}, \texttt{==}, etc.)
+\end{itemize}
+
+\section*{Bonus Explorations}
+
+\begin{itemize}
+    \item \textbf{Contrast Enhancement:} Make darks darker and brights brighter
+    \item \textbf{Color Isolation:} Keep one color, turn everything else grayscale
+    \item \textbf{Duotone:} Map colors to a gradient between two colors
+    \item \textbf{Vignette:} Darken edges, keep center bright
+    \item \textbf{Multiple Thresholds:} Create 3-4 distinct levels instead of 2
+    \item \textbf{Channel Swap:} Swap red and blue channels for surreal effect
+    \item \textbf{Math Art:} Use position (x, y) in color calculations for patterns
+\end{itemize}
+
+\section*{Reflection Questions}
+
+\begin{enumerate}
+    \item Why does the luminance method produce better grayscale than simple averaging?
+    \item What happens if you apply the negative filter twice? Why?
+    \item How would you create a "mostly grayscale but keep red" filter?
+    \item What's the difference between brightness adjustment and contrast adjustment?
+    \item Why do we need to clamp values to 0-255?
+    \item How could you make a filter that only affects the top half of an image?
+    \item What filter combinations create the most interesting effects?
+\end{enumerate}
+
+\section*{What's Next?}
+
+In the next lab, you'll learn about \textbf{image transformations}—rotating, flipping, cropping, and scaling images. These geometric operations change the structure of images rather than just the colors. Combined with what you've learned today, you'll have a complete toolkit for image manipulation!
+
+\vspace{2em}
+
+\begin{center}
+\textit{Congratulations! You've created your own image filters!\\
+Every photo app, from Instagram to professional editing software,\\
+uses these fundamental pixel processing techniques.\\
+You're now a digital artist and image processing programmer!}
+\end{center}
+
+\end{document}

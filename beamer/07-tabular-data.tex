@@ -1,0 +1,770 @@
+\documentclass{csbeamer}
+
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,calc}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\title{Tabular Data and CSV Files}
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\term{Winter 2026}
+\author{Dr. Jean-Alexis Delamer}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}{Today's Topics}
+    \begin{center}
+        \Large From pixels to spreadsheets!
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Learning Objectives:}
+    \begin{itemize}
+        \item<1-> Understand \textcolor{stfxblue}{tabular data} as a programming concept
+        \item<2-> Read and write \textcolor{marigold}{CSV files} in Python
+        \item<3-> Access rows and columns by \textcolor{stfxblue}{index}
+        \item<4-> Compute basic statistics: \textcolor{marigold}{min}, \textcolor{marigold}{max}, \textcolor{marigold}{average}
+        \item<5-> Filter rows based on \textcolor{stfxblue}{conditions}
+        \item<6-> Process real datasets with \textcolor{marigold}{loops}
+        \item<7-> Build reusable \textcolor{stfxblue}{data-processing functions}
+    \end{itemize}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<8->{\textit{Tables are just \textcolor{marigold}{\textbf{grids of data}}, and grids are something we already know!}}
+    \end{center}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}{From Images to Tables}
+    \begin{center}
+        \textbf{You already know 2D grids, this is the same idea!}
+    \end{center}
+
+    \vspace{0.5em}
+
+    \begin{center}
+        \begin{tabular}{l|l}
+            \textbf{\textcolor{stfxblue}{Images}} & \textbf{\textcolor{marigold}{Tables}} \\
+            \hline
+            2D grid of \textcolor{stfxblue}{pixels}    & 2D grid of \textcolor{marigold}{values} \\
+            Pixel = (R, G, B)                           & Cell = a number or text \\
+            Width $\times$ Height                       & Columns $\times$ Rows \\
+            Modify pixels                               & Modify cells \\
+            Filter by color                             & Filter by value \\
+        \end{tabular}
+    \end{center}
+
+    \vspace{1em}
+
+    \begin{center}
+        \onslide<2->{\Large \textcolor{marigold}{\textbf{Both are just grids of data!}}}
+    \end{center}
+
+    \vspace{0.5em}
+
+    \onslide<3->{
+    \begin{center}
+        \textit{The skills you built with images transfer directly to tables.}
+    \end{center}
+    }
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{What is a CSV File?}
+    \textbf{CSV = Comma-Separated Values}
+
+    \vspace{0.5em}
+
+    \begin{itemize}
+        \item A plain text file, you can open it in Notepad
+        \item Each \textcolor{stfxblue}{line} is one row of data
+        \item \textcolor{marigold}{Commas} separate the columns within each row
+        \item The \textcolor{stfxblue}{first row} is usually a \textbf{header} (column names)
+        \item Universally supported: Excel, Python, R, databases \ldots
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    \textbf{Example: \texttt{students.csv}}
+    \begin{lstlisting}[language={},frame=single,numbers=none]
+Name,Grade,Score
+Alice,A,92
+Bob,B,78
+Carol,A,95
+David,C,64
+Eve,B,81
+    \end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Reading a CSV: Step 1 - Open the File}
+    \textbf{First, just open the file and look at the raw lines:}
+
+    \begin{lstlisting}
+with open("students.csv", "r") as f:
+    lines = f.readlines()
+
+print(lines)
+    \end{lstlisting}
+
+    \vspace{0.8em}
+    \pause
+
+    \textbf{Output - each line is one string, including the newline \texttt{\textbackslash n}:}
+
+    \begin{lstlisting}
+['Name,Grade,Score\n', 'Alice,A,92\n', 'Bob,B,78\n', ...]
+    \end{lstlisting}
+
+    \vspace{0.8em}
+    \pause
+
+    \textbf{Key ideas:}
+    \begin{itemize}
+        \item<3-> \texttt{open("file", "r")} opens a file for \textcolor{stfxblue}{reading}
+        \item<4-> \texttt{f.readlines()} returns a \textcolor{marigold}{\textbf{list of strings}}, one per line
+        \item<5-> Every line still has a \texttt{\textbackslash n} (newline) at the end - we need to clean that up
+    \end{itemize}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Reading a CSV: Step 2 - Clean Up Each Line}
+    \textbf{The \texttt{.strip()} method removes whitespace and newlines:}
+
+    \begin{lstlisting}
+line = "Alice,A,92\n"
+
+clean = line.strip()
+print(clean)   # Alice,A,92
+    \end{lstlisting}
+
+    \vspace{0.5em}
+    \pause
+
+    \textbf{The \texttt{.split(",")} method breaks a string on commas:}
+
+    \begin{lstlisting}
+clean = "Alice,A,92"
+
+parts = clean.split(",")
+print(parts)   # ['Alice', 'A', '92']
+    \end{lstlisting}
+
+    \vspace{0.5em}
+    \pause
+
+    \textbf{Chain them together:}
+
+    \begin{lstlisting}
+row = "Alice,A,92\n".strip().split(",")
+print(row)     # ['Alice', 'A', '92']
+    \end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Reading a CSV: Step 3 - Read the Header}
+    \textbf{The \textcolor{stfxblue}{first line} is special - it contains the column names:}
+
+    \begin{lstlisting}
+with open("students.csv", "r") as f:
+    lines = f.readlines()
+
+# lines[0] is the first line (the header)
+header = lines[0].strip().split(",")
+print("Columns:", header)
+# Columns: ['Name', 'Grade', 'Score']
+    \end{lstlisting}
+
+    \pause
+
+    \textbf{The remaining lines (\texttt{lines[1:]}) are the data rows:}
+
+    \begin{lstlisting}
+print("Number of data rows:", len(lines[1:])) # Number of data rows: 5
+
+print("First data row (raw):", lines[1]) # First data row (raw): Alice,A,92
+    \end{lstlisting}
+
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Reading a CSV: Step 4 - Parse All Data Rows}
+    \textbf{Loop through \texttt{lines[1:]} and split each one:}
+
+    \begin{lstlisting}
+with open("students.csv", "r") as f:
+    lines = f.readlines()
+
+data = []
+for line in lines[1:]:       # skip the header (index 0)
+    line = line.strip()      # remove the newline character
+    if line == "":           # skip any accidental blank lines
+        continue
+    row = line.split(",")    # split on commas -> a list
+    data.append(row)         # add the list to data
+
+print(data)
+# [['Alice', 'A', '92'], ['Bob', 'B', '78'], ...]
+    \end{lstlisting}
+
+    \pause
+
+    \textbf{\texttt{data} is now a \textcolor{marigold}{list of lists} - one inner list per student.}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Reading a CSV: Step 5 - Access Individual Cells}
+    \textbf{Each row is a list: \texttt{row[0]} = Name, \texttt{row[1]} = Grade, \texttt{row[2]} = Score}
+
+    \begin{lstlisting}
+for row in data:
+    name  = row[0]
+    grade = row[1]
+    score = row[2]
+    print(name, "got a", grade, "with score", score)
+    \end{lstlisting}
+
+    \pause
+
+    \textbf{Output:}
+
+    \begin{lstlisting}
+Alice got a A with score 92
+Bob got a B with score 78
+Carol got a A with score 95
+David got a C with score 64
+Eve got a B with score 81
+    \end{lstlisting}
+
+    \pause
+
+    \begin{itemize}
+        \item<3-> Scores are \textcolor{stfxblue}{\textbf{strings}}, not numbers - \texttt{"92"}, not \texttt{92}
+        \item<4-> To do math: \texttt{int(row[2])} or \texttt{float(row[2])}
+    \end{itemize}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Reading a CSV File: Using the \texttt{csv} Module}
+    \textbf{Python's standard library has a \textcolor{stfxblue}{\texttt{csv}} module - no install needed!}
+
+    \begin{lstlisting}
+import csv
+
+# csv.reader handles commas, quotes, and newlines for us
+with open("students.csv", "r", newline="") as f:
+    reader = csv.reader(f)
+
+    header = next(reader)       # read the first row as header
+    print("Columns:", header)   # Columns: ['Name', 'Grade', 'Score']
+
+    data = []
+    for row in reader:          # each row is already a list
+        data.append(row)
+    \end{lstlisting}
+
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{The \texttt{csv} Module: Key Takeaways}
+    \textbf{Why use \texttt{csv.reader} instead of doing it manually?}
+
+    \vspace{0.8em}
+
+    \begin{itemize}
+        \item<1-> \textcolor{stfxblue}{\textbf{Simpler code}} - no \texttt{.strip()}, no \texttt{.split(",")}, no blank-line checks
+        \item<2-> \textcolor{marigold}{\textbf{Handles edge cases}} - e.g.\ values that contain commas inside quotes:\\
+              \texttt{"Smith, John",A,92} is parsed correctly
+        \item<3-> Each row comes back as a \textcolor{stfxblue}{\textbf{list of strings}} - just like the manual way
+        \item<4-> \texttt{next(reader)} reads \textcolor{marigold}{\textbf{one row}} and advances the cursor - useful for skipping the header
+    \end{itemize}
+
+    \vspace{0.8em}
+
+    \pause
+
+    \begin{block}{Remember: all values are strings}
+        To do arithmetic, convert first:\quad
+        \texttt{int(row[2])} gives \texttt{92}\quad
+        \texttt{float(row[2])} gives \texttt{92.0}
+    \end{block}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}{Understanding Rows and Columns}
+    \textbf{Think of your table like a 2D grid - just like an image:}
+
+    \vspace{0.5em}
+
+    \begin{center}
+        \begin{tikzpicture}[scale=0.85]
+            % Column header labels
+            \node[font=\bfseries\small, text=stfxblue] at (2.0, 3.6) {col 0 (\texttt{Name})};
+            \node[font=\bfseries\small, text=stfxblue] at (4.5, 3.6) {col 1 (\texttt{Grade})};
+            \node[font=\bfseries\small, text=stfxblue] at (7.0, 3.6) {col 2 (\texttt{Score})};
+
+            % Row 0
+            \draw[fill=blue!10] (0.7,2.8) rectangle (3.3,3.2);
+            \draw[fill=blue!10] (3.3,2.8) rectangle (5.7,3.2);
+            \draw[fill=blue!10] (5.7,2.8) rectangle (8.3,3.2);
+            \node at (2.0,3.0) {\small Alice};
+            \node at (4.5,3.0) {\small A};
+            \node at (7.0,3.0) {\small 92};
+            \node[font=\bfseries\small] at (0.1,3.0) {row 0};
+
+            % Row 1
+            \draw[fill=green!8] (0.7,2.4) rectangle (3.3,2.8);
+            \draw[fill=green!8] (3.3,2.4) rectangle (5.7,2.8);
+            \draw[fill=green!8] (5.7,2.4) rectangle (8.3,2.8);
+            \node at (2.0,2.6) {\small Bob};
+            \node at (4.5,2.6) {\small B};
+            \node at (7.0,2.6) {\small 78};
+            \node[font=\bfseries\small] at (0.1,2.6) {row 1};
+
+            % Row 2
+            \draw[fill=blue!10] (0.7,2.0) rectangle (3.3,2.4);
+            \draw[fill=blue!10] (3.3,2.0) rectangle (5.7,2.4);
+            \draw[fill=blue!10] (5.7,2.0) rectangle (8.3,2.4);
+            \node at (2.0,2.2) {\small Carol};
+            \node at (4.5,2.2) {\small A};
+            \node at (7.0,2.2) {\small 95};
+            \node[font=\bfseries\small] at (0.1,2.2) {row 2};
+
+            % Outer border
+            \draw[thick] (0.7,2.0) rectangle (8.3,3.2);
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.5em}
+
+    \textbf{Accessing values:}
+    \begin{itemize}
+        \item<2-> \texttt{data[0]}        \hfill $\rightarrow$ \texttt{['Alice', 'A', '92']}  (whole row)
+        \item<3-> \texttt{data[0][0]}     \hfill $\rightarrow$ \texttt{'Alice'}               (row 0, col 0)
+        \item<4-> \texttt{data[1][2]}     \hfill $\rightarrow$ \texttt{'78'}                  (row 1, col 2)
+        \item<5-> \texttt{data[2][2]}     \hfill $\rightarrow$ \texttt{'95'}                  (row 2, col 2)
+    \end{itemize}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Working with Headers: \texttt{csv.DictReader}}
+    \begin{lstlisting}
+with open("students.csv", "r", newline="") as f:
+    reader = csv.DictReader(f)   # uses first row as keys
+
+    data = []
+    for row in reader:
+        data.append(row)         # each row is a dictionary
+
+# Each row is now a dict: {'Name': ..., 'Grade': ..., 'Score': ...}
+for row in data:
+    name  = row["Name"]          # no need to remember column 0
+    grade = row["Grade"]         # no need to remember column 1
+    score = float(row["Score"])  # convert string to number
+    print(f"{name}: {grade} ({score})")
+    \end{lstlisting}
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \textbf{With \texttt{csv.reader}:}
+            \begin{itemize}
+                \item \texttt{row[2]} \textrightarrow{} Score
+                \item Fragile if columns move
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{With \texttt{csv.DictReader}:}
+            \begin{itemize}
+                \item \texttt{row["Score"]} \textrightarrow{} Score
+                \item \textcolor{marigold}{\textbf{Robust and readable!}}
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Try It: Read Your First CSV}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{1em}
+
+    \textbf{Create a small CSV about your favourite movies:}
+    \begin{enumerate}
+        \item Open a text editor and create \texttt{movies.csv} with the content:
+        \begin{lstlisting}[language={},frame=single,numbers=none]
+Title,Year,Rating
+Interstellar,2014,9.5
+The Matrix,1999,8.7
+Coco,2017,8.4
+        \end{lstlisting}
+        \item Write a Python script that reads it with \texttt{csv.DictReader}
+        \item Print each movie title and its rating
+        \item Add a 4th movie of your choice and re-run the script
+    \end{enumerate}
+
+    \vspace{0.5em}
+
+    \textbf{Bonus:} Print only movies released after the year 2000.
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}{Computing Statistics: Min and Max}
+    \textbf{Strategy: scan every row, keep track of the best value seen so far}
+
+    \vspace{1em}
+
+    \onslide<2->{
+    \textbf{Finding the maximum (pseudocode):}
+    \begin{itemize}
+        \item<2-> Start with \texttt{current\_max = very small number} (or the first value)
+        \item<3-> Loop through every row in the dataset
+        \item<4-> Read the value in the column you care about
+        \item<5-> Convert it to a number with \texttt{float()}
+        \item<6-> If this value \textbf{is greater than} \texttt{current\_max}, update \texttt{current\_max}
+        \item<7-> After the loop, \texttt{current\_max} holds the answer
+    \end{itemize}
+    }
+
+    \vspace{1em}
+
+    \onslide<8->{
+    \textbf{Finding the minimum:} same idea - start large, update when smaller.
+
+    \vspace{0.5em}
+
+    \textcolor{marigold}{\textbf{Key insight:}} This is exactly the same loop pattern you used to find the darkest or brightest pixel in an image!
+    }
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Computing Max: Code}
+    \begin{lstlisting}
+import csv
+
+with open("students.csv", "r", newline="") as f:
+    reader = csv.DictReader(f)
+    data = list(reader)
+
+# ---- find max score ----
+current_max = float(data[0]["Score"])   # start with first value
+max_student = data[0]["Name"]
+
+for row in data:
+    score = float(row["Score"])
+    if score > current_max:
+        current_max = score
+        max_student = row["Name"]
+
+print("Highest score:", current_max, "by", max_student)
+
+    \end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Computing the Average}
+    \begin{lstlisting}
+with open("students.csv", "r", newline="") as f:
+    reader = csv.DictReader(f)
+    data = list(reader)
+
+total = 0.0
+count = 0
+
+for row in data:
+    total = total + float(row["Score"])
+    count = count + 1
+
+
+if count > 0:              # Guard against empty files
+    average = total / count
+    print(f"Average score: {average:.2f}")
+else:
+    print("No data found.")
+    \end{lstlisting}
+\end{frame}
+
+
+% -----------------------------------------------
+\begin{frame}{Filtering Rows}
+    \begin{center}
+        \textbf{Like image filters, we only \textcolor{stfxblue}{keep rows that pass a test}}
+    \end{center}
+
+    \vspace{0.5em}
+
+    \begin{center}
+        \begin{tikzpicture}[node distance=0.6cm and 1.4cm,
+                            box/.style={draw, rounded corners, minimum width=2.2cm,
+                                        minimum height=0.55cm, font=\small},
+                            arrow/.style={->, thick}]
+
+            % Input column
+            \node[box, fill=blue!15]  (r0) {Alice, A, 92};
+            \node[box, fill=blue!15, below=of r0] (r1) {Bob, B, 78};
+            \node[box, fill=blue!15, below=of r1] (r2) {Carol, A, 95};
+            \node[box, fill=blue!15, below=of r2] (r3) {David, C, 64};
+            \node[box, fill=blue!15, below=of r3] (r4) {Eve, B, 81};
+            \node[above=0.2cm of r0, font=\bfseries\small] {All rows};
+
+            % Filter box
+            \node[box, align=center, fill=marigold!40, right=1.6cm of r2, minimum width=2.8cm,
+                  minimum height=1.2cm] (filt) {\textbf{Condition:}\\\texttt{Score >= 80}};
+
+            % Output column
+            \node[box, fill=green!20, right=1.6cm of filt, yshift=0.6cm]  (o0) {Alice, A, 92};
+            \node[box, fill=green!20, below=of o0] (o1) {Carol, A, 95};
+            \node[box, fill=green!20, below=of o1] (o2) {Eve, B, 81};
+            \node[above=0.2cm of o0, font=\bfseries\small] {Filtered rows};
+
+            % Arrows in
+            \draw[arrow] (r0.east) -- (filt.west);
+            \draw[arrow] (r1.east) -- (filt.west);
+            \draw[arrow] (r2.east) -- (filt.west);
+            \draw[arrow] (r3.east) -- (filt.west);
+            \draw[arrow] (r4.east) -- (filt.west);
+
+            % Arrows out
+            \draw[arrow, green!60!black] (filt.east) -- (o0.west);
+            \draw[arrow, green!60!black] (filt.east) -- (o1.west);
+            \draw[arrow, green!60!black] (filt.east) -- (o2.west);
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.3em}
+
+    \onslide<2->{
+    \textbf{The pattern:} build a new list containing only the rows we want.
+    }
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Filtering: Keep Rows Above a Threshold}
+    \textbf{Example: keep only students with score $\geq$ 80}
+
+    \begin{lstlisting}
+with open("students.csv", "r", newline="") as f:
+    data = list(csv.DictReader(f))
+passing = []
+for row in data:
+    score = float(row["Score"])   # convert string -> number first!
+    if score >= 80:
+        passing.append(row)
+
+for row in passing:
+    print(f"  {row['Name']:10s}  {row['Score']}")
+    \end{lstlisting}
+
+    \pause
+    \textbf{Output:}
+    \begin{lstlisting}
+Students with score >= 80 (3 found):
+  Alice       92
+  Carol       95
+  Eve         81
+    \end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Filtering: Keep Rows Matching a Value}
+    \textbf{Example: keep only students with grade \texttt{"A"}}
+
+    \begin{lstlisting}
+with open("students.csv", "r", newline="") as f:
+    data = list(csv.DictReader(f))
+a_students = []
+for row in data:
+    if row["Grade"] == "A":       # string comparison, no conversion needed
+        a_students.append(row)
+print(f"A-grade students ({len(a_students)} found):")
+for row in a_students:
+    print(f"  {row['Name']}")
+    \end{lstlisting}
+
+    \pause
+
+    \textbf{Output:}
+    \begin{lstlisting}
+A-grade students (2 found):
+  Alice
+  Carol
+    \end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Sorting Data}
+    \textbf{Use Python's built-in \texttt{sorted()} with a \textcolor{stfxblue}{\texttt{key=}} argument:}
+
+    \begin{lstlisting}
+with open("students.csv", "r", newline="") as f:
+    data = list(csv.DictReader(f))
+
+# Sort by Score, highest first
+by_score = sorted(data, key=lambda row: float(row["Score"]),reverse=True)
+
+print("Ranked by score:")
+for i, row in enumerate(by_score):
+    print(f"  {i+1}. {row['Name']:10s} {row['Score']}")
+
+# Sort alphabetically by Name (ascending)
+by_name = sorted(data, key=lambda row: row["Name"])
+
+print("\nAlphabetical order:")
+for row in by_name:
+    print(f"  {row['Name']}")
+    \end{lstlisting}
+
+    \pause
+
+    \begin{itemize}
+        \item \texttt{lambda row: ...} is a small, one-line function used as the sort key
+        \item \texttt{reverse=True} flips the order from ascending to descending
+    \end{itemize}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Try It: Class Grade Analyzer}
+    \begin{center}
+        \Large \textbf{Activity Time!}
+    \end{center}
+
+    \vspace{0.5em}
+
+    \textbf{Create \texttt{grades.csv} and analyse it:}
+    \begin{lstlisting}[language={},frame=single,numbers=none]
+Name,Score
+Alice,88
+Bob,74
+Carol,95
+David,61
+Eve,82
+Frank,90
+Grace,73
+    \end{lstlisting}
+
+    \textbf{Write a script that prints:}
+    \begin{enumerate}
+        \item The \textcolor{stfxblue}{highest} and \textcolor{stfxblue}{lowest} score (with the student's name)
+        \item The \textcolor{marigold}{class average}
+        \item A list of students whose score is \textcolor{stfxblue}{above the average}
+        \item The class list sorted from \textcolor{marigold}{highest to lowest} score
+    \end{enumerate}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{Writing a CSV File}
+    \begin{lstlisting}
+results = [
+    ["Name", "Score", "Grade"],    # header row
+    ["Alice", 92, "A"],
+    ["Bob",   78, "B"],
+    ["Carol", 95, "A"],
+    ["David", 64, "C"],
+    ["Eve",   81, "B"],
+]
+
+with open("output.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    for row in results:
+        writer.writerow(row)
+
+# You can also write all rows at once:
+with open("output2.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows(results)   # note: writerows (plural)
+    \end{lstlisting}
+
+    \pause
+
+    \texttt{writerow} takes one list; \texttt{writerows} takes a list of lists
+
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}[fragile]{A Complete Data Pipeline}
+
+    \begin{lstlisting}
+# 1. LOAD
+with open("students.csv", "r", newline="") as f:
+    data = list(csv.DictReader(f))
+# 2. PROCESS -- compute average score
+total = sum(float(row["Score"]) for row in data)
+average = total / len(data)
+# 3. FILTER -- keep only above-average students
+above_avg = [row for row in data if float(row["Score"]) > average]
+# Sort filtered results highest first
+above_avg.sort(key=lambda row: float(row["Score"]), reverse=True)
+# 4. SAVE
+with open("above_average.csv", "w", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["Name", "Grade", "Score"])
+    writer.writeheader()
+    writer.writerows(above_avg)
+
+print(f"Average: {average:.2f}")
+print(f"Saved {len(above_avg)} above-average students.")
+    \end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}{Quick Self-Check}
+    \textbf{Can you answer these?}
+
+    \vspace{1em}
+
+    \begin{enumerate}
+        \item What does CSV stand for, and what makes it different from a regular text file?
+        \item What is the difference between \texttt{csv.reader} and \texttt{csv.DictReader}?
+        \item If \texttt{row = ['Alice', 'A', '92']}, what is \texttt{row[2]}?
+        \item Why do we need \texttt{float(row["Score"])} before comparing scores?
+        \item How does filtering rows from a CSV differ from filtering pixels in an image?
+    \end{enumerate}
+\end{frame}
+
+% -----------------------------------------------
+\begin{frame}{Real-World Applications}
+    \textbf{What you have learned is used in:}
+
+    \vspace{1em}
+
+    \begin{itemize}
+        \item \textbf{Data science:} Pandas, NumPy, and Jupyter notebooks all start from CSV
+        \item \textbf{Finance:} Stock prices, transaction logs, expense reports
+        \item \textbf{Sports analytics:} Player statistics, game-by-game results
+        \item \textbf{Scientific research:} Experimental measurements, survey results
+        \item \textbf{Web scraping:} Save scraped data to CSV for later analysis
+        \item \textbf{Machine learning:} Training datasets are almost always tabular
+        \item \textbf{Business intelligence:} Sales reports, customer data, A/B test results
+    \end{itemize}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,96 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\exam{Quiz 5}
+\examdate{Winter 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{rules}
+\textbf{Instructions:}
+\begin{itemize}
+    \item This quiz covers material from Lab 4 (Functions and Image Transformations)
+    \item Answer all questions in the space provided
+    \item Show your work where applicable
+    \item Time limit: 15 minutes
+\end{itemize}
+\end{rules}
+
+\vspace{0.2in}
+
+\showgrade
+
+\newpage
+
+\begin{questions}
+
+\question[2] Write the basic syntax for defining a function in Python that takes two parameters and returns their sum.
+\vspace{1.5in}
+
+\question[3] What is the transformation formula for horizontally mirroring an image? If a pixel is at position $(x, y)$ in an image with width $W$ and height $H$, what is its new position after horizontal mirroring?
+
+\vspace{0.3cm}
+New position: \underline{\hspace{3in}}
+\vspace{0.8in}
+
+\question[3] When rotating an image 90 degrees clockwise, what happens to the dimensions? If the original image is 640×480, what are the dimensions of the rotated image?
+
+Original dimensions: 640×480 \hspace{0.5in} New dimensions: \underline{\hspace{2in}}
+
+\vspace{0.3cm}
+Why do the dimensions change? \underline{\hspace{4in}}
+\vspace{0.5in}
+
+\question[2] Given an image with dimensions 800×600, you want to crop a 200×200 region from the center. What should the starting x and y coordinates be?
+
+\vspace{0.3cm}
+start\_x = \underline{\hspace{2in}} \hspace{0.5in} start\_y = \underline{\hspace{2in}}
+
+\newpage
+
+\question[3] What does the following function do? Describe the transformation it applies.
+\begin{lstlisting}
+def mystery_transform(img):
+    width, height = img.size
+    result = Image.new("RGB", (width, height))
+    src_pixels = img.load()
+    dst_pixels = result.load()
+
+    for x in range(width):
+        for y in range(height):
+            new_x = width - 1 - x
+            new_y = height - 1 - y
+            dst_pixels[new_x, new_y] = src_pixels[x, y]
+    return result
+\end{lstlisting}
+
+\vspace{1.2in}
+
+\question[2] Why does the order matter when combining transformations? Give an example where crop→rotate produces a different result than rotate→crop.
+
+\vspace{1.5in}
+
+\end{questions}
+
+\end{document}
