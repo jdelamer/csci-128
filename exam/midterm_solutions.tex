@@ -1,0 +1,378 @@
+\documentclass{csexam}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+% Course information
+\university{St. Francis Xavier University}
+\department{Department of Computer Science}
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\exam{Midterm 1 - SOLUTIONS}
+\examdate{Winter 2026}
+
+\begin{document}
+
+\maketitle
+\printanswers
+
+\begin{questions}
+
+% ======================================
+% Section 1: Values, Types, and Variables
+% ======================================
+\question[6] For each expression below, determine the data type of the result. If there is an error, write "ERROR".
+
+\begin{solution}
+\begin{parts}
+    \part \texttt{5 + 3.0} \hspace{0.5cm} Type: \textbf{float}
+    \part \texttt{str(42) + "7"} \hspace{0.5cm} Type: \textbf{str}
+    \part \texttt{int("3.14")} \hspace{0.5cm} Type/Result: \textbf{ERROR} (ValueError - cannot convert string with decimal to int)
+    \part \texttt{10 / 2} \hspace{0.5cm} Type: \textbf{float}
+    \part \texttt{10 // 3} \hspace{0.5cm} Type: \textbf{int}
+    \part \texttt{"Python" * 2} \hspace{0.5cm} Type: \textbf{str}
+\end{parts}
+\end{solution}
+
+\question[8] What is the output of the following code? Show exactly what gets printed.
+
+\begin{lstlisting}
+x = "5"
+y = 3
+x = int(x) + y
+y = str(y) * 2
+print(x, y)
+\end{lstlisting}
+
+\begin{solution}
+\textbf{Output:}
+\begin{verbatim}
+8 33
+\end{verbatim}
+
+\textbf{Explanation:}
+\begin{itemize}
+    \item Line 1: x = "5" (string)
+    \item Line 2: y = 3 (int)
+    \item Line 3: x = int("5") + 3 = 5 + 3 = 8
+    \item Line 4: y = str(3) * 2 = "3" * 2 = "33"
+    \item Line 5: prints 8 and "33" separated by a space
+\end{itemize}
+\end{solution}
+
+\question[8] Trace through the following code carefully and show what gets printed:
+\begin{lstlisting}
+a = 10
+b = 20
+a = b - a
+b = a + b
+a = b - a
+print(a)
+print(b)
+\end{lstlisting}
+
+\begin{solution}
+\textbf{Output:}
+\begin{verbatim}
+20
+10
+\end{verbatim}
+
+\textbf{Trace:}
+\begin{itemize}
+    \item Line 1: a = 10
+    \item Line 2: b = 20
+    \item Line 3: a = 20 - 10 = 10
+    \item Line 4: b = 10 + 20 = 30
+    \item Line 5: a = 30 - 10 = 20
+    \item Line 6: prints 20
+    \item Line 7: prints 10
+\end{itemize}
+
+Note: This is a classic swap algorithm using arithmetic operations.
+\end{solution}
+
+\newpage
+
+\question[14] Write a complete Python program that:
+\begin{itemize}
+    \item Asks the user for their age
+    \item Asks the user for the number of years to add
+    \item Calculates their future age
+    \item Calculates how many months old they will be (future age × 12)
+    \item Prints both results with appropriate labels
+\end{itemize}
+
+\begin{solution}
+\begin{lstlisting}
+# Get user input
+age = int(input("Enter your age: "))
+years = int(input("Enter number of years: "))
+
+# Calculate future age and months
+future_age = age + years
+months = future_age * 12
+
+# Print results
+print("In", years, "years you will be:", future_age)
+print("That is", months, "months old")
+\end{lstlisting}
+
+\textbf{Alternative solution using f-strings:}
+\begin{lstlisting}
+# Get user input
+age = int(input("Enter your age: "))
+years = int(input("Enter number of years: "))
+
+# Calculate future age and months
+future_age = age + years
+months = future_age * 12
+
+# Print results
+print(f"In {years} years you will be: {future_age}")
+print(f"That is {months} months old")
+\end{lstlisting}
+\end{solution}
+
+\newpage
+
+\question[8] What is wrong with each of the following code snippets? Identify the error and explain how to fix it.
+
+\begin{solution}
+\begin{parts}
+    \part
+\begin{lstlisting}
+age = input("Enter your age: ")
+next_year = age + 1
+print(next_year)
+\end{lstlisting}
+    \textbf{Error:} \textit{Type error - cannot add string and integer. input() returns a string.}
+
+    \textbf{Fix:} \textit{Convert input to int: age = int(input("Enter your age: "))}
+
+    \part
+\begin{lstlisting}
+name = input("Enter your name: ")
+print("Hello " + name + ". You are " + 25 + " years old")
+\end{lstlisting}
+    \textbf{Error:} \textit{Type error - cannot concatenate string and integer (25).}
+
+    \textbf{Fix:} \textit{Convert 25 to string: print("Hello " + name + ". You are " + str(25) + " years old")}
+\end{parts}
+\end{solution}
+
+\question[6] Explain the difference between the operators \texttt{/} and \texttt{//} in Python. Give an example showing different results for each.
+
+\begin{solution}
+\textbf{Difference:}
+\begin{itemize}
+    \item \texttt{/} is \textbf{true division} - always returns a float with the exact result including decimal places
+    \item \texttt{//} is \textbf{floor division} (or integer division) - returns an integer by discarding the decimal portion (rounds down)
+\end{itemize}
+
+\textbf{Examples:}
+\begin{itemize}
+    \item \texttt{10 / 3} results in \texttt{3.3333...} (float)
+    \item \texttt{10 // 3} results in \texttt{3} (int)
+    \item \texttt{10 / 2} results in \texttt{5.0} (float, even though evenly divisible)
+    \item \texttt{10 // 2} results in \texttt{5} (int)
+\end{itemize}
+\end{solution}
+
+\newpage
+
+% ======================================
+% Section 2: Pictures and Pixels
+% ======================================
+\question[6] Answer the following questions:
+
+\begin{solution}
+\begin{parts}
+    \part \textbf{(128, 128, 128):} Medium gray. \textbf{(200, 200, 200):} Light gray (closer to white).
+
+    When all three RGB values are equal, you get a shade of gray. Lower values are darker, higher values are lighter.
+
+    \part \textbf{Yellow:} (255, 255, 0)
+
+    Yellow is created by mixing red and green at full intensity with no blue.
+
+    \part \textbf{Orange:} Approximately (255, 165, 0) or similar values like (255, 128, 0)
+
+    Orange is red at full intensity with a moderate amount of green and no blue.
+\end{parts}
+\end{solution}
+
+\question[5] For an image with dimensions 100×100:
+
+\begin{solution}
+\begin{parts}
+    \part \textbf{Top-right corner:} (99, 0)
+
+    x ranges from 0 to 99, y ranges from 0 to 99. Top means y=0, right means x=99.
+
+    \part \textbf{Bottom-left corner:} (0, 99)
+
+    Bottom means y=99, left means x=0.
+
+    \part \textbf{Center pixel:} (50, 50) or (49, 49)
+
+    Either answer is acceptable since 100×100 doesn't have a true "center" pixel. (50, 50) is slightly off-center but commonly used.
+\end{parts}
+\end{solution}
+
+\newpage
+
+\question[15] Write a complete Python program using Pillow that:
+\begin{itemize}
+    \item Loads an image file named \texttt{"photo.jpg"}
+    \item Gets the width and height of the image and prints them
+    \item Gets the pixel color at position (10, 10)
+    \item Extracts the individual R, G, and B values from that pixel
+    \item Calculates the sum of the three color values (R + G + B)
+    \item Prints the results in the specified format
+\end{itemize}
+
+\begin{solution}
+\begin{lstlisting}
+from PIL import Image
+
+# Load the image
+img = Image.open("photo.jpg")
+
+# Get width and height
+width, height = img.size
+
+# Print image size
+print("Image size:", width, "x", height)
+
+# Get pixel color at (10, 10)
+pixel_color = img.getpixel((10, 10))
+
+# Extract R, G, B values
+r, g, b = pixel_color
+
+# Calculate sum
+total = r + g + b
+
+# Print results
+print("Pixel at (10, 10) - Red:", r, ", Green:", g, ", Blue:", b)
+print("Total color value:", total)
+\end{lstlisting}
+
+\textbf{Alternative with f-strings:}
+\begin{lstlisting}
+from PIL import Image
+
+img = Image.open("photo.jpg")
+width, height = img.size
+
+print(f"Image size: {width} x {height}")
+
+pixel_color = img.getpixel((10, 10))
+r, g, b = pixel_color
+total = r + g + b
+
+print(f"Pixel at (10, 10) - Red: {r}, Green: {g}, Blue: {b}")
+print(f"Total color value: {total}")
+\end{lstlisting}
+\end{solution}
+
+\newpage
+
+\question[12] Complete the following Python program by filling in the blanks. This program creates a vertical red stripe down the middle of a 200×200 image:
+
+\begin{solution}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a new white image (200x200)
+img = Image.new("RGB", (200, 200), (255, 255, 255))
+
+# Draw a red vertical stripe in the middle (x from 95 to 105)
+for x in range(95, 105):
+    for y in range(200):
+        img.putpixel((x, y), (255, 0, 0))
+
+# Save the image
+img.save("stripe.jpg")
+\end{lstlisting}
+
+\textbf{Explanation of blanks:}
+\begin{itemize}
+    \item \texttt{Image.new} - method to create a new image
+    \item \texttt{200, 200} - dimensions (width, height)
+    \item \texttt{95, 105} - range for x coordinate (middle stripe)
+    \item \texttt{200} - range for y coordinate (full height, 0 to 199)
+    \item \texttt{img.putpixel} - method to set pixel color
+    \item \texttt{255, 0, 0} - red color (R=255, G=0, B=0)
+    \item \texttt{img.save} - method to save the image
+\end{itemize}
+\end{solution}
+
+\question[12] Write a complete Python program using Pillow that:
+\begin{itemize}
+    \item Creates a new 100×100 RGB image with all pixels initially black
+    \item Uses nested loops to set all pixels in the left half (x from 0 to 49) to red (255, 0, 0)
+    \item Uses nested loops to set all pixels in the right half (x from 50 to 99) to green (0, 255, 0)
+    \item Saves the result as \texttt{"two\_colors.jpg"}
+\end{itemize}
+
+\begin{solution}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a new 100x100 black image
+img = Image.new("RGB", (100, 100), (0, 0, 0))
+
+# Set left half to red
+for x in range(0, 50):
+    for y in range(100):
+        img.putpixel((x, y), (255, 0, 0))
+
+# Set right half to green
+for x in range(50, 100):
+    for y in range(100):
+        img.putpixel((x, y), (0, 255, 0))
+
+# Save the image
+img.save("two_colors.jpg")
+\end{lstlisting}
+
+\textbf{Alternative solution (more efficient using loops):}
+\begin{lstlisting}
+from PIL import Image
+
+# Create a new 100x100 black image
+img = Image.new("RGB", (100, 100), (0, 0, 0))
+
+# Loop through all pixels
+for x in range(100):
+    for y in range(100):
+        if x < 50:
+            img.putpixel((x, y), (255, 0, 0))  # Red
+        else:
+            img.putpixel((x, y), (0, 255, 0))  # Green
+
+# Save the image
+img.save("two_colors.jpg")
+\end{lstlisting}
+\end{solution}
+
+\end{questions}
+
+\end{document}

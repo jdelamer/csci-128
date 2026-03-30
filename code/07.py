@@ -3,35 +3,44 @@ import csv
 with open("students.csv", "r") as f:
     lines = f.readlines()
 
-print(lines)
+# header = lines[0].strip().split(",")
+# print("Header:", header)
+# print(lines[1:])
 
-# data = []
-# for line in lines[1:]:
-#     line = line.strip()
-#     if line == "":
-#         continue
-#     row = line.split(",")
-#     data.append(row)
+
+# line = "Alice,A,92\n\n\n".strip().split(",")
+# print(line)
+
+
+data = []
+for line in lines[1:]:
+    line = line.strip()
+    if line == "":
+        continue
+    row = line.split(",")
+    data.append(row)
 
 # print(data)
-#
+
 # for row in data:
 #     name  = row[0]
 #     grade = row[1]
-#     score = row[2]
+#     score = int(row[2])
 #     print(name, "got a", grade, "with score", score)
 
 
-# # csv.reader handles commas, quotes, and newlines for us
-# with open("students.csv", "r", newline="") as f:
-#     reader = csv.reader(f)
+# csv.reader handles commas, quotes, and newlines for us
+# with open("students.csv", "r") as f:
+    # reader = csv.reader(f)
 
-#     header = next(reader)       # read the first row as header
-#     print("Columns:", header)   # Columns: ['Name', 'Grade', 'Score']
+    # header = next(reader)       # read the first row as header
+    # print("Columns:", header)   # Columns: ['Name', 'Grade', 'Score']
 
-#     data = []
-#     for row in reader:          # each row is already a list
-#         data.append(row)
+    # data = []
+    # for row in reader:          # each row is already a list
+    #     data.append(row)
+
+    # print(data)
 
 
 # with open("students.csv", "r", newline="") as f:
@@ -41,7 +50,8 @@ print(lines)
 #     for row in reader:
 #         data.append(row)  # each row is a dictionary
 
-# # Each row is now a dict: {'Name': ..., 'Grade': ..., 'Score': ...}
+# print(data)
+# Each row is now a dict: {'Name': ..., 'Grade': ..., 'Score': ...}
 # for row in data:
 #     name = row["Name"]  # no need to remember column 0
 #     grade = row["Grade"]  # no need to remember column 1
@@ -49,21 +59,21 @@ print(lines)
 #     print(f"{name}: {grade} ({score})")
 
 
-# with open("students.csv", "r", newline="") as f:
-#     reader = csv.DictReader(f)
-#     data = list(reader)
+with open("students.csv", "r", newline="") as f:
+    reader = csv.DictReader(f)
+    data = list(reader)
 
 # # ---- find max score ----
-# current_max = float(data[0]["Score"])   # start with first value
-# max_student = data[0]["Name"]
+current_max = float(data[0]["Score"])   # start with first value
+max_student = data[0]["Name"]
 
-# for row in data:
-#     score = float(row["Score"])
-#     if score > current_max:
-#         current_max = score
-#         max_student = row["Name"]
+for row in data:
+    score = float(row["Score"])
+    if score > current_max:
+        current_max = score
+        max_student = row["Name"]
 
-# print("Highest score:", current_max, "by", max_student)
+print("Highest score:", current_max, "by", max_student)
 
 # with open("students.csv", "r", newline="") as f:
 #     reader = csv.DictReader(f)

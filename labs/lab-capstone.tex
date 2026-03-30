@@ -1,0 +1,583 @@
+\documentclass{cslab}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Python code styling
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black}\itshape,
+    columns=fullflexible,
+    showstringspaces=false,
+    breakatwhitespace=false,
+    breaklines=true,
+    frame=single,
+    tabsize=4
+}
+
+% Lab information
+\labnumber{}
+\labtitle{Capstone Lab: From Pixels to Pipelines}
+\course{CSCI 128: Coding for Problem Solving}
+\courseshort{CSCI 128}
+\semester{Winter 2026}
+\timelimit{2 hours}
+\logoimage{LogoWordsBottom.png}
+
+\begin{document}
+
+\maketitle
+
+\begin{objectives}
+    \item Use variables, types, and expressions to compute values
+    \item Load images and manipulate pixels using the RGB colour model
+    \item Apply colour filters (grayscale, negative, brightness, tint)
+    \item Perform geometric transformations (mirror, crop, scale)
+    \item Compose a multi-image collage onto a canvas
+    \item Read and filter a CSV dataset
+    \item Connect image processing with data analysis in a single pipeline
+\end{objectives}
+
+% -----------------------------------------------------------
+\section{Setup}
+
+\begin{setup}
+\textbf{Before you begin:}
+\begin{enumerate}
+    \item Create a folder: \texttt{csci128/capstone}
+    \item Inside it, create a subfolder called \texttt{data} and another called \texttt{output}
+    \item Create \texttt{data/cities.csv} with the following content exactly:
+\end{enumerate}
+
+\begin{lstlisting}[language={},numbers=none,frame=single]
+name,country,population,area_km2,coastal
+Halifax,Canada,403000,5490,yes
+Sydney,Australia,5312000,12368,yes
+Lyon,France,522000,518,no
+Nairobi,Kenya,4397000,696,no
+Vancouver,Canada,2463000,2878,yes
+Zurich,Switzerland,415000,87,no
+Lima,Peru,10719000,2672,yes
+Oslo,Norway,693000,454,yes
+Kampala,Uganda,3652000,189,no
+Quebec City,Canada,800000,3154,no
+\end{lstlisting}
+
+Save the file and confirm it appears at \texttt{capstone/data/cities.csv} before continuing.
+\end{setup}
+
+% -----------------------------------------------------------
+\section{Lab Tasks}
+
+% -----------------------------------------------------------
+\task{Warming Up with Variables and Types}
+
+Before writing any image or CSV code, let's make sure the concepts from the very first
+lectures are solid.
+
+\textbf{Create \texttt{warmup.py}:}
+
+\begin{lstlisting}
+# -------------------------------------------------------
+# Part A: variables and arithmetic
+# -------------------------------------------------------
+
+# A standard HD image is 1920 x 1080 pixels.
+# Store the width and height in variables.
+width  = ___
+height = ___
+
+# Calculate and print the total number of pixels.
+total_pixels = ___
+print("Total pixels in an HD image:", ___)
+
+# Each pixel stores three colour channels (R, G, B).
+# Each channel is one byte (0-255).
+# How many bytes does one HD image occupy?
+bytes_per_image = ___
+print("Bytes per image:", ___)
+print("Kilobytes per image:", ___)
+
+# -------------------------------------------------------
+# Part B: types and conversion
+# -------------------------------------------------------
+
+# The string below came from reading a CSV file.
+raw_population = "403000"
+
+# Convert it to an integer and store it.
+population = ___
+
+# Calculate and print: how many people per square km if
+# the city covers 5490 km^2?
+area = 5490
+density = ___
+print(f"Population density: {density:.1f} people/km2")
+
+# -------------------------------------------------------
+# Part C: string formatting
+# -------------------------------------------------------
+
+city_name = "Halifax"
+country   = "Canada"
+
+# Print one line that reads:
+#   Halifax, Canada --- population: 403,000
+print(___)
+\end{lstlisting}
+
+\begin{note}
+Fill in every \texttt{\_\_\_} blank with the correct expression or value.  There are no
+imports needed --- pure Python arithmetic and strings.
+\end{note}
+
+% -----------------------------------------------------------
+\task{Colour Filters on a City Photo}
+
+For this task you need \textbf{one image} of your choice --- a photo of a city, a
+landscape, or anything with colour.  Name it \texttt{data/photo.jpg}.
+
+\textbf{Create \texttt{filters.py}:}
+
+\begin{lstlisting}
+from PIL import Image
+
+
+def grayscale(img):
+    """Return a grayscale copy of img.
+
+    Use the standard luminance formula to convert each pixel to gray.
+    """
+    result = img.copy()
+    pixels = result.load()
+    w, h = result.size
+    for x in range(w):
+        for y in range(h):
+            r, g, b = pixels[x, y]
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+def negative(img):
+    """Return a negative copy of img."""
+    result = img.copy()
+    pixels = result.load()
+    w, h = result.size
+    for x in range(w):
+        for y in range(h):
+            r, g, b = pixels[x, y]
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+def adjust_brightness(img, amount):
+    """Return a copy of img with brightness shifted by amount.
+
+    Parameters
+    ----------
+    img    : PIL Image
+    amount : int   positive = brighter, negative = darker
+    """
+    result = img.copy()
+    pixels = result.load()
+    w, h = result.size
+    for x in range(w):
+        for y in range(h):
+            r, g, b = pixels[x, y]
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+def tint(img, tr, tg, tb):
+    """Return a copy of img with a colour tint applied.
+
+    Each channel should be scaled by its corresponding factor
+    (tr, tg, tb), then clamped to [0, 255].
+    """
+    result = img.copy()
+    pixels = result.load()
+    w, h = result.size
+    for x in range(w):
+        for y in range(h):
+            r, g, b = pixels[x, y]
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+# -------------------------------------------------------
+# Apply and save all four filters
+# -------------------------------------------------------
+original = Image.open("data/photo.jpg")
+
+grayscale(original).save("output/photo_gray.jpg")
+negative(original).save("output/photo_negative.jpg")
+adjust_brightness(original, 50).save("output/photo_bright.jpg")
+adjust_brightness(original, -50).save("output/photo_dark.jpg")
+tint(original, 1.0, 0.7, 0.7).save("output/photo_warm.jpg")
+
+print("All filters saved to output/")
+\end{lstlisting}
+
+\begin{warning}
+Each function must work on a \textbf{copy} of the image (\texttt{img.copy()}) so the
+original is never modified.  This lets you chain filters without side effects.
+\end{warning}
+
+\begin{hint}
+Clamping a value \texttt{v} to the range \texttt{[0, 255]} is a one-liner:
+\begin{lstlisting}[numbers=none,frame=none]
+v = max(0, min(255, v))
+\end{lstlisting}
+\end{hint}
+
+% -----------------------------------------------------------
+\task{Geometric Transformations}
+
+\textbf{Create \texttt{transforms.py}:}
+
+\begin{lstlisting}
+from PIL import Image
+
+
+def mirror_horizontal(img):
+    """Return a left-right mirrored copy of img."""
+    result = img.copy()
+    src    = img.load()
+    dst    = result.load()
+    w, h   = img.size
+    for x in range(w):
+        for y in range(h):
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+def crop(img, x1, y1, x2, y2):
+    """Return the rectangular region [x1:x2, y1:y2] of img.
+
+    Parameters
+    ----------
+    x1, y1 : int   top-left corner of the crop region
+    x2, y2 : int   bottom-right corner (exclusive)
+    """
+    new_w = x2 - x1
+    new_h = y2 - y1
+    result = Image.new("RGB", (new_w, new_h))
+    src = img.load()
+    dst = result.load()
+    for x in range(new_w):
+        for y in range(new_h):
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+def scale_down(img, factor):
+    """Return a copy of img scaled down by an integer factor.
+
+    Parameters
+    ----------
+    factor : int   e.g. 2 means half the size in each dimension
+    """
+    w, h   = img.size
+    new_w  = w // factor
+    new_h  = h // factor
+    result = Image.new("RGB", (new_w, new_h))
+    src    = img.load()
+    dst    = result.load()
+    for x in range(new_w):
+        for y in range(new_h):
+            # --- YOUR CODE HERE ---
+            pass
+    return result
+
+
+# -------------------------------------------------------
+# Apply transformations
+# -------------------------------------------------------
+original = Image.open("data/photo.jpg")
+
+mirror_horizontal(original).save("output/photo_mirror.jpg")
+
+# Crop the centre quarter of the image
+w, h = original.size
+crop(original, w // 4, h // 4, 3 * w // 4, 3 * h // 4).save(
+    "output/photo_crop.jpg"
+)
+
+scale_down(original, 2).save("output/photo_half.jpg")
+
+print("Transformations saved to output/")
+\end{lstlisting}
+
+\begin{note}
+For \texttt{mirror\_horizontal} you are reading from \texttt{src} (the \emph{original}
+pixel array) and writing to \texttt{dst} (the \emph{copy}).  If you read and write the
+same pixel array you will corrupt the image halfway through the loop.
+\end{note}
+
+% -----------------------------------------------------------
+\task{Reading and Filtering the Cities Dataset}
+
+\textbf{Create \texttt{read\_cities.py}:}
+
+\begin{lstlisting}
+import csv
+
+
+def load_cities(filepath):
+    """Load cities.csv and return a list of dicts."""
+    with open(filepath, newline="") as f:
+        # --- YOUR CODE HERE ---
+        # Use csv.DictReader to read the file.
+        # Return a list of all rows.
+        pass
+
+
+def filter_coastal(cities):
+    """Return only the cities where coastal == 'yes'."""
+    # --- YOUR CODE HERE ---
+    pass
+
+
+def filter_by_min_population(cities, min_pop):
+    """Return cities whose population is >= min_pop."""
+    # --- YOUR CODE HERE ---
+    pass
+
+
+def sort_by_population(cities, descending=True):
+    """Return cities sorted by population."""
+    # --- YOUR CODE HERE ---
+    pass
+
+
+def print_city_table(cities):
+    """Print a simple table of city name, country, and population."""
+    print(f"{'City':<15} {'Country':<15} {'Population':>12}")
+    print("-" * 44)
+    for city in cities:
+        print(f"{city['name']:<15} {city['country']:<15} "
+              f"{int(city['population']):>12,}")
+
+
+# -------------------------------------------------------
+# Main
+# -------------------------------------------------------
+cities = load_cities("data/cities.csv")
+
+print("=== All cities ===")
+print_city_table(cities)
+
+print("\n=== Coastal cities only ===")
+print_city_table(filter_coastal(cities))
+
+print("\n=== Cities with population >= 1,000,000 ===")
+big_cities = filter_by_min_population(cities, 1_000_000)
+print_city_table(sort_by_population(big_cities))
+\end{lstlisting}
+
+\begin{hint}
+\texttt{sorted()} does not modify the original list --- it returns a new sorted list.
+To sort by a specific column, you will need to pass a \textbf{key function} to
+\texttt{sorted()}.  Remember that numeric columns read from a CSV are strings and
+must be converted before comparing.
+\end{hint}
+
+% -----------------------------------------------------------
+\task{Generating City Badges}
+
+For each city in a filtered list you will create a small coloured image \textbf{badge}
+that displays the city name and its population density.  This is where data analysis
+meets image generation.
+
+\textbf{Create \texttt{badges.py}:}
+
+\begin{lstlisting}
+import csv
+from PIL import Image, ImageDraw, ImageFont
+
+
+BADGE_W = 300
+BADGE_H = 150
+
+# Colour scheme: coastal cities get a blue badge, inland cities get green.
+COASTAL_COLOUR = (70, 130, 180)    # steel blue
+INLAND_COLOUR  = (60, 140,  80)    # forest green
+TEXT_COLOUR    = (255, 255, 255)   # white
+
+
+def compute_density(population, area_km2):
+    """Return population density rounded to one decimal place."""
+    # --- YOUR CODE HERE ---
+    pass
+
+
+def make_badge(city_name, country, density, is_coastal):
+    """Return a BADGE_W x BADGE_H PIL Image for one city.
+
+    The badge must show:
+      - A filled background (blue for coastal, green for inland)
+      - The city name in large text at the top
+      - The country name in smaller text below the city name
+      - The density (people/km2) at the bottom
+    """
+    bg_colour = COASTAL_COLOUR if is_coastal else INLAND_COLOUR
+    img  = Image.new("RGB", (BADGE_W, BADGE_H), bg_colour)
+    draw = ImageDraw.Draw(img)
+
+    # --- YOUR CODE HERE ---
+    # Draw the city name, country, and density onto the badge.
+
+    return img
+
+
+# -------------------------------------------------------
+# Load data and generate one badge per city
+# -------------------------------------------------------
+with open("data/cities.csv", newline="") as f:
+    cities = list(csv.DictReader(f))
+
+badge_images = []   # collect badges in this list
+
+for city in cities:
+    name     = city["name"]
+    country  = city["country"]
+    pop      = int(city["population"])
+    area     = float(city["area_km2"])
+    coastal  = city["coastal"] == "yes"
+
+    density  = compute_density(pop, area)
+    badge    = make_badge(name, country, density, coastal)
+
+    badge.save(f"output/badge_{name.replace(' ', '_')}.jpg")
+    badge_images.append(badge)
+    print(f"Badge created: {name}")
+
+print(f"\n{len(badge_images)} badges saved to output/")
+\end{lstlisting}
+
+\begin{note}
+\texttt{ImageDraw.Draw(img)} gives you a drawing surface attached to \texttt{img}.
+Anything you draw on it modifies \texttt{img} in place, so there is no need to return
+the draw object.  The \texttt{draw.text((x, y), text, fill=colour)} method places
+\texttt{text} with its top-left corner at \texttt{(x, y)}.
+\end{note}
+
+% -----------------------------------------------------------
+\task{Assembling the Collage}
+
+Now bring everything together: load the badges produced in Task 5, arrange them in a
+grid, and save the final collage.  Then write a summary CSV of the cities that appear
+in the collage.
+
+\textbf{Create \texttt{collage.py}:}
+
+\begin{lstlisting}
+import csv
+import os
+from PIL import Image
+
+
+BADGE_W   = 300
+BADGE_H   = 150
+COLS      = 5          # number of columns in the grid
+PADDING   = 10         # pixels of space between badges
+BG_COLOUR = (30, 30, 30)   # dark background
+
+
+def build_collage(badge_paths, cols, badge_w, badge_h, padding, bg):
+    """Arrange badge images in a grid and return the canvas.
+
+    Parameters
+    ----------
+    badge_paths : list of str    paths to individual badge images
+    cols        : int            number of columns
+    badge_w, badge_h : int       expected size of each badge
+    padding     : int            gap between badges (pixels)
+    bg          : tuple          background RGB colour
+
+    Returns
+    -------
+    PIL Image
+    """
+    rows = (len(badge_paths) + cols - 1) // cols   # ceiling division
+
+    canvas_w = cols * badge_w + (cols + 1) * padding
+    canvas_h = rows * badge_h + (rows + 1) * padding
+    canvas   = Image.new("RGB", (canvas_w, canvas_h), bg)
+
+    for i, path in enumerate(badge_paths):
+        badge = Image.open(path)
+
+        col = i % cols
+        row = i // cols
+
+        # --- YOUR CODE HERE ---
+        # Calculate the x and y position for this badge based on its
+        # row and column, then paste it onto the canvas.
+        pass
+
+    return canvas
+
+
+def save_summary_csv(badge_paths, output_path):
+    """Write a CSV listing the cities that appear in the collage."""
+    with open(output_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["position", "city", "filename"])
+        writer.writeheader()
+        for i, path in enumerate(badge_paths):
+            filename = os.path.basename(path)
+            # Extract city name: "badge_Quebec_City.jpg" -> "Quebec City"
+            city_name = filename.replace("badge_", "").replace(".jpg", "")
+            city_name = city_name.replace("_", " ")
+            writer.writerow({
+                "position": i + 1,
+                "city": city_name,
+                "filename": filename,
+            })
+
+
+# -------------------------------------------------------
+# Collect badge paths (sorted alphabetically for a tidy grid)
+# -------------------------------------------------------
+badge_paths = sorted([
+    os.path.join("output", f)
+    for f in os.listdir("output")
+    if f.startswith("badge_") and f.endswith(".jpg")
+])
+
+if not badge_paths:
+    print("No badges found in output/ - run badges.py first!")
+else:
+    collage = build_collage(badge_paths, COLS, BADGE_W, BADGE_H,
+                            PADDING, BG_COLOUR)
+    collage.save("output/collage.jpg")
+    print(f"Collage saved: {collage.size[0]}x{collage.size[1]} pixels, "
+          f"{len(badge_paths)} badges")
+
+    save_summary_csv(badge_paths, "output/collage_summary.csv")
+    print("Summary CSV saved to output/collage_summary.csv")
+\end{lstlisting}
+
+\begin{note}
+Run the scripts \textbf{in order}:
+\begin{enumerate}
+    \item \texttt{warmup.py} --- no dependencies
+    \item \texttt{filters.py} --- needs \texttt{data/photo.jpg}
+    \item \texttt{transforms.py} --- needs \texttt{data/photo.jpg}
+    \item \texttt{read\_cities.py} --- needs \texttt{data/cities.csv}
+    \item \texttt{badges.py} --- needs \texttt{data/cities.csv}
+    \item \texttt{collage.py} --- needs the badge files produced by \texttt{badges.py}
+\end{enumerate}
+\end{note}
+
+
+\end{document}

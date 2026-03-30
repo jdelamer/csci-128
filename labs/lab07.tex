@@ -10,11 +10,11 @@
     keywordstyle=\color{blue}\bfseries,
     stringstyle=\color{red},
     commentstyle=\color{green!50!black}\itshape,
+    columns=fullflexible,
     showstringspaces=false,
+    breakatwhitespace=false,
     breaklines=true,
     frame=single,
-    numbers=left,
-    numberstyle=\tiny\color{gray},
     tabsize=4
 }
 
@@ -55,7 +55,7 @@
 
 \section{Introduction}
 
-Just like images are 2D grids of pixels, spreadsheets are 2D grids of values --- rows represent individual records and columns represent attributes. CSV (Comma-Separated Values) files are the simplest and most universal format for storing this kind of tabular data, and Python's built-in \texttt{csv} module makes reading and writing them straightforward. By the end of this lab you will be able to load a dataset, compute statistics, filter records, and save results, the core loop of real-world data analysis.
+Just like images are 2D grids of pixels, spreadsheets are 2D grids of values-rows represent individual records and columns represent attributes. CSV (Comma-Separated Values) files are the simplest and most universal format for storing this kind of tabular data, and Python's built-in \texttt{csv} module makes reading and writing them straightforward. By the end of this lab you will be able to load a dataset, compute statistics, filter records, and save results, the core loop of real-world data analysis.
 
 \section{Setup}
 
@@ -162,12 +162,12 @@ print("Students from Halifax:", halifax_count)
 \end{lstlisting}
 
 \begin{note}
-The first row of a CSV file is called the \textbf{header row} --- it gives each column a name. Calling \texttt{next(reader)} reads that one row and advances the reader past it, so every subsequent iteration gives you a data row only. If you forget to skip the header you will accidentally try to process the column names as data!
+The first row of a CSV file is called the \textbf{header row}-it gives each column a name. Calling \texttt{next(reader)} reads that one row and advances the reader past it, so every subsequent iteration gives you a data row only. If you forget to skip the header you will accidentally try to process the column names as data!
 \end{note}
 
 \textbf{Run the script and check:}
 \begin{itemize}
-    \item The manual split and the \texttt{csv.reader} output look the same --- good!
+    \item The manual split and the \texttt{csv.reader} output look the same-good!
     \item The header is \texttt{['name', 'grade', 'score', 'city']}
     \item There are exactly 8 data rows
     \item Three students are from Halifax (Alice, Carol, Frank)
@@ -176,7 +176,7 @@ The first row of a CSV file is called the \textbf{header row} --- it gives each 
 % -----------------------------------------------------------
 \task{Accessing Columns with DictReader}
 
-\texttt{csv.reader} gives you lists --- you have to remember that index 2 is the score. \texttt{csv.DictReader} is smarter: it reads the header automatically and gives you each row as a dictionary, so you can write \texttt{row['score']} instead of \texttt{row[2]}.
+\texttt{csv.reader} gives you lists-you have to remember that index 2 is the score. \texttt{csv.DictReader} is smarter: it reads the header automatically and gives you each row as a dictionary, so you can write \texttt{row['score']} instead of \texttt{row[2]}.
 
 \textbf{Create \texttt{dict\_reader.py}:}
 
@@ -261,13 +261,13 @@ Every value that \texttt{csv.DictReader} gives you is a \textbf{string}, even nu
 \end{hint}
 
 \begin{warning}
-Remember: \texttt{csv.DictReader} gives you strings, not numbers. Always convert before comparing! Writing \texttt{row['score'] > 80} compares a string to an integer --- Python will raise a \texttt{TypeError}. Write \texttt{int(row['score']) > 80} instead.
+Remember: \texttt{csv.DictReader} gives you strings, not numbers. Always convert before comparing! Writing \texttt{row['score'] > 80} compares a string to an integer-Python will raise a \texttt{TypeError}. Write \texttt{int(row['score']) > 80} instead.
 \end{warning}
 
 % -----------------------------------------------------------
 \task{Computing Statistics}
 
-Now let's implement our own statistics functions --- no importing the \texttt{statistics} module allowed! This is great practice with loops and accumulators.
+Now let's implement our own statistics functions-no importing the \texttt{statistics} module allowed! This is great practice with loops and accumulators.
 
 \textbf{Create \texttt{statistics.py}:}
 
@@ -398,7 +398,7 @@ Once the \texttt{with} block ends the file is closed, but \texttt{data} stays in
 % -----------------------------------------------------------
 \task{Filtering Rows}
 
-Filtering means keeping only the rows that satisfy some condition --- just like applying a colour filter to an image keeps only the pixels that pass a test.
+Filtering means keeping only the rows that satisfy some condition-just like applying a colour filter to an image keeps only the pixels that pass a test.
 
 \textbf{Create \texttt{filter\_rows.py}:}
 
@@ -526,7 +526,7 @@ for row in b_or_c:
 \end{lstlisting}
 
 \begin{note}
-Filtering rows is the same idea as filtering pixels in an image: you loop over every item and keep only the ones that pass a test. The structure of the function --- empty list, loop, conditional append, return --- appears constantly in data processing code. Memorise it!
+Filtering rows is the same idea as filtering pixels in an image: you loop over every item and keep only the ones that pass a test. The structure of the function-empty list, loop, conditional append, return-appears constantly in data processing code. Memorise it!
 \end{note}
 
 % -----------------------------------------------------------
@@ -729,47 +729,144 @@ print("Pipeline complete.")
 \end{lstlisting}
 
 \begin{note}
-This script is a \textbf{data pipeline} --- a sequence of clearly labelled steps that transforms raw data into useful output. Real data science workflows follow exactly this pattern: load, clean, analyse, visualise, save. Once you can write a pipeline for a small dataset like this, scaling up to millions of rows is mostly a matter of using faster tools (like \texttt{pandas}) with the same conceptual structure.
+This script is a \textbf{data pipeline}-a sequence of clearly labelled steps that transforms raw data into useful output. Real data science workflows follow exactly this pattern: load, clean, analyse, visualise, save. Once you can write a pipeline for a small dataset like this, scaling up to millions of rows is mostly a matter of using faster tools (like \texttt{pandas}) with the same conceptual structure.
+\end{note}
+
+
+% -----------------------------------------------------------
+
+\section{Challenge Questions}
+
+% -----------------------------------------------------------
+\subsection*{Challenge 1: Median Score}
+
+The \textbf{median} is the middle value when all values are sorted. For an even number of values, it is the average of the two middle values.
+
+\textbf{In a new file \texttt{challenge1.py}:}
+\begin{itemize}
+    \item Load \texttt{data/students.csv} into a list of dicts.
+    \item Write a function \texttt{column\_median(data, col\_name)} that computes the median without using any built-in statistics library.
+    \item Print the median score. (Expected answer: \textbf{79.5})
+    \item Print whether the median is higher or lower than the mean.
+\end{itemize}
+
+\begin{hint}
+You will need to extract all values into a plain list, sort it with \texttt{sorted()}, then decide whether the length is odd or even using the \texttt{\%} operator.
+\end{hint}
+
+% -----------------------------------------------------------
+\subsection*{Challenge 2: Score Histogram (Text)}
+
+A \textbf{histogram} groups values into bins and shows how many fall in each bin. You will build one using only \texttt{print()} and string repetition.
+
+\textbf{In a new file \texttt{challenge2.py}:}
+\begin{itemize}
+    \item Define bins: \texttt{50--59}, \texttt{60--69}, \texttt{70--79}, \texttt{80--89}, \texttt{90--99}.
+    \item Count how many students fall in each bin.
+    \item Print a text bar chart where each \texttt{*} represents one student, for example:
+\end{itemize}
+
+\begin{lstlisting}[language={},numbers=none]
+50-59 |
+60-69 | **
+70-79 | **
+80-89 | **
+90-99 | **
+\end{lstlisting}
+
+\begin{hint}
+Use \texttt{"*" * count} to build the bar for each bin. Use integer division (\texttt{//}) and the \texttt{\%} operator, or a chain of \texttt{if}/\texttt{elif} statements, to decide which bin a score belongs to.
+\end{hint}
+
+% -----------------------------------------------------------
+\subsection*{Challenge 3: Ranking Table}
+
+Sorting rows and adding a computed column are two of the most common data-manipulation tasks.
+
+\textbf{In a new file \texttt{challenge3.py}:}
+\begin{itemize}
+    \item Load the data and sort all students by score from highest to lowest. Do \textbf{not} use any library sort functions on the raw list; implement a simple selection sort or insertion sort yourself.
+    \item Add a \texttt{"rank"} key to each row dict (1 = highest score).
+    \item Add a \texttt{"letter\_grade"} key: \texttt{A} for score $\geq 90$, \texttt{B} for $\geq 75$, \texttt{C} for $\geq 60$, \texttt{F} otherwise.
+    \item Write the ranked, annotated rows to \texttt{data/rankings.csv} with columns \texttt{rank}, \texttt{name}, \texttt{score}, \texttt{letter\_grade}.
+    \item Print the table to the terminal as well.
+\end{itemize}
+
+\begin{note}
+A \textbf{selection sort} finds the largest remaining value on each pass and swaps it to the front of the unsorted portion. You already know all the tools you need: a loop, an accumulator for the current best, and list indexing.
 \end{note}
 
 % -----------------------------------------------------------
+\subsection*{Challenge 4: Multi-File Summary}
 
-\section{Bonus Challenges}
+Real datasets are often split across several files. Here you will create a second data file and write code that processes both at once.
 
-\subsection*{Challenge 1: Multi-File Processing}
+\textbf{Step 1: create \texttt{data/teachers.csv}:}
+\begin{lstlisting}[language={},numbers=none,frame=single]
+name,subject,years_experience,city
+Ms. Park,Math,8,Halifax
+Mr. Reid,Science,3,Sydney
+Ms. Chen,English,12,Halifax
+Mr. Osei,History,5,Truro
+\end{lstlisting}
 
-Write a script \texttt{multi\_file.py} that reads \emph{all} \texttt{.csv} files in the \texttt{data/} folder using \texttt{os.listdir()}, loads each one with \texttt{csv.DictReader}, and prints the filename together with the number of rows it contains. This mimics batch-processing pipelines that run the same analysis over dozens of files automatically.
-
-\subsection*{Challenge 2: Grade Summary Report}
-
-Load \texttt{students.csv} and print a formatted grade report. For each letter grade (A, B, C) display: number of students, minimum score, maximum score, and average score. Format the output so the numbers line up in columns --- it should look like a table in the terminal.
-
-\subsection*{Challenge 3: Your Own Dataset}
-
-Create your own CSV file about any topic you care about (sports statistics, movie ratings, country populations, restaurant reviews, \ldots). Requirements:
+\textbf{Step 2: in a new file \texttt{challenge4.py}:}
 \begin{itemize}
-    \item At least 10 rows of real or realistic data
-    \item At least 4 columns (at least one numeric)
-    \item A Python script that loads it and computes at least 3 interesting statistics
-    \item A filtered subset saved to a new CSV file
+    \item Write a \textbf{generic} function \texttt{load\_csv(filepath)} that works for \emph{any} CSV file and returns a list of dicts.
+    \item Load both \texttt{students.csv} and \texttt{teachers.csv} using that function.
+    \item Print every unique city that appears in \textbf{either} file (no duplicates, sorted alphabetically).
+    \item For each city, print how many students \emph{and} how many teachers are based there.
+    \item Save a summary to \texttt{data/city\_summary.csv} with columns \texttt{city}, \texttt{student\_count}, \texttt{teacher\_count}.
 \end{itemize}
 
+\begin{hint}
+Build a set of cities first (sets automatically remove duplicates), then loop over the sorted set to count occurrences in each list separately.
+\end{hint}
+
 % -----------------------------------------------------------
+\subsection*{Challenge 5: Data Cleaning}
 
-\section{Key Concepts}
+CSV files from the real world are often messy. This challenge practices \textbf{defensive programming}: detecting and correcting bad data before processing it.
 
-\begin{description}
-    \item[CSV (Comma-Separated Values)] A plain-text file format where each line is a row and values within a row are separated by commas. Universally supported by spreadsheets, databases, and Python.
-    \item[Row] One record in a table --- e.g.\ one student, one sale, one measurement.
-    \item[Column] One attribute shared by all rows --- e.g.\ \texttt{name}, \texttt{score}, \texttt{city}.
-    \item[Header row] The first row of a CSV file, giving each column a name. \texttt{csv.DictReader} reads this automatically; \texttt{csv.reader} requires you to call \texttt{next(reader)} to skip it manually.
-    \item[csv.reader] Reads each row as a \emph{list} of strings. Access values by index: \texttt{row[2]}.
-    \item[csv.DictReader] Reads each row as a \emph{dictionary}. Access values by name: \texttt{row['score']}. More readable and less error-prone.
-    \item[csv.DictWriter] Writes rows from dictionaries back to a CSV. Always call \texttt{writeheader()} first.
-    \item[Type conversion] CSV values are always strings. Use \texttt{int()} or \texttt{float()} before arithmetic or numeric comparisons.
-    \item[Filter] A function that loops through rows and returns only those matching a condition. The pattern is: empty list, loop, conditional append, return.
-    \item[Pipeline] A script structured as a chain of discrete steps: load \textrightarrow{} process \textrightarrow{} analyse \textrightarrow{} save.
-\end{description}
+\textbf{Step 1: create \texttt{data/students\_dirty.csv}:}
+\begin{lstlisting}[language={},numbers=none,frame=single]
+name,grade,score,city
+Alice,A,92,Halifax
+,B,78,Truro
+Carol,A,105,Halifax
+David,C,-5,Sydney
+Emma,b,81,Truro
+Frank,A,,Halifax
+Grace,C,62,Sydney
+Henry,B,75,
+\end{lstlisting}
+
+The file contains several problems: a missing name, scores outside the valid range 0--100, a lowercase grade, a missing score, and a missing city.
+
+\textbf{Step 2: in a new file \texttt{challenge5.py}:}
+\begin{itemize}
+    \item Write a function \texttt{clean\_row(row)} that takes a single dict and returns a \textbf{cleaned} copy, applying these rules:
+    \begin{itemize}
+        \item If \texttt{name} is empty, skip the row (return \texttt{None}).
+        \item Convert \texttt{grade} to uppercase.
+        \item If \texttt{score} is empty or not a valid integer, set it to \texttt{0}.
+        \item Clamp \texttt{score} to the range \texttt{[0, 100]}: values below 0 become 0, values above 100 become 100.
+        \item If \texttt{city} is empty, set it to \texttt{"Unknown"}.
+    \end{itemize}
+    \item Apply \texttt{clean\_row} to every row in \texttt{students\_dirty.csv}, discarding rows where it returns \texttt{None}.
+    \item Print both the original and cleaned versions of each row so you can verify the fixes.
+    \item Save the cleaned data to \texttt{data/students\_clean.csv}.
+\end{itemize}
+
+\begin{hint}
+To safely convert a string to an integer when the string might be empty or invalid, use a \texttt{try}/\texttt{except} block:
+\begin{lstlisting}[numbers=none]
+try:
+    score = int(raw_score)
+except ValueError:
+    score = 0
+\end{lstlisting}
+\end{hint}
 
 % -----------------------------------------------------------
 
@@ -782,6 +879,7 @@ Before you leave, show your instructor or TA:
     \item \texttt{statistics.py} printing the correct min (62), max (95), and average score for the full dataset.
     \item \texttt{filter\_rows.py} filtering Halifax students and listing students with score above 80.
     \item \texttt{pipeline.py} running end-to-end without errors and producing \texttt{data/above\_average.csv} with the correct rows.
+    \item \textbf{(Bonus)} Any completed challenge files, with correct output visible in the terminal.
 \end{enumerate}
 
 % -----------------------------------------------------------
@@ -791,22 +889,14 @@ Before you leave, show your instructor or TA:
 Upload the following files to Moodle under \textbf{Lab 07}:
 
 \begin{itemize}
-    \item \texttt{explore\_csv.py}
-    \item \texttt{dict\_reader.py}
-    \item \texttt{statistics.py}
-    \item \texttt{filter\_rows.py}
-    \item \texttt{write\_csv.py}
-    \item \texttt{pipeline.py}
-    \item \texttt{data/high\_achievers.csv}
-    \item \texttt{data/city\_counts.csv}
-    \item \texttt{data/above\_average.csv}
-    \item Any additional CSV files produced by experiments or bonus challenges
+    \item \textbf{(Challenge 1)} \texttt{challenge1.py}
+    \item \textbf{(Challenge 2)} \texttt{challenge2.py}
+    \item \textbf{(Challenge 3)} \texttt{challenge3.py} and \texttt{data/rankings.csv}
+    \item \textbf{(Challenge 4)} \texttt{challenge4.py}, \texttt{data/teachers.csv}, and \texttt{data/city\_summary.csv}
+    \item \textbf{(Challenge 5)} \texttt{challenge5.py}, \texttt{data/students\_dirty.csv}, and \texttt{data/students\_clean.csv}
 \end{itemize}
 
 % -----------------------------------------------------------
 
-\section{What's Next?}
-
-In Lab 08, we will explore working with \textbf{nested data structures} --- lists of lists and dictionaries of dictionaries --- and see how the same pipeline pattern scales up to more complex, real-world datasets.
 
 \end{document}
